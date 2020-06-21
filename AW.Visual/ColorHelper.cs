@@ -1,8 +1,8 @@
-﻿using AW.Visual.ColorTheme.ColorSet;
-
-using System;
+﻿using System;
 using System.Linq;
 using System.Windows.Media;
+
+using AW.Visual.ColorTheme.ColorSet;
 
 using DColor = System.Drawing.Color;
 using MColor = System.Windows.Media.Color;

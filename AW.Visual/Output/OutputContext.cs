@@ -1,11 +1,11 @@
-﻿using AW.Visual.Common;
-
-using MaterialDesignThemes.Wpf;
-
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows.Threading;
+
+using AW.Visual.Common;
+
+using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual.Output
 {

@@ -4,12 +4,18 @@ namespace AW.Visual.VisualType
 {
     public partial class CheckBoxControl : UserControl
     {
-        public CheckBoxControl() => InitializeComponent();
+        public CheckBoxControl(bool hideTag)
+        {
+            InitializeComponent();
+
+            if (hideTag)
+                Element.Content = null;
+        }
     }
 
     public class CheckBoxContext : VisualTypeContext
     {
-        public CheckBoxContext(string tag, object source, string property)
-            : base(tag, source, property, new CheckBoxControl()) { }
+        public CheckBoxContext(string tag, object source, string property, bool? hideTag = null)
+            : base(tag, source, property, new CheckBoxControl(hideTag ?? string.IsNullOrEmpty(tag))) { }
     }
 }

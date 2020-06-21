@@ -4,13 +4,11 @@ namespace AW.Visual.Output
 {
     public partial class OutputControl : UserControl
     {
-        public static string Title { get; set; } = "History";
-
         public OutputControl()
         {
             InitializeComponent();
 
-            HistoryLabel.Text = Title;
+            HistoryLabel.Text = AWWindow.History;
             Items.SizeChanged += (sc, ec) =>
             {
                 if (LastCount != Items.Items.Count)

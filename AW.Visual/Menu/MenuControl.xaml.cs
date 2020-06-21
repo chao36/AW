@@ -1,11 +1,5 @@
-﻿using AW.Visual.ColorTheme;
-using AW.Visual.Common;
-
-using MaterialDesignThemes.Wpf;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
@@ -13,14 +7,14 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Threading;
 
+using AW.Visual.Common;
+
+using MaterialDesignThemes.Wpf;
+
 namespace AW.Visual.Menu
 {
     public partial class MenuControl : BaseControl
     {
-        public static string RenameTitle { get; set; } = "Rename";
-        public static string NewNameTitle { get; set; } = "New name";
-        public static string RemoveTitle { get; set; } = "Remove";
-
         public MenuControl() => InitializeComponent();
 
         protected override void OnDataContextChange()
@@ -118,17 +112,17 @@ namespace AW.Visual.Menu
 
                 if (item.Actions is List<IAction> actions)
                 {
-                    foreach (IAction menuAction in actions.Where(a => a.Title == RenameTitle).ToList())
+                    foreach (IAction menuAction in actions.Where(a => a.Title == AWWindow.RenameTitle).ToList())
                         actions.Remove(menuAction);
 
                     if (item.CanRename)
-                        actions.Add(new ActionContext(RenameTitle, PackIconKind.RenameBox, () =>
+                        actions.Add(new ActionContext(AWWindow.RenameTitle, PackIconKind.RenameBox, () =>
                         {
                             IsCreate = false;
                             IsCreateGroup = false;
 
                             Edit.Text = item.Name;
-                            HintAssist.SetHint(Edit, NewNameTitle);
+                            HintAssist.SetHint(Edit, AWWindow.NewNameTitle);
 
                             Label.Visibility = Visibility.Collapsed;
                             Edit.Visibility = Visibility.Visible;
@@ -142,15 +136,15 @@ namespace AW.Visual.Menu
                                 }));
                         }));
 
-                    foreach (IAction menuAction in actions.Where(a => a.Title == RemoveTitle).ToList())
+                    foreach (IAction menuAction in actions.Where(a => a.Title == AWWindow.RemoveTitle).ToList())
                         actions.Remove(menuAction);
 
                     if (item.CanRemove)
-                        actions.Add(new ActionContext(RemoveTitle, PackIconKind.Close, () =>
+                        actions.Add(new ActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
                         {
                             item.OnRemove?.Invoke(item);
                             item.Group?.RemoveItem(item);
-                        }, iconColor: new SolidColorBrush(ColorHelper.RedSet.Color500.ToMediaColor())));
+                        }, iconColor: ColorHelper.RedSet.Color500.ToBrush()));
                 }
 
                 if (item.Actions is List<IAction> itemActions)

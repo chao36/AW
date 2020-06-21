@@ -1,9 +1,9 @@
-﻿using AW.Visual.Common;
-
-using System;
+﻿using System;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Media.Animation;
+
+using AW.Visual.Common;
 
 namespace AW.Visual
 {

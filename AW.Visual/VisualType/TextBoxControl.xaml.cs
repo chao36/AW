@@ -16,7 +16,7 @@ namespace AW.Visual.VisualType
             if (hideTag)
                 Tag.Visibility = Visibility.Collapsed;
 
-            if (textBoxType != TextBoxType.Text)
+            if (textBoxType != TextBoxType.String)
             {
                 Func<string, bool> canChange = textBoxType == TextBoxType.Double
                     ? (Func<string, bool>)(v => !double.TryParse(v, out double _))
@@ -69,15 +69,15 @@ namespace AW.Visual.VisualType
 
     public enum TextBoxType
     {
-        Text = 0,
+        String = 0,
         Double = 1,
         Int = 2
     }
 
     public class TextBoxContext : VisualTypeContext
     {
-        public TextBoxContext(string tag, string placeholder, object source, string property, TextBoxType textBoxType)
-            : base(tag, source, property, new TextBoxControl(string.IsNullOrEmpty(tag), textBoxType))
+        public TextBoxContext(string tag, string placeholder, object source, string property, TextBoxType textBoxType, bool? hideTag = null)
+            : base(tag, source, property, new TextBoxControl(hideTag ?? string.IsNullOrEmpty(tag), textBoxType))
             => Placeholder = placeholder;
 
         public string Placeholder { get; }

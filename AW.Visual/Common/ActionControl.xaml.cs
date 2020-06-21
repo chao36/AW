@@ -1,8 +1,8 @@
-﻿using MaterialDesignThemes.Wpf;
-
-using System;
+﻿using System;
 using System.Windows.Input;
 using System.Windows.Media;
+
+using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual.Common
 {

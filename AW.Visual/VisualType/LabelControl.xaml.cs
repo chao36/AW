@@ -9,7 +9,7 @@ namespace AW.Visual.VisualType
 
     public class LabelContext : VisualTypeContext
     {
-        public LabelContext(string tag)
-            : base(tag, null, null, new LabelControl()) { }
+        public LabelContext(object source, string property)
+            : base(null, source, property, new LabelControl()) { }
     }
 }

@@ -1,26 +1,28 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Documents;
-using System.Windows.Input;
-using System.Windows.Media;
-using System.Windows.Media.Imaging;
-using System.Windows.Navigation;
-using System.Windows.Shapes;
+﻿using System.Windows.Controls;
+
+using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    /// <summary>
-    /// Interaction logic for PropertyControl.xaml
-    /// </summary>
-    public partial class PropertyControl : UserControl
+    public partial class PropertyControl : BaseControl
     {
-        public PropertyControl()
+        public PropertyControl() => InitializeComponent();
+
+        protected override void OnDataContextChange()
         {
-            InitializeComponent();
+            if (DataContext is IVisualTypeContext visualType)
+            {
+                if (visualType is ObjectContext || visualType is CollectionContext)
+                    Content = visualType.Control;
+                else
+                {
+                    for (int i = 1; i < Container.Children.Count; ++i)
+                        Container.Children.RemoveAt(i);
+
+                    Container.Children.Add(visualType.Control);
+                    Grid.SetColumn(visualType.Control, 1);
+                }
+            }
         }
     }
 }

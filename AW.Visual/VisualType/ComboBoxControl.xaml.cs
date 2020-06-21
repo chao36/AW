@@ -20,8 +20,8 @@ namespace AW.Visual.VisualType
 
     public class ComboBoxContext : VisualTypeContext
     {
-        public ComboBoxContext(string tag, string placeholder, object source, string property, string displayMemberPath, IEnumerable<object> items)
-            : base(tag, source, property, new ComboBoxControl(string.IsNullOrEmpty(tag), displayMemberPath))
+        public ComboBoxContext(string tag, string placeholder, object source, string property, string displayMemberPath, IEnumerable<object> items, bool? hideTag = null)
+            : base(tag, source, property, new ComboBoxControl(hideTag ?? string.IsNullOrEmpty(tag), displayMemberPath))
         {
             Placeholder = placeholder;
             Items = new ObservableCollection<object>(items);

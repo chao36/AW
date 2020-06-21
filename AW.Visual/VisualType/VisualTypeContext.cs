@@ -1,13 +1,16 @@
-﻿using AW.Visual.Common;
-
-using System;
+﻿using System;
+using System.ComponentModel;
 using System.Reflection;
 using System.Windows;
 
+using AW.Visual.Common;
+
 namespace AW.Visual.VisualType
 {
-    public interface IVisualTypeContext
+    public interface IVisualTypeContext : INotifyPropertyChanged
     {
+        int Left { get; set; }
+
         object Source { get; }
         string PropertyName { get; }
 
@@ -19,6 +22,8 @@ namespace AW.Visual.VisualType
 
     public class VisualTypeContext : BaseContext, IVisualTypeContext
     {
+        public int Left { get; set; }
+
         public VisualTypeContext(string tag, object source, string property, FrameworkElement control)
         {
             Source = source;
@@ -28,6 +33,13 @@ namespace AW.Visual.VisualType
 
             Control = control;
             Control.DataContext = this;
+
+            if (Source is INotifyPropertyChanged notify)
+                notify.PropertyChanged += (_, e) =>
+                {
+                    if (e.PropertyName == PropertyName)
+                        Notify(nameof(Value));
+                };
         }
 
         public object Source { get; }
@@ -42,7 +54,7 @@ namespace AW.Visual.VisualType
 
         public FrameworkElement Control { get; }
 
-        protected object GetValue()
+        protected virtual object GetValue()
         {
             if (Source != null)
             {
@@ -55,14 +67,18 @@ namespace AW.Visual.VisualType
             return null;
         }
 
-        protected void SetValue(object value)
+        protected virtual void SetValue(object value)
         {
             if (Source != null)
             {
                 PropertyInfo property = Source.GetType().GetProperty(PropertyName);
 
+                value = property.PropertyType.IsEnum
+                    ? Enum.Parse(property.PropertyType, value.ToString())
+                    : Convert.ChangeType(value, property.PropertyType);
+
                 if (property != null && property.CanWrite)
-                    property.SetValue(Source, Convert.ChangeType(value, property.PropertyType));
+                    property.SetValue(Source, value);
             }
 
             Notify(nameof(Value));

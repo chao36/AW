@@ -1,26 +1,17 @@
-﻿using AW.Visual.ColorTheme;
+﻿using System;
+using System.Windows;
+using System.Windows.Media;
+
+using AW.Visual.ColorTheme;
 
 using MaterialDesignThemes.Wpf;
-
-using System;
-using System.Windows;
-using System.Windows.Controls;
-using System.Windows.Media;
 
 namespace AW.Visual
 {
     public partial class AWWindow : Window
     {
-        private static bool IsLoadResource = false;
-
         public AWWindow(FrameworkElement content = null, FrameworkElement toolbar = null)
         {
-            if (!IsLoadResource)
-            {
-                Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri("/AW.Visual;Component/Resource.xaml", UriKind.Relative)) as ResourceDictionary);
-                IsLoadResource = true;
-            }
-
             InitializeComponent();
             
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - SystemParameters.WindowResizeBorderThickness.Top - SystemParameters.WindowResizeBorderThickness.Bottom + 1;
@@ -77,6 +68,11 @@ namespace AW.Visual
         private void CloseClick(object sender, RoutedEventArgs e)
             => Close();
 
+        public static void Init()
+        {
+            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri("/AW.Visual;Component/Resource.xaml", UriKind.Relative)) as ResourceDictionary);
+        }
+
         public static void ChangeTheme(bool isDark, Color color)
         {
             IBaseTheme baseTheme = AWTheme.Light;
@@ -86,5 +82,12 @@ namespace AW.Visual
             ITheme theme = Theme.Create(baseTheme, color, color);
             new PaletteHelper().SetTheme(theme);
         }
+
+        public static string History { get; set; } = "History";
+        public static string RenameTitle { get; set; } = "Rename";
+        public static string NewNameTitle { get; set; } = "New name";
+        public static string AddTitle { get; set; } = "Add";
+        public static string RemoveTitle { get; set; } = "Remove";
+
     }
 }

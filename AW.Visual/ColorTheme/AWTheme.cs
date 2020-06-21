@@ -1,6 +1,6 @@
-﻿using MaterialDesignThemes.Wpf;
+﻿using System.Windows.Media;
 
-using System.Windows.Media;
+using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual.ColorTheme
 {

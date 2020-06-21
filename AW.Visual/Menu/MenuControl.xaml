@@ -67,7 +67,7 @@
                     VerticalAlignment="Center"
                     Height="20"
                     Width="20"
-                    Kind="{Binding GroupIcon}"/>
+                    Kind="MenuRight"/>
                 <md:PackIcon
                     Grid.Column="1"
                     Foreground="{DynamicResource MaterialDesignBody}"

@@ -1,12 +1,10 @@
-﻿using AW.Visual;
-using AW.Visual.ColorTheme;
-using AW.Visual.VisualType;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Documents;
+
+using AW.Visual;
+using AW.Visual.VisualType;
 
 namespace AW.VisualTests
 {
@@ -21,17 +19,17 @@ namespace AW.VisualTests
 
         private void Application_Startup(object sender, StartupEventArgs e)
         {
+            AWWindow.Init();
+
             StackPanel grid = new StackPanel
             {
-                Width = 200,
+                Width = 400,
             };
+            Button button = new Button();
+            button.Click += Button_Click;
+            
 
-            Test test = new Test();
-
-            grid.Children.Add(new CheckBoxContext("Tag", test, "B").Control);
-            grid.Children.Add(new DateContext("Tag", "Placeholder", test, "D").Control);
-            grid.Children.Add(new TextBoxContext("Tag", "Placeholder", test, "T", TextBoxType.Text).Control);
-            grid.Children.Add(new ComboBoxContext("Tag", "Placeholder", test, "C", null, new List<string> { "test1", "test2", "test3", "test4" }).Control);
+            grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
 
             Window window = new AWWindow(grid);
 
@@ -39,12 +37,51 @@ namespace AW.VisualTests
             window.Show();
         }
 
-        public class Test
+        private void Button_Click(object sender, RoutedEventArgs e)
         {
-            public bool B { get; set; }
-            public DateTime D { get; set; } = DateTime.Now;
-            public string T { get; set; }
-            public string C { get; set; }
+
+        }
+
+        Class2 test = new Class2();
+
+
+
+        public enum Enum1
+        {
+            Value1,
+            Value2,
+            Value3,
+        }
+
+        public class Class1
+        {
+            [AWProperty]
+            public bool Bool { get; set; }
+            [AWProperty]
+            public DateTime Date { get; set; } = DateTime.Now;
+            [AWProperty]
+            public Enum1 Enum { get; set; }
+        }
+
+        public class Class2
+        {
+            [AWProperty]
+            public bool Bool { get; set; }
+            [AWProperty]
+            public DateTime Date { get; set; } = DateTime.Now;
+            [AWProperty]
+            public int Int { get; set; } = 20;
+            [AWProperty]
+            public string String { get; set; } = "Test";
+
+            [AWProperty]
+            public Class1 Class1 { get; set; }
+
+            [AWProperty]
+            public List<Class1> List { get; set; } = new List<Class1>
+            {
+                new Class1()
+            };
         }
     }
 }

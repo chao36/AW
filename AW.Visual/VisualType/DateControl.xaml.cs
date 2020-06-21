@@ -42,8 +42,8 @@ namespace AW.Visual.VisualType
 
     public class DateContext : VisualTypeContext
     {
-        public DateContext(string tag, string placeholder, object source, string property)
-            : base(tag, source, property, new DateControl(string.IsNullOrEmpty(tag)))
+        public DateContext(string tag, string placeholder, object source, string property, bool? hideTag = null)
+            : base(tag, source, property, new DateControl(hideTag ?? string.IsNullOrEmpty(tag)))
             => Placeholder = placeholder;
 
         public string Placeholder { get; }
