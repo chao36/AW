@@ -49,17 +49,17 @@ namespace AW.Visual.Menu
 
                     if (item.Actions is List<IAction> groupActions)
                     {
-                        foreach (IAction menuAction in groupActions.Where(a => a.Title == group.CreateHint).ToList())
+                        foreach (IAction menuAction in groupActions.Where(a => a.Title == group.CreateItemHint).ToList())
                             groupActions.Remove(menuAction);
 
-                        if (group.CanCreate)
-                            groupActions.Add(new ActionContext(group.CreateHint, PackIconKind.Add, () =>
+                        if (group.ViewCreateItem)
+                            groupActions.Add(new ActionContext(group.CreateItemHint, PackIconKind.Add, () =>
                             {
                                 IsCreate = true;
                                 IsCreateGroup = false;
 
                                 Edit.Text = "";
-                                HintAssist.SetHint(Edit, group.CreateHint);
+                                HintAssist.SetHint(Edit, group.CreateItemHint);
 
                                 Label.Visibility = Visibility.Collapsed;
                                 Edit.Visibility = Visibility.Visible;
@@ -76,7 +76,7 @@ namespace AW.Visual.Menu
                         foreach (IAction menuAction in groupActions.Where(a => a.Title == group.CreateGroupHint).ToList())
                             groupActions.Remove(menuAction);
 
-                        if (group.CanCreateGroup)
+                        if (group.ViewCreateGroup)
                             groupActions.Add(new ActionContext(group.CreateGroupHint, PackIconKind.FolderAdd, () =>
                             {
                                 IsCreate = false;
@@ -115,7 +115,7 @@ namespace AW.Visual.Menu
                     foreach (IAction menuAction in actions.Where(a => a.Title == AWWindow.RenameTitle).ToList())
                         actions.Remove(menuAction);
 
-                    if (item.CanRename)
+                    if (item.ViewRename)
                         actions.Add(new ActionContext(AWWindow.RenameTitle, PackIconKind.RenameBox, () =>
                         {
                             IsCreate = false;
@@ -139,7 +139,7 @@ namespace AW.Visual.Menu
                     foreach (IAction menuAction in actions.Where(a => a.Title == AWWindow.RemoveTitle).ToList())
                         actions.Remove(menuAction);
 
-                    if (item.CanRemove)
+                    if (item.ViewRemove)
                         actions.Add(new ActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
                         {
                             item.OnRemove?.Invoke(item);
@@ -209,7 +209,7 @@ namespace AW.Visual.Menu
             Keyboard.ClearFocus();
 
             bool con = IsCreate
-                ? (menuItem as IMenuGroup).OnCreate?.Invoke(menuItem as IMenuGroup, Edit.Text) == true
+                ? (menuItem as IMenuGroup).OnCreateItem?.Invoke(menuItem as IMenuGroup, Edit.Text) == true
                 : IsCreateGroup
                     ? (menuItem as IMenuGroup).OnCreateGroup?.Invoke(menuItem as IMenuGroup, Edit.Text) == true
                     : Edit.Text == menuItem.Name || menuItem.OnRename?.Invoke(menuItem, Edit.Text) == true;

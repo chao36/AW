@@ -20,8 +20,8 @@ namespace AW.Visual.Menu
         int Left { get; set; }
         bool IsSelect { get; set; }
 
-        bool CanRemove { get; }
-        bool CanRename { get; }
+        bool ViewRemove { get; }
+        bool ViewRename { get; }
         bool CanChangeGroup { get; }
 
         IEnumerable<IAction> Actions { get; set; }
@@ -37,17 +37,17 @@ namespace AW.Visual.Menu
 
     public interface IMenuGroup : IMenuItem
     {
-        Func<IMenuGroup, string, bool> OnCreate { get; set; }
+        Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
         Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
         Func<IMenuItem, IMenuGroup, bool> OnChangeGroup { get; set; }
 
         bool IsOpen { get; set; }
 
-        bool CanSort { get; }
-        bool CanCreate { get; }
-        bool CanCreateGroup { get; }
+        bool NeedSortItems { get; }
+        bool ViewCreateItem { get; }
+        bool ViewCreateGroup { get; }
 
-        string CreateHint { get; set; }
+        string CreateItemHint { get; set; }
         string CreateGroupHint { get; set; }
 
         ObservableCollection<IMenuItem> Source { get; }
@@ -80,8 +80,8 @@ namespace AW.Visual.Menu
             }
         }
 
-        public bool CanRemove { get; set; } = true;
-        public bool CanRename { get; set; } = true;
+        public bool ViewRemove { get; set; } = true;
+        public bool ViewRename { get; set; } = true;
         public bool CanChangeGroup { get; set; }
 
         public IEnumerable<IAction> Actions { get; set; }
@@ -109,7 +109,7 @@ namespace AW.Visual.Menu
         public MenuGroupItemContext()
             => Group = this;
 
-        public Func<IMenuGroup, string, bool> OnCreate { get; set; }
+        public Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
         public Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
         public Func<IMenuItem, IMenuGroup, bool> OnChangeGroup { get; set; }
 
@@ -124,16 +124,16 @@ namespace AW.Visual.Menu
             }
         }
 
-        public bool CanSort { get; set; } = true;
+        public bool NeedSortItems { get; set; } = true;
 
-        public bool CanCreate { get; set; } = true;
-        public bool CanCreateGroup { get; set; } = true;
+        public bool ViewCreateItem { get; set; } = true;
+        public bool ViewCreateGroup { get; set; } = true;
 
-        public string CreateHint { get; set; }
+        public string CreateItemHint { get; set; }
         public string CreateGroupHint { get; set; }
 
         public ObservableCollection<IMenuItem> Source { get; } = new ObservableCollection<IMenuItem>();
-        public IEnumerable<IMenuItem> Items => CanSort ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Name) : (IEnumerable<IMenuItem>)Source;
+        public IEnumerable<IMenuItem> Items => NeedSortItems ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Name) : (IEnumerable<IMenuItem>)Source;
         public IEnumerable<IMenuItem> AllItems
         {
             get
@@ -161,11 +161,11 @@ namespace AW.Visual.Menu
 
             if (item is IMenuGroup group)
             {
-                group.OnCreate = OnCreate;
+                group.OnCreateItem = OnCreateItem;
                 group.OnCreateGroup = OnCreateGroup;
                 group.OnChangeGroup = OnChangeGroup;
 
-                group.CreateHint = CreateHint;
+                group.CreateItemHint = CreateItemHint;
                 group.CreateGroupHint = CreateGroupHint;
 
                 if (group.Items != null)

@@ -1,10 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
 using AW.Visual;
+using AW.Visual.Menu;
 using AW.Visual.VisualType;
+using MaterialDesignThemes.Wpf;
 
 namespace AW.VisualTests
 {
@@ -26,8 +29,61 @@ namespace AW.VisualTests
                 Width = 400
             };
 
-            var obj = new TestVisual();
-            grid.Children.Add(new ObjectContext(obj).Control);
+            var menu = new MenuGroupItemContext
+            {
+                Name = "Test",
+                CreateGroupHint = "Add group",
+                CreateItemHint = "Add item",
+
+                Icon = PackIconKind.FolderAccount,
+
+                IsOpen = true,
+                IsSelect = false,
+
+                NeedSortItems = true,
+                CanChangeGroup = false,
+
+                ViewCreateItem = true,
+                ViewCreateGroup = false,
+
+                ViewRemove = false,
+                ViewRename = true,
+
+                OnChangeGroup = (item, newGroup) => true,
+
+                OnCreateItem = (group, name) =>
+                {
+                    if (string.IsNullOrEmpty(name))
+                        return false;
+
+                    group.AddItem(new MenuItemContext
+                    {
+                        Name = name,
+
+                        Icon = PackIconKind.Account,
+                        ViewRemove = true,
+                        ViewRename = true,
+
+                        OnRemove = (item) => true,
+                        OnRename = (item, newName) => true,
+
+                        OnSelect = (item) =>
+                        {
+                            item.IsSelect = true;
+
+                            return true;
+                        }
+                    });
+
+                    return true;
+                },
+                //OnCreateGroup
+
+                OnRemove = (item) => true,
+                OnRename = (item, newName) => true,
+            };
+
+            grid.Children.Add(new MenuControl() { DataContext = menu } );
 
             AWWindow window = new AWWindow(grid);
             window.Title = "Test";
