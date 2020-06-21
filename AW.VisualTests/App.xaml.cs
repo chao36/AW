@@ -23,49 +23,38 @@ namespace AW.VisualTests
 
             Grid grid = new Grid
             {
-                Margin = new Thickness(50)
+                Width = 400
             };
-            Button button = new Button();
-            button.Click += Button_Click;
 
-
-            // grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
+            var obj = new TestVisual();
+            grid.Children.Add(new ObjectContext(obj).Control);
 
             AWWindow window = new AWWindow(grid);
-            window.ShowWait("Test");
-
             window.Title = "Test";
             window.Show();
         }
 
-        private void Button_Click(object sender, RoutedEventArgs e)
-        {
 
-        }
-
-        Class2 test = new Class2();
-
-
-
-        public enum Enum1
+        public enum TestEnum
         {
             Value1,
             Value2,
             Value3,
         }
 
-        public class Class1
+        public class SubTestVisual
         {
             [AWProperty]
             public bool Bool { get; set; }
             [AWProperty]
-            public DateTime Date { get; set; } = DateTime.Now;
-            [AWProperty]
-            public Enum1 Enum { get; set; }
+            public TestEnum Enum { get; set; }
         }
 
-        public class Class2
+        public class TestVisual
         {
+            [AWReadonly]
+            [AWProperty]
+            public string Name { get; set; } = "Test";
             [AWProperty]
             public bool Bool { get; set; }
             [AWProperty]
@@ -76,12 +65,15 @@ namespace AW.VisualTests
             public string String { get; set; } = "Test";
 
             [AWProperty]
-            public Class1 Class1 { get; set; }
+            public SubTestVisual SubTestVisual { get; set; }
 
             [AWProperty]
-            public List<Class1> List { get; set; } = new List<Class1>
+            public List<SubTestVisual> List { get; set; } = new List<SubTestVisual>
             {
-                new Class1()
+                new SubTestVisual
+                {
+                    Enum = TestEnum.Value2
+                }
             };
         }
     }

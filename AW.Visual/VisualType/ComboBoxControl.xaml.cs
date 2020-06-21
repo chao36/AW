@@ -29,5 +29,7 @@ namespace AW.Visual.VisualType
 
         public string Placeholder { get; }
         public ObservableCollection<object> Items { get; }
+
+        protected override object GetValue() =>  base.GetValue().ToString();
     }
 }

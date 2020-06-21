@@ -109,7 +109,7 @@ namespace AW.Visual.VisualType
 
                         if (p.PropertyType == StringType)
                             return p.GetCustomAttribute<AWReadonlyAttribute>() != null
-                                ? new LabelContext(source, p.Name)
+                                ? new LabelContext(p.Name, source, p.Name, true)
                                 : (IVisualTypeContext)new TextBoxContext(p.Name, null, source, p.Name, TextBoxType.String, true);
 
                         if (p.PropertyType == BoolType)

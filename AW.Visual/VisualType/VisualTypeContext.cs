@@ -45,7 +45,7 @@ namespace AW.Visual.VisualType
         public object Source { get; }
         public string PropertyName { get; }
 
-        public string Tag { get; }
+        public virtual string Tag { get; }
         public virtual object Value
         {
             get => GetValue();

@@ -1,15 +1,22 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+using System.Windows.Controls;
 
 namespace AW.Visual.VisualType
 {
     public partial class LabelControl : UserControl
     {
-        public LabelControl() => InitializeComponent();
+        public LabelControl(bool hideTag)
+        {
+            InitializeComponent();
+
+            if (hideTag)
+                Tag.Visibility = Visibility.Collapsed;
+        }
     }
 
     public class LabelContext : VisualTypeContext
     {
-        public LabelContext(object source, string property)
-            : base(null, source, property, new LabelControl()) { }
+        public LabelContext(string tag, object source, string property, bool? hideTag = null)
+            : base(tag, source, property, new LabelControl(hideTag ?? string.IsNullOrEmpty(tag))) { }
     }
 }
