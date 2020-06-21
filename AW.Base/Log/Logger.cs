@@ -25,9 +25,6 @@ namespace AW.Base.Log
             catch { }
         }
 
-        public static void Log(object obj, [CallerMemberName] string method = null, bool ignoreEvent = false)
-            => Log(null, obj.ToString(), method, ignoreEvent);
-
         public static void Log(string message, [CallerMemberName] string method = null, bool ignoreEvent = false)
             => Log(null, message, method, ignoreEvent);
 
