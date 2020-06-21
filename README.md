@@ -115,3 +115,43 @@ public class TestReference
     }
 }
 ```
+
+# AW.Visual
+Project contains some wpf control (used [Material Design](http://materialdesigninxaml.net/) )
+
+## Init
+To start in WPF application:
+```xaml
+// App.xaml
+<Application 
+    x:Class="AW.VisualTests.App"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="clr-namespace:AW.VisualTests"
+    Startup="Application_Startup">
+    // Any name [Application_Startup]
+...
+```
+```C#
+// App.xaml.cs
+protected override void OnStartup(StartupEventArgs e)
+{
+    base.OnStartup(e);
+
+    // Change color theme (dark/light and main color)
+    AWWindow.ChangeTheme(true, ColorHelper.TealSet.Color700.ToMediaColor());
+}
+
+private void Application_Startup(object sender, StartupEventArgs e)
+{
+    // Init resource
+    AWWindow.Init();
+    
+    // Create window with any control as content
+    Window window = new AWWindow(new Control());
+
+    window.Show();
+}
+```
+
+## DialogHelper
