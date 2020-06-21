@@ -4,6 +4,11 @@
     <TargetFramework>netstandard2.0</TargetFramework>
     <Description>Project containing data logger and serializer</Description>
     <Product>AW.Base</Product>
+    <Company />
+    <PackageId>AW.Base</PackageId>
+    <Authors>AkumaWalker</Authors>
+    <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
+    <PackageTags>AW;Base;AW.Base;Logger;Serializer</PackageTags>
   </PropertyGroup>
 
 </Project>

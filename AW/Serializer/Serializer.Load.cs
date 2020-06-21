@@ -1,11 +1,11 @@
-﻿using AW.Log;
-using AW.Serializer.Common;
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+
+using AW.Log;
+using AW.Serializer.Common;
 
 namespace AW.Serializer
 {

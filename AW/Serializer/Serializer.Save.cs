@@ -1,10 +1,10 @@
-﻿using AW.Serializer.Common;
-
-using System;
+﻿using System;
 using System.Collections;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+
+using AW.Serializer.Common;
 
 namespace AW.Serializer
 {
