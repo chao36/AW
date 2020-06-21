@@ -23,7 +23,14 @@ namespace AW.Base.Log
             }
             catch { }
         }
-        public static void Log(Exception ex = null, string message = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+
+        public static void Log(object obj, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => Log(null, obj.ToString(), method, ignoreEvent);
+
+        public static void Log(string message, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => Log(null, message, method, ignoreEvent);
+
+        public static void Log(Exception ex, string message = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
         {
             if (message != null && ex != null)
                 message += $" {ex.Message}";
@@ -32,10 +39,6 @@ namespace AW.Base.Log
 
             Log($"{method}() - {message ?? "error"}{(ex != null ? ($"{Environment.NewLine}{ex.StackTrace}") : "")}", ignoreEvent);
         }
-
-        public static void Log(object log, bool ignoreEvent = false)
-            => Log(log.ToString(), ignoreEvent);
-
 
         public static void Log(string message, bool ignoreEvent = false)
         {
