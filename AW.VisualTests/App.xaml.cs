@@ -29,7 +29,7 @@ namespace AW.VisualTests
             button.Click += Button_Click;
             
 
-            grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
+           // grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
 
             Window window = new AWWindow(grid);
 
