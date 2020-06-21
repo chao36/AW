@@ -38,7 +38,7 @@ namespace AW.Base.Log
             Log($"{method}() - {message ?? "error"}{(ex != null ? ($"{Environment.NewLine}{ex.StackTrace}") : "")}", ignoreEvent);
         }
 
-        public static void Log(string message, bool ignoreEvent = false)
+        private static void Log(string message, bool ignoreEvent)
         {
             if (!ignoreEvent)
                 OnLog?.Invoke(message);
