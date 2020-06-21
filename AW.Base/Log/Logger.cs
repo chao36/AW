@@ -8,7 +8,8 @@ namespace AW.Base.Log
     {
         public static event Action<string> OnLog;
 
-        private const string LogFileName = "__log";
+        public static string LogFileName = "__log";
+        public static long MaxLogFileSize = 104857600;
 
         static Logger()
         {
@@ -17,7 +18,7 @@ namespace AW.Base.Log
                 if (File.Exists(LogFileName))
                 {
                     long size = new FileInfo(LogFileName).Length;
-                    if (size > 104857600)
+                    if (size > MaxLogFileSize)
                         File.Delete(LogFileName);
                 }
             }
