@@ -18,7 +18,8 @@
     <Border
         BorderThickness="1"
         BorderBrush="{DynamicResource PrimaryHueMidBrush}">
-        <Grid>
+        <Grid
+            x:Name="Container">
             <Grid.RowDefinitions>
                 <RowDefinition Height="32"/>
                 <RowDefinition/>

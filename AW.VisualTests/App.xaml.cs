@@ -21,17 +21,18 @@ namespace AW.VisualTests
         {
             AWWindow.Init();
 
-            StackPanel grid = new StackPanel
+            Grid grid = new Grid
             {
-                Width = 400,
+                Margin = new Thickness(50)
             };
             Button button = new Button();
             button.Click += Button_Click;
-            
 
-           // grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
 
-            Window window = new AWWindow(grid);
+            // grid.Children.Add(new ObjectContext(test).Control);grid.Children.Add(button);
+
+            AWWindow window = new AWWindow(grid);
+            window.ShowWait("Test");
 
             window.Title = "Test";
             window.Show();

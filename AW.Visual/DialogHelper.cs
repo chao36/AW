@@ -15,7 +15,7 @@ namespace AW.Visual
         public static void ShowAlert(Grid container, string message)
             => Show(container, new SimpleDialog(message, false));
 
-        public static void ShowWait(Grid container, string message = "Wait")
+        public static void ShowWait(Grid container, string message)
             => Show(container, new SimpleDialog(message, true));
 
         public static void ShowView(Grid container, FrameworkElement view)

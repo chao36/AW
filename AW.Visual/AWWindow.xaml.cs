@@ -68,6 +68,15 @@ namespace AW.Visual
         private void CloseClick(object sender, RoutedEventArgs e)
             => Close();
 
+        public void ShowAlert(string message)
+            => DialogHelper.ShowAlert(Container, message);
+
+        public void ShowWait(string message)
+            => DialogHelper.ShowWait(Container, message);
+        
+        public void ShowAlert(FrameworkElement view)
+            => DialogHelper.ShowView(Container, view);
+
         public static void Init()
         {
             Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri("/AW.Visual;Component/Resource.xaml", UriKind.Relative)) as ResourceDictionary);
