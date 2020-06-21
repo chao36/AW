@@ -77,7 +77,10 @@ namespace AW.VisualTests
 
                     return true;
                 },
+
                 //OnCreateGroup
+                Content = null,
+                Context = null,
 
                 OnRemove = (item) => true,
                 OnRename = (item, newName) => true,

@@ -14,7 +14,7 @@ namespace AW.Visual.VisualType
             InitializeComponent();
 
             if (hideTag)
-                Tag.Visibility = Visibility.Collapsed;
+                TagLabel.Visibility = Visibility.Collapsed;
 
             if (textBoxType != TextBoxType.String)
             {

@@ -8,7 +8,7 @@
     <PackageId>AW.Base</PackageId>
     <Authors>AkumaWalker</Authors>
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
-    <PackageTags>AW;Base;AW.Base;Logger;Serializer</PackageTags>
+    <PackageTags>AW;Base;AW.Base;Logger;Serializer;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/AkumaWalker/AW</PackageProjectUrl>
     <Version>2.0.0</Version>

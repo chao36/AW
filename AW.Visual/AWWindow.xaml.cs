@@ -21,7 +21,7 @@ namespace AW.Visual
             StateChanged += WindowStateChanged;
 
             if (content != null)
-                Content.Content = content;
+                ContentControl.Content = content;
             
             if (toolbar != null)
             {
@@ -46,8 +46,8 @@ namespace AW.Visual
 
         public bool ShowClose
         {
-            get => Close.Visibility == Visibility.Visible;
-            set => Close.Visibility = true ? Visibility.Visible : Visibility.Collapsed;
+            get => CloseBtn.Visibility == Visibility.Visible;
+            set => CloseBtn.Visibility = true ? Visibility.Visible : Visibility.Collapsed;
         }
 
         private void WindowStateChanged(object sender, EventArgs e)

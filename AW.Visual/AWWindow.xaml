@@ -87,7 +87,7 @@
                     <Grid
                         Style="{StaticResource RedHoverBG}">
                         <Button
-                            x:Name="Close"
+                            x:Name="CloseBtn"
                             WindowChrome.IsHitTestVisibleInChrome="True"
                             Click="CloseClick"
                             BorderBrush="Transparent"
@@ -107,7 +107,7 @@
                 </StackPanel>
             </Grid>
             <ContentPresenter
-                x:Name="Content"
+                x:Name="ContentControl"
                 Margin="5"
                 Grid.Row="1"/>
         </Grid>

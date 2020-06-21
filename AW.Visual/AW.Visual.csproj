@@ -3,6 +3,14 @@
   <PropertyGroup>
     <TargetFramework>netcoreapp3.1</TargetFramework>
     <UseWPF>true</UseWPF>
+    <Authors>AkumaWalker</Authors>
+    <Company>AkumaWalker</Company>
+    <Description>Project contains some WPF control (used Material Design)</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AkumaWalker/AW</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+    <PackageTags>AW;Visual;AW.Visual;WPF;Controls;Menu;Dialog;</PackageTags>
   </PropertyGroup>
 
   <ItemGroup>

@@ -12,7 +12,7 @@ namespace AW.Visual.VisualType
             InitializeComponent();
 
             if (hideTag)
-                Tag.Visibility = Visibility.Collapsed;
+                TagLabel.Visibility = Visibility.Collapsed;
 
             Element.DisplayMemberPath = displayMemberPath;
         }
