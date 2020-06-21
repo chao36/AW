@@ -4,9 +4,9 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-using AW.Serializer.Common;
+using AW.Base.Serializer.Common;
 
-namespace AW.Serializer
+namespace AW.Base.Serializer
 {
     public partial class AWSerializer : IDisposable
     {

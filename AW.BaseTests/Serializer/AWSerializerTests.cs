@@ -1,19 +1,19 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-using System;
+﻿using System;
 using System.Collections.Generic;
 
-namespace AW.Serializer.Tests
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+
+namespace AW.Base.Serializer.Tests
 {
     [TestClass()]
-    public class SerializerTests
+    public class AWSerializerTests
     {
-        [AW.Serializer.Common.AWSerializable]
+        [AW.Base.Serializer.Common.AWSerializable]
         public class Test
         {
             public DateTime Date { get; set; } = DateTime.Now;
             public double D { get; set; } = 2.09;
-            
+
             public List<int> LI { get; set; } = new List<int>
             {
                 1, 2, 3, 4, 5

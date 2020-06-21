@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AW.Serializer.Common
+namespace AW.Base.Serializer.Common
 {
     [AttributeUsage(AttributeTargets.Class | AttributeTargets.Struct)]
     public class AWSerializableAttribute : Attribute { }

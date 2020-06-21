@@ -5,9 +5,9 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using AW.Log;
+using AW.Base.Log;
 
-namespace AW.Serializer.Common
+namespace AW.Base.Serializer.Common
 {
     public static class SerializerHelper
     {

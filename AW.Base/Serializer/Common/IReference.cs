@@ -1,4 +1,4 @@
-﻿namespace AW.Serializer.Common
+﻿namespace AW.Base.Serializer.Common
 {
     public interface IReference
     {

@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -9,6 +9,7 @@
     <Authors>AkumaWalker</Authors>
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
     <PackageTags>AW;Base;AW.Base;Logger;Serializer</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
 </Project>

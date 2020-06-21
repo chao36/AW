@@ -4,10 +4,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
 
-using AW.Log;
-using AW.Serializer.Common;
+using AW.Base.Log;
+using AW.Base.Serializer.Common;
 
-namespace AW.Serializer
+namespace AW.Base.Serializer
 {
     public partial class AWSerializer
     {
