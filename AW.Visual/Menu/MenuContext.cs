@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
 
+using AW.Base.Serializer.Common;
 using AW.Visual.Common;
 
 using MaterialDesignThemes.Wpf;
@@ -35,7 +36,7 @@ namespace AW.Visual.Menu
         IEnumerable<string> Names { get; }
     }
 
-    public interface IMenuGroup : IMenuItem
+    public interface IMenuGroup : IMenuItem, IReference
     {
         Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
         Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
@@ -59,17 +60,23 @@ namespace AW.Visual.Menu
         void Clear();
     }
 
+    [AWSerializable]
     public class MenuItemContext : BaseContext, IMenuItem
     {
+        [AWReference]
         public IMenuGroup Group { get; set; }
 
+        [AWIgnore]
         public Func<IMenuItem, bool> OnSelect { get; set; }
+        [AWIgnore]
         public Func<IMenuItem, bool> OnRemove { get; set; }
+        [AWIgnore]
         public Func<IMenuItem, string, bool> OnRename { get; set; }
 
         public int Left { get; set; }
 
         private bool isSelect;
+        [AWIgnore]
         public virtual bool IsSelect
         {
             get => isSelect;
@@ -84,6 +91,7 @@ namespace AW.Visual.Menu
         public bool ViewRename { get; set; } = true;
         public bool CanChangeGroup { get; set; }
 
+        [AWIgnore]
         public IEnumerable<IAction> Actions { get; set; }
 
         private string name;
@@ -101,19 +109,27 @@ namespace AW.Visual.Menu
         public object Content { get; set; }
         public object Context { get; set; }
 
+        [AWIgnore]
         public virtual IEnumerable<string> Names => new List<string> { Name.ToLower() };
     }
 
+    [AWSerializable]
     public class MenuGroupItemContext : MenuItemContext, IMenuGroup
     {
+        public int ReferenceId { get; set; }
+
         public MenuGroupItemContext()
             => Group = this;
 
+        [AWIgnore]
         public Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
+        [AWIgnore]
         public Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
+        [AWIgnore]
         public Func<IMenuItem, IMenuGroup, bool> OnChangeGroup { get; set; }
 
         public bool IsOpen { get; set; }
+        [AWIgnore]
         public override bool IsSelect
         {
             get => false;
@@ -134,7 +150,9 @@ namespace AW.Visual.Menu
 
         public ObservableCollection<IMenuItem> Source { get; set; } = new ObservableCollection<IMenuItem>();
 
+        [AWIgnore]
         public IEnumerable<IMenuItem> Items => NeedSortItems ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Name) : (IEnumerable<IMenuItem>)Source;
+        [AWIgnore]
         public IEnumerable<IMenuItem> AllItems
         {
             get
@@ -196,6 +214,7 @@ namespace AW.Visual.Menu
             Notify(nameof(Items));
         }
 
+        [AWIgnore]
         public override IEnumerable<string> Names => new List<string> { Name.ToLower() }.Concat(Source.SelectMany(i => i.Names));
     }
 }
