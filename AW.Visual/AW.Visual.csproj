@@ -11,6 +11,7 @@
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageTags>AW;Visual;AW.Visual;WPF;Controls;Menu;Dialog;</PackageTags>
+    <Version>1.0.2</Version>
   </PropertyGroup>
 
   <ItemGroup>

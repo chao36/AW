@@ -4,6 +4,8 @@ using System.Text.RegularExpressions;
 using System.Windows;
 using System.Windows.Controls;
 
+using AW.Base.Serializer;
+using AW.Base.Serializer.Common;
 using AW.Visual;
 using AW.Visual.Menu;
 using AW.Visual.VisualType;
@@ -29,61 +31,32 @@ namespace AW.VisualTests
                 Width = 400
             };
 
-            var menu = new MenuGroupItemContext
+            //using AWSerializer serializer = new AWSerializer();
+            //string data = SerializerHelper.LoadText();
+            //menu = serializer.Deserialize<MenuGroupItemContext>(data);
+
+            //menu.OnSelect = OnMenuSelect;
+            //menu.OnRemove = OnPageRemove;
+            //menu.OnRename = OnPageEdit;
+            //menu.OnCreateItem = OnPageAdd;
+            //menu.OnCreateGroup = OnFolderAdd;
+            //menu.OnChangeGroup = OnPageGroupChange;
+
+            menu = new MenuGroupItemContext
             {
-                Name = "Test",
-                CreateGroupHint = "Add group",
-                CreateItemHint = "Add item",
-
-                Icon = PackIconKind.FolderAccount,
-
-                IsOpen = true,
-                IsSelect = false,
-
-                NeedSortItems = true,
-                CanChangeGroup = false,
-
-                ViewCreateItem = true,
-                ViewCreateGroup = false,
-
+                Icon = PackIconKind.FileDocumentBoxMultiple,
+                Name = "pages",
+                CreateItemHint = "add_page",
+                CreateGroupHint = "add_folder",
                 ViewRemove = false,
-                ViewRename = true,
-
-                OnChangeGroup = (item, newGroup) => true,
-
-                OnCreateItem = (group, name) =>
-                {
-                    if (string.IsNullOrEmpty(name))
-                        return false;
-
-                    group.AddItem(new MenuItemContext
-                    {
-                        Name = name,
-
-                        Icon = PackIconKind.Account,
-                        ViewRemove = true,
-                        ViewRename = true,
-
-                        OnRemove = (item) => true,
-                        OnRename = (item, newName) => true,
-
-                        OnSelect = (item) =>
-                        {
-                            item.IsSelect = true;
-
-                            return true;
-                        }
-                    });
-
-                    return true;
-                },
-
-                //OnCreateGroup
-                Content = null,
-                Context = null,
-
-                OnRemove = (item) => true,
-                OnRename = (item, newName) => true,
+                ViewRename = false,
+                OnSelect = OnMenuSelect,
+                OnRemove = OnPageRemove,
+                OnRename = OnPageEdit,
+                OnCreateItem = OnPageAdd,
+                OnCreateGroup = OnFolderAdd,
+                OnChangeGroup = OnPageGroupChange,
+                IsOpen = true
             };
 
             grid.Children.Add(new MenuControl() { DataContext = menu } );
@@ -91,6 +64,77 @@ namespace AW.VisualTests
             AWWindow window = new AWWindow(grid);
             window.Title = "Test";
             window.Show();
+
+            window.Closing += Window_Closing;
+        }
+
+        private void Window_Closing(object sender, System.ComponentModel.CancelEventArgs e)
+        {
+            using AWSerializer serializer = new AWSerializer();
+            SerializerHelper.SaveText(serializer.Serialize(menu));
+        }
+
+        MenuGroupItemContext menu;
+
+        private bool OnMenuSelect(IMenuItem item)
+        {
+            foreach (IMenuItem menuItem in menu.Items)
+                menuItem.IsSelect = false;
+
+            item.IsSelect = true;
+
+            return true;
+        }
+
+        private bool OnFolderAdd(IMenuGroup group, string name)
+        {
+            group.AddItem(GetFolder(name));
+
+            return true;
+        }
+
+        private IMenuGroup GetFolder(string name)
+            => new MenuGroupItemContext
+            {
+                Icon = PackIconKind.Folder,
+                Name = name,
+                CanChangeGroup = true
+            };
+
+        private bool OnPageAdd(IMenuGroup group, string name)
+        {
+            IMenuItem menuItem = GetPage(name);
+
+            group.AddItem(menuItem);
+            OnMenuSelect(menuItem);
+
+            return true;
+        }
+
+        private IMenuItem GetPage(string name)
+            => new MenuItemContext
+            {
+                Icon = PackIconKind.FileDocumentBoxOutline,
+                Name = name,
+                CanChangeGroup = true,
+            };
+
+        private bool OnPageGroupChange(IMenuItem menuItem, IMenuGroup group)
+        {
+            if (menuItem == group)
+                return false;
+
+            return true;
+        }
+
+        private bool OnPageEdit(IMenuItem item, string name)
+        {
+            return true;
+        }
+
+        private bool OnPageRemove(IMenuItem item)
+        {
+            return true;
         }
 
 

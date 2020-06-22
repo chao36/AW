@@ -132,7 +132,8 @@ namespace AW.Visual.Menu
         public string CreateItemHint { get; set; }
         public string CreateGroupHint { get; set; }
 
-        public ObservableCollection<IMenuItem> Source { get; } = new ObservableCollection<IMenuItem>();
+        public ObservableCollection<IMenuItem> Source { get; set; } = new ObservableCollection<IMenuItem>();
+
         public IEnumerable<IMenuItem> Items => NeedSortItems ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Name) : (IEnumerable<IMenuItem>)Source;
         public IEnumerable<IMenuItem> AllItems
         {
@@ -155,18 +156,18 @@ namespace AW.Visual.Menu
             item.Left = Left + 40;
             item.Group = this;
 
-            item.OnRemove = OnRemove;
-            item.OnRename = OnRename;
-            item.OnSelect = OnSelect;
+            item.OnRemove ??= OnRemove;
+            item.OnRename ??= OnRename;
+            item.OnSelect ??= OnSelect;
 
             if (item is IMenuGroup group)
             {
-                group.OnCreateItem = OnCreateItem;
-                group.OnCreateGroup = OnCreateGroup;
-                group.OnChangeGroup = OnChangeGroup;
+                group.OnCreateItem ??= OnCreateItem;
+                group.OnCreateGroup ??= OnCreateGroup;
+                group.OnChangeGroup ??= OnChangeGroup;
 
-                group.CreateItemHint = CreateItemHint;
-                group.CreateGroupHint = CreateGroupHint;
+                group.CreateItemHint ??= CreateItemHint;
+                group.CreateGroupHint ??= CreateGroupHint;
 
                 if (group.Items != null)
                     foreach (IMenuItem menuItem in group.Source.ToList())
