@@ -40,7 +40,7 @@
                                 <md:Card 
                                     UniformCornerRadius="4"
                                     md:ShadowAssist.ShadowDepth="Depth2"
-                                    Width="200">
+                                    MinWidth="200">
                                     <ItemsControl
                                         ItemsSource="{Binding Actions}">
                                         <ItemsControl.ItemTemplate>
