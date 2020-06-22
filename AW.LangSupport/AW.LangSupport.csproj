@@ -2,10 +2,18 @@
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
+    <Company>AkumaWalker</Company>
+    <Authors>AkumaWalker</Authors>
+    <Description>Project to create multi language application</Description>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageProjectUrl>https://github.com/AkumaWalker/AW</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
+    <PackageTags>AW;Lang;AW.LangSupport;AW.Lang;LangSupport;Translate;</PackageTags>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AW.Base" Version="2.0.0" />
+    <PackageReference Include="AW.Base" Version="2.0.1" />
   </ItemGroup>
 
 </Project>
