@@ -8,9 +8,6 @@ namespace AW.LangSupport
     [AWSerializable]
     public class LangConfig
     {
-        [AWIgnore]
-        public static LangConfig Instane { get; set; } = new LangConfig();
-
         [AWReference]
         public Lang CurrentLang { get; set; }
 
