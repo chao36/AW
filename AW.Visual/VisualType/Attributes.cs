@@ -24,11 +24,13 @@ namespace AW.Visual.VisualType
     [AttributeUsage(AttributeTargets.Property)]
     public class AWComboBoxAttribute : AWPropertyAttribute
     {
-        public string SourceName { get; set; }
-        public string UpdateSourceEventName { get; set; }
+        public string DisplayMemberPath { get; }
+        public string SourceName { get; }
+        public string UpdateSourceEventName { get; }
 
-        public AWComboBoxAttribute(int index = 0, string tag = null, string sourceName = null, string updateSourceEventName = null) : base(index, tag)
+        public AWComboBoxAttribute(int index = 0, string tag = null, string displayMemberPath, string sourceName = null, string updateSourceEventName = null) : base(index, tag)
         {
+            DisplayMemberPath = displayMemberPath;
             SourceName = sourceName;
             UpdateSourceEventName = updateSourceEventName;
         }

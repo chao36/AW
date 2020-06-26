@@ -107,7 +107,7 @@ namespace AW.Visual.VisualType
                         string tag = attribute.Tag ?? p.Name;
 
                         if (attribute is AWComboBoxAttribute comboBoxAttribute)
-                            return new ComboBoxContext(tag, null, source, p.Name, null, comboBoxAttribute.SourceName, comboBoxAttribute.UpdateSourceEventName, true);
+                            return new ComboBoxContext(tag, null, source, p.Name, comboBoxAttribute.DisplayMemberPath, comboBoxAttribute.SourceName, comboBoxAttribute.UpdateSourceEventName, true);
 
                         if (p.PropertyType == IntType)
                             return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Int, true);
