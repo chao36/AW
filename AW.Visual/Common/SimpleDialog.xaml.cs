@@ -16,7 +16,7 @@ namespace AW.Visual.Common
             {
                 Wait.Visibility = Visibility.Collapsed;
 
-                ClickHelper.LeftClick(Shadow, _ =>
+                VisualHelper.LeftClick(Shadow, _ =>
                 {
                     DialogHelper.Hide();
                 });

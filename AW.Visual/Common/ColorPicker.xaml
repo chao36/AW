@@ -1,0 +1,172 @@
+﻿<base:BaseControl
+    x:Class="AW.Visual.Common.ColorPicker"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:e="http://schemas.microsoft.com/xaml/behaviors"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    xmlns:behaviors="clr-namespace:AW.Visual.Behaviors"
+    xmlns:base="clr-namespace:AW.Visual.Common"
+    mc:Ignorable="d">
+    <StackPanel
+        x:Name="Container">
+        <StackPanel
+            Orientation="Horizontal">
+            <Canvas
+                Width="200" Height="200"
+                ClipToBounds="True">
+                <Rectangle
+                    x:Name="Colors"
+                    Width="200" Height="200">
+                    <Rectangle.Fill>
+                        <VisualBrush TileMode="None">
+                            <VisualBrush.Visual>
+                                <Canvas Background="Black" Width="1" Height="1" SnapsToDevicePixels="True">
+                                    <Rectangle Width="1" Height="1" SnapsToDevicePixels="True">
+                                        <Rectangle.Fill>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="1,0">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStop Color="White" Offset="0" />
+                                                    <GradientStop Color="{Binding HueColor}" Offset="1" />
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Rectangle.Fill>
+                                        <Rectangle.OpacityMask>
+                                            <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                                                <LinearGradientBrush.GradientStops>
+                                                    <GradientStop Color="#FFFFFFFF" Offset="0"/>
+                                                    <GradientStop Color="#00FFFFFF" Offset="1"/>
+                                                </LinearGradientBrush.GradientStops>
+                                            </LinearGradientBrush>
+                                        </Rectangle.OpacityMask>
+                                    </Rectangle>
+                                </Canvas>
+                            </VisualBrush.Visual>
+                        </VisualBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Grid
+                    DataContext="{Binding ColorsDrag}"
+                    Width="16"
+                    Height="16"
+                    Background="Transparent">
+                    <Ellipse
+                        Height="16"
+                        Width="16"
+                        StrokeThickness="4"
+                        Stroke="Black"/>
+                    <Ellipse
+                        Height="16"
+                        Width="16"
+                        StrokeThickness="2"
+                        Stroke="White"/>
+                    <e:Interaction.Behaviors>
+                        <behaviors:DragBehavior/>
+                    </e:Interaction.Behaviors>
+                </Grid>
+            </Canvas>
+            <Canvas
+                Width="20" Height="200"
+                Margin="20 0 0 0"
+                ClipToBounds="True">
+                <Rectangle
+                    x:Name="HueColors"
+                    Width="20" Height="200">
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                            <LinearGradientBrush.GradientStops>
+                                <GradientStop Color="#FF0000" Offset="0" />
+                                <GradientStop Color="#FFFF00" Offset="0.167" />
+                                <GradientStop Color="#00FF00" Offset="0.333" />
+                                <GradientStop Color="#00FFFF" Offset="0.5" />
+                                <GradientStop Color="#0000FF" Offset="0.667" />
+                                <GradientStop Color="#FF00FF" Offset="0.833" />
+                                <GradientStop Color="#FF0000" Offset="1" />
+                            </LinearGradientBrush.GradientStops>
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <Grid
+                    DataContext="{Binding HueDrag}"
+                    Width="20"
+                    Height="8"
+                    Background="Transparent">
+                    <Polygon Points="0,0 8,4 0,8" Fill="Black"/>
+                    <Polygon Points="20,0 12,4 20,8" Fill="Black"/>
+                    <e:Interaction.Behaviors>
+                        <behaviors:DragBehavior/>
+                    </e:Interaction.Behaviors>
+                </Grid>
+            </Canvas>
+            <StackPanel
+                Margin="20 0 0 0">
+                <Rectangle
+                    Margin="0 0 0 10"
+                    Width="75"
+                    Height="50"
+                    Stroke="{DynamicResource MaterialDesignDivider}">
+                    <Rectangle.Fill>
+                        <SolidColorBrush Color="{Binding CurrentColor}"/>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Width="15"
+                        Text="R"/>
+                    <TextBox
+                        x:Name="R"
+                        MaxLength="3"
+                        Height="22"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding R}"
+                        Width="25"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Width="15"
+                        Text="G"/>
+                    <TextBox
+                        x:Name="G"
+                        MaxLength="3"
+                        Height="22"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding G}"
+                        Width="25"/>
+                </StackPanel>
+                <StackPanel
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Width="15"
+                        Text="B"/>
+                    <TextBox
+                        x:Name="B"
+                        MaxLength="3"
+                        Height="22"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding B}"
+                        Width="25"/>
+                </StackPanel>
+                <StackPanel
+                    Margin="0 10 0 0"
+                    Orientation="Horizontal">
+                    <TextBlock
+                        VerticalAlignment="Center"
+                        Width="15"
+                        Text="#"/>
+                    <TextBox
+                        x:Name="Hex"
+                        MaxLength="6"
+                        Height="22"
+                        VerticalContentAlignment="Center"
+                        Text="{Binding Hex}"
+                        Width="45"/>
+                </StackPanel>
+            </StackPanel>
+        </StackPanel>
+    </StackPanel>
+</base:BaseControl>

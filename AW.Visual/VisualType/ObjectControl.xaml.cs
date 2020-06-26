@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Windows;
 using System.Windows.Controls;
+using System.Windows.Media;
 
 using AW.Base.Serializer.Common;
 
@@ -28,7 +29,7 @@ namespace AW.Visual.VisualType
             }
             else
             {
-                ClickHelper.LeftDown(ItemContainer, _ =>
+                VisualHelper.LeftDown(ItemContainer, _ =>
                 {
                     IsOpen = !IsOpen;
 
@@ -85,6 +86,7 @@ namespace AW.Visual.VisualType
         private static readonly Type StringType = typeof(string);
         private static readonly Type BoolType = typeof(bool);
         private static readonly Type DateTimeType = typeof(DateTime);
+        private static readonly Type ColorType = typeof(Color);
         private static readonly Type EnumerableType = typeof(IList);
 
         private void SetProperties(object source)
@@ -101,31 +103,40 @@ namespace AW.Visual.VisualType
                     .OrderBy(p => p.GetCustomAttribute<AWPropertyAttribute>()?.Index ?? 0)
                     .Select(p =>
                     {
+                        AWPropertyAttribute attribute = p.GetCustomAttribute<AWPropertyAttribute>();
+                        string tag = attribute.Tag ?? p.Name;
+
+                        if (attribute is AWComboBoxAttribute comboBoxAttribute)
+                            return new ComboBoxContext(tag, null, source, p.Name, null, comboBoxAttribute.SourceName, comboBoxAttribute.UpdateSourceEventName, true);
+
                         if (p.PropertyType == IntType)
-                            return new TextBoxContext(p.Name, null, source, p.Name, TextBoxType.Int, true);
+                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Int, true);
 
                         if (p.PropertyType == DoubleType)
-                            return new TextBoxContext(p.Name, null, source, p.Name, TextBoxType.Double, true);
+                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Double, true);
 
                         if (p.PropertyType == StringType)
-                            return p.GetCustomAttribute<AWReadonlyAttribute>() != null
-                                ? new LabelContext(p.Name, source, p.Name)
-                                : (IVisualTypeContext)new TextBoxContext(p.Name, null, source, p.Name, TextBoxType.String, true);
+                            return attribute is AWReadonlyAttribute
+                                ? (IVisualTypeContext)new LabelContext(tag, source, p.Name)
+                                : new TextBoxContext(tag, null, source, p.Name, TextBoxType.String, true);
 
                         if (p.PropertyType == BoolType)
-                            return new CheckBoxContext(p.Name, source, p.Name, true);
+                            return new CheckBoxContext(tag, source, p.Name, true);
 
                         if (p.PropertyType == DateTimeType)
-                            return new DateContext(p.Name, null, source, p.Name, true);
+                            return new DateContext(tag, null, source, p.Name, true);
+
+                        if (p.PropertyType == ColorType)
+                            return new ColorPickerContext(tag, source, p.Name, true);
 
                         if (p.PropertyType.IsEnum)
-                            return new ComboBoxContext(p.Name, null, source, p.Name, null, Enum.GetNames(p.PropertyType), true);
+                            return new EnumComboBoxContext(tag, null, source, p.Name, Enum.GetNames(p.PropertyType), true);
 
                         if (p.PropertyType.GetInterfaces().Any(t => t == EnumerableType))
-                            return new CollectionContext(p.Name, source, p.Name, Left + 25);
+                            return new CollectionContext(tag, source, p.Name, Left + 25);
 
                         if (p.PropertyType.IsClass)
-                            return new ObjectContext(p.Name, source, p.Name, Left + 25);
+                            return new ObjectContext(tag, source, p.Name, Left + 25);
 
                         return null;
                     })

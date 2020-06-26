@@ -41,19 +41,132 @@ namespace AW.Visual
             return DColor.FromArgb(argbarray[0], argbarray[1], argbarray[2], argbarray[3]);
         }
 
-        public static SolidColorBrush ToBrush(this DColor color)
-           => new SolidColorBrush(color.ToMediaColor());
-
         public static SolidColorBrush BrushAlpha(this SolidColorBrush brush, byte alpha)
             => new SolidColorBrush(MColor.FromArgb(alpha, brush.Color.R, brush.Color.G, brush.Color.B));
+        public static SolidColorBrush ToBrush(this DColor color)
+           => new SolidColorBrush(color.ToMediaColor());
+        public static SolidColorBrush ToBrush(this MColor color)
+           => new SolidColorBrush(color);
 
-        public static MColor ToMediaColor(this DColor color)
-            => MColor.FromArgb(color.A, color.R, color.G, color.B);
+        public static MColor ToMediaColor(this DColor color, byte? alpha = null)
+            => MColor.FromArgb(alpha ?? color.A, color.R, color.G, color.B);
+        public static DColor ToDrawColor(this MColor color, byte? alpha = null)
+            => DColor.FromArgb(alpha ?? color.A, color.R, color.G, color.B);
 
-        public static DColor ToDrawColor(this MColor color)
-            => DColor.FromArgb(color.A, color.R, color.G, color.B);
+        public static MColor MediaColorFromHSB(double H, double S, double B, byte? alpha = null)
+        {
+            if (H < 0)
+                H += 360;
+            else if (H >= 360)
+                H -= 360;
 
-        public static MColor ToMediaColor(this DColor color, byte a)
-            => MColor.FromArgb(a, color.R, color.G, color.B);
+            double r, g, b;
+
+            if (B <= 0)
+                r = g = b = 0;
+            else if (S <= 0)
+                r = g = b = B;
+            else
+            {
+                double hf = H / 60.0;
+                int i = (int)Math.Floor(hf);
+                double f = hf - i;
+
+                double pv = B * (1.0 - S);
+                double qv = B * (1.0 - S * f);
+                double tv = B * (1.0 - S * (1.0 - f));
+
+                switch (i)
+                {
+                    case 0:
+                        r = B;
+                        g = tv;
+                        b = pv;
+                        break;
+                    case 1:
+                        r = qv;
+                        g = B;
+                        b = pv;
+                        break;
+                    case 2:
+                        r = pv;
+                        g = B;
+                        b = tv;
+                        break;
+                    case 3:
+                        r = pv;
+                        g = qv;
+                        b = B;
+                        break;
+                    case 4:
+                        r = tv;
+                        g = pv;
+                        b = B;
+                        break;
+                    case 5:
+                        r = B;
+                        g = pv;
+                        b = qv;
+                        break;
+                    case 6:
+                        r = B;
+                        g = tv;
+                        b = pv;
+                        break;
+                    case -1:
+                        r = B;
+                        g = pv;
+                        b = qv;
+                        break;
+                    default:
+                        r = g = b = B;
+                        break;
+                }
+            }
+
+            return MColor.FromArgb(alpha ?? 255, Clamp((int)(r * 255)), Clamp((int)(g * 255)), Clamp((int)(b * 255)));
+        }
+
+        public static void ToHSB(this MColor color, out double H, out double S, out double B)
+        {
+            double r = color.R / 255.0;
+            double g = color.G / 255.0;
+            double b = color.B / 255.0;
+
+            double cmax = Math.Max(r, Math.Max(g, b));
+            double cmin = Math.Min(r, Math.Min(g, b)); 
+            double diff = cmax - cmin;
+
+            H = 0;
+            B = cmax * 100;
+
+            if (cmax == r)
+                H = (60 * ((g - b) / diff) + 360) % 360;
+            else if (cmax == g)
+                H = (60 * ((b - r) / diff) + 120) % 360;
+            else if (cmax == b)
+                H = (60 * ((r - g) / diff) + 240) % 360;
+
+            if (cmax == 0)
+                S = 0;
+            else
+                S = (diff / cmax) * 100;
+
+            S /= 100;
+            B /= 100;
+
+            if (double.IsNaN(H))
+                H = 0;
+        }
+
+        private static byte Clamp(int i)
+        {
+            if (i < 0) 
+                return 0;
+            if (i > 255) 
+                return 255;
+
+            return (byte)i;
+        }
     }
 }

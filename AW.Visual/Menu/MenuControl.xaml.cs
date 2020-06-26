@@ -37,7 +37,7 @@ namespace AW.Visual.Menu
                     Group.Visibility = Visibility.Visible;
                     UpdateGroup(group.IsOpen);
 
-                    ClickHelper.LeftDown(ItemContainer, _ =>
+                    VisualHelper.LeftDown(ItemContainer, _ =>
                     {
                         group.IsOpen = !group.IsOpen;
 
@@ -100,7 +100,7 @@ namespace AW.Visual.Menu
                 }
                 else if (item is IMenuItem menuItem)
                 {
-                    ClickHelper.LeftDown(ItemContainer, _ =>
+                    VisualHelper.LeftDown(ItemContainer, _ =>
                     {
                         if (menuItem.OnSelect?.Invoke(menuItem) == true)
                             menuItem.IsSelect = true;

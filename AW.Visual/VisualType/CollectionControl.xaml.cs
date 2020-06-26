@@ -22,7 +22,7 @@ namespace AW.Visual.VisualType
         {
             InitializeComponent();
 
-            ClickHelper.LeftDown(ItemContainer, _ =>
+            VisualHelper.LeftDown(ItemContainer, _ =>
             {
                 IsOpen = !IsOpen;
 

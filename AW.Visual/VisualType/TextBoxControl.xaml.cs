@@ -1,9 +1,5 @@
-﻿using System;
-using System.Windows;
+﻿using System.Windows;
 using System.Windows.Controls;
-using System.Windows.Data;
-using System.Windows.Input;
-using System.Windows.Media;
 
 namespace AW.Visual.VisualType
 {
@@ -17,53 +13,9 @@ namespace AW.Visual.VisualType
                 TagLabel.Visibility = Visibility.Collapsed;
 
             if (textBoxType != TextBoxType.String)
-            {
-                Func<string, bool> canChange = textBoxType == TextBoxType.Double
-                    ? (Func<string, bool>)(v => !double.TryParse(v, out double _))
-                    : (v => !int.TryParse(v, out int _));
+                VisualHelper.LimitInput(Element, textBoxType == TextBoxType.Double ? LimitType.Double : LimitType.Int);
 
-                Element.PreviewTextInput += (s, e) =>
-                {
-                    e.Handled = !string.IsNullOrWhiteSpace(e.Text)
-                        && (e.Text != "-" || Element.CaretIndex != 0)
-                        && canChange(Element.Text.Insert(Element.CaretIndex, e.Text));
-                };
-                DataObject.AddPastingHandler(Element, (s, e) =>
-                {
-                    if (e.DataObject.GetDataPresent(typeof(string)))
-                    {
-                        string text = (string)e.DataObject.GetData(typeof(string));
-
-                        if (canChange(Element.Text.Insert(Element.CaretIndex, text)))
-                            e.CancelCommand();
-                    }
-                    else
-                        e.CancelCommand();
-                });
-            }
-
-            Element.PreviewKeyUp += (s, e) =>
-            {
-                if (e.Key == Key.Return)
-                {
-                    DependencyObject ancestor = Element.Parent;
-                    while (ancestor != null)
-                    {
-                        if (ancestor is UIElement element && element.Focusable)
-                        {
-                            element.Focus();
-                            break;
-                        }
-
-                        ancestor = VisualTreeHelper.GetParent(ancestor);
-                    }
-                    Keyboard.ClearFocus();
-
-                    BindingExpression be = Element.GetBindingExpression(TextBox.TextProperty);
-                    if (be != null)
-                        be.UpdateSource();
-                }
-            };
+            VisualHelper.ExitOnEnter(Element);
         }
     }
 

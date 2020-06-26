@@ -32,7 +32,7 @@ namespace AW.Visual.Common
             Grid.SetColumn(card, 1);
             Grid.SetRow(card, 1);
 
-            ClickHelper.LeftClick(Shadow, _ =>
+            VisualHelper.LeftClick(Shadow, _ =>
             {
                 Container.Children.Remove(view);
                 DialogHelper.Hide();

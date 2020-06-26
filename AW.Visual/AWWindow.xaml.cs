@@ -97,6 +97,8 @@ namespace AW.Visual
         public static string NewNameTitle { get; set; } = "New name";
         public static string AddTitle { get; set; } = "Add";
         public static string RemoveTitle { get; set; } = "Remove";
+        public static string OkTitle { get; set; } = "Ok";
+        public static string CancelTitle { get; set; } = "Cancel";
 
     }
 }
