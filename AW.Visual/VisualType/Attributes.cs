@@ -28,7 +28,7 @@ namespace AW.Visual.VisualType
         public string SourceName { get; }
         public string UpdateSourceEventName { get; }
 
-        public AWComboBoxAttribute(int index = 0, string tag = null, string displayMemberPath, string sourceName = null, string updateSourceEventName = null) : base(index, tag)
+        public AWComboBoxAttribute(int index = 0, string tag = null, string displayMemberPath = null, string sourceName = null, string updateSourceEventName = null) : base(index, tag)
         {
             DisplayMemberPath = displayMemberPath;
             SourceName = sourceName;
