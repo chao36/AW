@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace AW.Visual.VisualType
+namespace AW.Base
 {
     [AttributeUsage(AttributeTargets.Property)]
     public class AWPropertyAttribute : Attribute
@@ -36,4 +36,3 @@ namespace AW.Visual.VisualType
         }
     }
 }
-  
