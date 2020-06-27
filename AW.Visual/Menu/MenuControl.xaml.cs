@@ -141,7 +141,7 @@ namespace AW.Visual.Menu
                     if (item.ViewRemove)
                         actions.Add(new ActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
                         {
-                            if (item.CanRemove?.Invoke(item))
+                            if (item.CanRemove?.Invoke(item) == true)
                                 item.Group?.RemoveItem(item);
                         }, iconColor: ColorHelper.RedSet.Color500.ToBrush()));
                 }
