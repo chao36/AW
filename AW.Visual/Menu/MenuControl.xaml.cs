@@ -101,7 +101,7 @@ namespace AW.Visual.Menu
                 {
                     VisualHelper.LeftDown(ItemContainer, _ =>
                     {
-                        if (menuItem.OnSelect?.Invoke(menuItem) == true)
+                        if (menuItem.CanSelect?.Invoke(menuItem) == true)
                             menuItem.IsSelect = true;
 
                         if (menuItem.CanChangeGroup)
@@ -141,8 +141,8 @@ namespace AW.Visual.Menu
                     if (item.ViewRemove)
                         actions.Add(new ActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
                         {
-                            item.OnRemove?.Invoke(item);
-                            item.Group?.RemoveItem(item);
+                            if (item.CanRemove?.Invoke(item))
+                                item.Group?.RemoveItem(item);
                         }, iconColor: ColorHelper.RedSet.Color500.ToBrush()));
                 }
 
@@ -158,7 +158,7 @@ namespace AW.Visual.Menu
         {
             IMenuItem menuItem = (IMenuItem)de.Data.GetData(typeof(MenuItemContext)) ?? (IMenuItem)de.Data.GetData(typeof(MenuGroupItemContext));
 
-            if (menuItem != null && DataContext is IMenuGroup group && group.OnChangeGroup?.Invoke(menuItem, group) == true)
+            if (menuItem != null && DataContext is IMenuGroup group && group.CanItemChangeGroup?.Invoke(menuItem, group) == true)
             {
                 menuItem.Group.RemoveItem(menuItem);
                 group.AddItem(menuItem);
@@ -211,7 +211,7 @@ namespace AW.Visual.Menu
                 ? (menuItem as IMenuGroup).OnCreateItem?.Invoke(menuItem as IMenuGroup, Edit.Text) == true
                 : IsCreateGroup
                     ? (menuItem as IMenuGroup).OnCreateGroup?.Invoke(menuItem as IMenuGroup, Edit.Text) == true
-                    : Edit.Text == menuItem.Name || menuItem.OnRename?.Invoke(menuItem, Edit.Text) == true;
+                    : Edit.Text == menuItem.Name || menuItem.CanRename?.Invoke(menuItem, Edit.Text) == true;
 
             if (con)
             {

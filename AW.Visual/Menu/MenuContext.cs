@@ -12,9 +12,9 @@ namespace AW.Visual.Menu
 {
     public interface IMenuItem
     {
-        Func<IMenuItem, bool> OnSelect { get; set; }
-        Func<IMenuItem, bool> OnRemove { get; set; }
-        Func<IMenuItem, string, bool> OnRename { get; set; }
+        Func<IMenuItem, bool> CanSelect { get; set; }
+        Func<IMenuItem, bool> CanRemove { get; set; }
+        Func<IMenuItem, string, bool> CanRename { get; set; }
 
         IMenuGroup Group { get; set; }
 
@@ -40,7 +40,7 @@ namespace AW.Visual.Menu
     {
         Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
         Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
-        Func<IMenuItem, IMenuGroup, bool> OnChangeGroup { get; set; }
+        Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
 
         bool IsOpen { get; set; }
 
@@ -67,11 +67,11 @@ namespace AW.Visual.Menu
         public IMenuGroup Group { get; set; }
 
         [AWIgnore]
-        public Func<IMenuItem, bool> OnSelect { get; set; }
+        public Func<IMenuItem, bool> CanSelect { get; set; }
         [AWIgnore]
-        public Func<IMenuItem, bool> OnRemove { get; set; }
+        public Func<IMenuItem, bool> CanRemove { get; set; }
         [AWIgnore]
-        public Func<IMenuItem, string, bool> OnRename { get; set; }
+        public Func<IMenuItem, string, bool> CanRename { get; set; }
 
         public int Left { get; set; }
 
@@ -126,7 +126,7 @@ namespace AW.Visual.Menu
         [AWIgnore]
         public Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
         [AWIgnore]
-        public Func<IMenuItem, IMenuGroup, bool> OnChangeGroup { get; set; }
+        public Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
 
         public bool IsOpen { get; set; }
         [AWIgnore]
@@ -174,15 +174,15 @@ namespace AW.Visual.Menu
             item.Left = Left + 40;
             item.Group = this;
 
-            item.OnRemove ??= OnRemove;
-            item.OnRename ??= OnRename;
-            item.OnSelect ??= OnSelect;
+            item.CanRemove ??= CanRemove;
+            item.CanRename ??= CanRename;
+            item.CanSelect ??= CanSelect;
 
             if (item is IMenuGroup group)
             {
                 group.OnCreateItem ??= OnCreateItem;
                 group.OnCreateGroup ??= OnCreateGroup;
-                group.OnChangeGroup ??= OnChangeGroup;
+                group.CanItemChangeGroup ??= CanItemChangeGroup;
 
                 group.CreateItemHint ??= CreateItemHint;
                 group.CreateGroupHint ??= CreateGroupHint;
@@ -208,7 +208,7 @@ namespace AW.Visual.Menu
         public void Clear()
         {
             foreach (IMenuItem item in Source.ToList())
-                item?.OnRemove?.Invoke(item);
+                item?.CanRemove?.Invoke(item);
 
             Source.Clear();
             Notify(nameof(Items));
