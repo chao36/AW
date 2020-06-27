@@ -1,6 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
+using System.Linq;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Data;
@@ -41,11 +43,19 @@ namespace AW.Visual
             return new Bitmap(stream);
         }
 
-        public static void LimitInput(TextBox textBox, LimitType limit)
+        public static void LimitInput(TextBox textBox, LimitType limit, IEnumerable<string> allowedStrings = null)
         {
-            textBox.Tag = limit == LimitType.Double
+            List<Func<string, bool>> tag = new List<Func<string, bool>>();
+
+            if (allowedStrings?.Count() > 0)
+                tag.Add(v => allowedStrings.Contains(v));
+
+            tag.Add(limit == LimitType.Double
                 ? (Func<string, bool>)(v => !double.TryParse(v, out double _))
-                : (v => !int.TryParse(v, out int _)); ;
+                : (v => !int.TryParse(v, out int _))
+            );
+
+            textBox.Tag = tag;
 
             textBox.PreviewTextInput -= TextBoxPreviewTextInput;
             textBox.PreviewTextInput += TextBoxPreviewTextInput;
@@ -56,10 +66,10 @@ namespace AW.Visual
 
         private static void TextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
         {
-            if (sender is TextBox textBox && textBox.Tag is Func<string, bool> canChange)
+            if (sender is TextBox textBox && textBox.Tag is List<Func<string, bool>> canChanges)
                 e.Handled = !string.IsNullOrWhiteSpace(e.Text)
                     && (e.Text != "-" || textBox.CaretIndex != 0)
-                    && canChange(textBox.Text.Insert(textBox.CaretIndex, e.Text));
+                    && canChanges.Any(c => c(textBox.Text.Insert(textBox.CaretIndex, e.Text)));
         }
 
         private static void TextBoxPastingHandler(object sender, DataObjectPastingEventArgs e)

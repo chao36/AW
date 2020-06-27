@@ -11,9 +11,10 @@
     <PackageTags>AW;Base;AW.Base;Logger;Serializer;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/AkumaWalker/AW</PackageProjectUrl>
-    <Version>2.0.2</Version>
+    <Version>2.1.0</Version>
     <Copyright />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <AssemblyVersion>2.0.3.0</AssemblyVersion>
   </PropertyGroup>
 
 </Project>

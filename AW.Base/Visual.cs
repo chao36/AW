@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace AW.Base
 {
@@ -13,6 +14,25 @@ namespace AW.Base
             Index = index;
             Tag = tag;
         }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class AWNumberAttribute : AWPropertyAttribute
+    {
+        public IEnumerable<string> AllowedStrings { get; }
+
+        public AWNumberAttribute(int index = 0, string tag = null, IEnumerable<string> allowedStrings = null) : base(index, tag)
+            => AllowedStrings = allowedStrings;
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class AWStringAttribute : AWNumberAttribute
+    {
+        public int MaxLength { get; }
+
+        public AWStringAttribute(int index = 0, string tag = null, int maxLength = 0, IEnumerable<string> allowedStrings = null)
+            : base(index, tag, allowedStrings) 
+            => MaxLength = maxLength;
     }
 
     [AttributeUsage(AttributeTargets.Property)]

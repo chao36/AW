@@ -111,15 +111,15 @@ namespace AW.Visual.VisualType
                             return new ComboBoxContext(tag, null, source, p.Name, comboBoxAttribute.DisplayMemberPath, comboBoxAttribute.SourceName, comboBoxAttribute.UpdateSourceEventName, true);
 
                         if (p.PropertyType == IntType)
-                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Int, true);
+                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Int, attribute, true);
 
                         if (p.PropertyType == DoubleType)
-                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Double, true);
+                            return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Double, attribute, true);
 
                         if (p.PropertyType == StringType)
                             return attribute is AWReadonlyAttribute
                                 ? (IVisualTypeContext)new LabelContext(tag, source, p.Name)
-                                : new TextBoxContext(tag, null, source, p.Name, TextBoxType.String, true);
+                                : new TextBoxContext(tag, null, source, p.Name, TextBoxType.String, attribute, true);
 
                         if (p.PropertyType == BoolType)
                             return new CheckBoxContext(tag, source, p.Name, true);
