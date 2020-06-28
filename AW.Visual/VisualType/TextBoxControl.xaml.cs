@@ -14,11 +14,11 @@ namespace AW.Visual.VisualType
             if (hideTag)
                 TagLabel.Visibility = Visibility.Collapsed;
 
-            if (attribute is AWStringAttribute stringAttribute && stringAttribute.MaxLength > 0)
-                Element.MaxLength = stringAttribute.MaxLength;
+            if (attribute is AWLimitAttribute limitAttribute && limitAttribute.MaxLength > 0)
+                Element.MaxLength = limitAttribute.MaxLength;
 
             if (textBoxType != TextBoxType.String)
-                VisualHelper.LimitInput(Element, textBoxType == TextBoxType.Double ? LimitType.Double : LimitType.Int, (attribute as AWNumberAttribute)?.AllowedStrings);
+                VisualHelper.LimitInput(Element, textBoxType == TextBoxType.Double ? LimitType.Double : LimitType.Int, (attribute as AWLimitAttribute)?.AllowedStrings);
 
             VisualHelper.ExitOnEnter(Element);
         }

@@ -1,4 +1,7 @@
 ﻿using System;
+using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -16,6 +19,7 @@ namespace AW.Visual.Common
 
         public Brush ForegroundColor { get; }
         public Brush IconColor { get; }
+        public bool UseForegroundColorForIcon { get;}
 
         public ICommand Command { get; }
     }
@@ -28,18 +32,35 @@ namespace AW.Visual.Common
         {
             if (DataContext is ActionContext context)
             {
-                if (context.IconColor != null)
-                    Icon.Foreground = context.IconColor;
+                if (context.Icon == null)
+                    Icon.Visibility = Visibility.Hidden;
 
                 if (context.ForegroundColor != null)
                     Title.Foreground = context.ForegroundColor;
+
+                if (context.IconColor != null)
+                    Icon.Foreground = context.IconColor;
+                else if (context.UseForegroundColorForIcon)
+                {
+                    Binding binding = new Binding(nameof(Foreground))
+                    {
+                        Source = Title,
+                    };
+                    Icon.SetBinding(ForegroundProperty, binding);
+                }
             }
         }
     }
 
     public class ActionContext : IAction
     {
-        public ActionContext(string title, PackIconKind? icon, Action action, Func<bool> canAction = null, double fontSize = 15, double iconSize = 22, Brush foregroundColor = null, Brush iconColor = null)
+        public ActionContext(
+            string title, PackIconKind? icon, 
+            Action action, Func<bool> canAction = null, 
+            double fontSize = 15, double iconSize = 22, 
+            Brush foregroundColor = null, Brush iconColor = null,
+            bool useForegroundColorForIcon = false
+        )
         {
             Title = title;
             Icon = icon;
@@ -49,6 +70,8 @@ namespace AW.Visual.Common
 
             ForegroundColor = foregroundColor;
             IconColor = iconColor;
+
+            UseForegroundColorForIcon = useForegroundColorForIcon;
 
             Command = new SimpleCommand(action, canAction);
         }
@@ -61,6 +84,7 @@ namespace AW.Visual.Common
 
         public Brush ForegroundColor { get; }
         public Brush IconColor { get; }
+        public bool UseForegroundColorForIcon { get; }
 
         public ICommand Command { get; }
     }
