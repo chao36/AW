@@ -56,6 +56,7 @@
                             Padding="0"
                             Margin="0">
                             <md:PackIcon
+                                Foreground="{DynamicResource MaterialDesignBody}"
                                 Kind="WindowMinimize"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
@@ -76,6 +77,7 @@
                             Padding="0"
                             Margin="0">
                             <md:PackIcon
+                                Foreground="{DynamicResource MaterialDesignBody}"
                                 x:Name="RestoreIcon"
                                 Kind="WindowRestore"
                                 VerticalAlignment="Center"
@@ -97,6 +99,7 @@
                             Padding="0"
                             Margin="0">
                             <md:PackIcon
+                                Foreground="{DynamicResource MaterialDesignBody}"
                                 Kind="WindowClose"
                                 VerticalAlignment="Center"
                                 HorizontalAlignment="Center"
