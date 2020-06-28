@@ -17,22 +17,17 @@ namespace AW.Base
     }
 
     [AttributeUsage(AttributeTargets.Property)]
-    public class AWNumberAttribute : AWPropertyAttribute
-    {
-        public IEnumerable<string> AllowedStrings { get; }
-
-        public AWNumberAttribute(int index = 0, string tag = null, IEnumerable<string> allowedStrings = null) : base(index, tag)
-            => AllowedStrings = allowedStrings;
-    }
-
-    [AttributeUsage(AttributeTargets.Property)]
-    public class AWStringAttribute : AWNumberAttribute
+    public class AWLimitAttribute : AWPropertyAttribute
     {
         public int MaxLength { get; }
+        public IEnumerable<string> AllowedStrings { get; }
 
-        public AWStringAttribute(int index = 0, string tag = null, int maxLength = 0, IEnumerable<string> allowedStrings = null)
-            : base(index, tag, allowedStrings) 
-            => MaxLength = maxLength;
+        public AWLimitAttribute(int index = 0, string tag = null, int maxLength = 0, IEnumerable<string> allowedStrings = null)
+            : base(index, tag)
+        {
+            MaxLength = maxLength;
+            AllowedStrings = allowedStrings;
+        }
     }
 
     [AttributeUsage(AttributeTargets.Property)]
