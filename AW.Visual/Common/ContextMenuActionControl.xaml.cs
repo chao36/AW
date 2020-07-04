@@ -26,8 +26,10 @@ namespace AW.Visual.Common
 
     public interface IContextMenuAction : IActionContext
     {
-        UIElement Elemnt { get; set; }
+        UIElement Element { get; set; }
         IContextMenuAction Parent { get; set; }
+
+        bool IconCollapse { get; set; }
 
         bool IsOpen { get; set; }
 
@@ -72,7 +74,10 @@ namespace AW.Visual.Common
                     }
                 }
 
-                context.Elemnt = this;
+                if (context.IconCollapse)
+                    Element.IconVisibility = Visibility.Collapsed;
+
+                context.Element = this;
 
                 MouseEnter += (s, e) => context.IsSelect = true;
                 MouseLeave += (s, e) => Task.Run(async () =>
@@ -109,8 +114,10 @@ namespace AW.Visual.Common
         public ContextMenuActionContext(string header, PackIconKind? icon, IEnumerable<IContextMenuAction> actions = null) 
             : this(header, icon, action: null, actions) { }
 
-        public UIElement Elemnt { get; set; }
+        public UIElement Element { get; set; }
         public IContextMenuAction Parent { get; set; }
+
+        public bool IconCollapse { get; set; }
 
         public bool IsOpen
         {
@@ -130,7 +137,7 @@ namespace AW.Visual.Common
 
         public void UpdateState()
         {
-            if (!Elemnt.IsMouseOver && Actions?.Any(i => i.IsSelect || i.IsOpen) == false)
+            if (!Element.IsMouseOver && Actions?.Any(i => i.IsSelect || i.IsOpen) == false)
             {
                 IsOpen = false;
                 IsSelect = false;
