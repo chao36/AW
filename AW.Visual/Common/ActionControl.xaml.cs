@@ -124,9 +124,9 @@ namespace AW.Visual.Common
         private static void HideHeaderPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
             => ((ActionControl)d).HideHeaderPropertyChanged((bool)e.NewValue);
 
-        private void IconVisibilityPropertyChanged(bool hide) => Icon.Visibility = hide ? Visibility.Collapsed : Visibility.Visible;
+        private void IconVisibilityPropertyChanged(Visibility visibility) => Icon.Visibility = visibility;
         private static void IconVisibilityPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e) 
-            => ((ActionControl)d).IconVisibilityPropertyChanged((bool)e.NewValue);
+            => ((ActionControl)d).IconVisibilityPropertyChanged((Visibility)e.NewValue);
 
         private void ContentMarginPropertyChanged(Thickness value) => Container.Margin = value;
         private static void ContentMarginPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
@@ -146,7 +146,7 @@ namespace AW.Visual.Common
         {
             if (DataContext is IActionContext context)
             {
-                if (context.Icon == null)
+                if (context.Icon == null && Icon.Visibility == Visibility.Visible)
                     Icon.Visibility = Visibility.Hidden;
 
                 if (context.IconColor != null)
