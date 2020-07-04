@@ -81,12 +81,12 @@ namespace AW.Visual.Common
             double S = x / 200;
             double B = (100 - y / 2) / 100;
 
-            Context.CurrentColor = ColorHelper.MediaColorFromHSB(H, S, B);
+            Context.CurrentColor = ColorHelper.FromHSB(H, S, B);
         }
 
         private void HueColorsUpdate(double x, double y)
         {
-            Context.HueColor = ColorHelper.MediaColorFromHSB(1.8 * y, 1, 1);
+            Context.HueColor = ColorHelper.FromHSB(1.8 * y, 1, 1);
             ColorsUpdate(Context.ColorsDrag.X, Context.ColorsDrag.Y);
         }
     }
@@ -188,7 +188,7 @@ namespace AW.Visual.Common
         public void UpdatePointPosition()
         {
             CurrentColor.ToHSB(out double H, out double S, out double B);
-            HueColor = ColorHelper.MediaColorFromHSB(H, 1, 1);
+            HueColor = ColorHelper.FromHSB(H, 1, 1);
             Notify(nameof(HueColor));
 
             HueDrag.Y = H / 1.8;

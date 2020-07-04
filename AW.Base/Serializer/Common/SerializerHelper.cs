@@ -11,10 +11,13 @@ namespace AW.Base.Serializer.Common
 {
     public static class SerializerHelper
     {
+        internal static ILogger Logger { get; }
+
         static SerializerHelper()
         {
-            Assembly mainAsm = Assembly.GetEntryAssembly();
+            Logger = new Logger("Serializer", "serializer.log");
 
+            Assembly mainAsm = Assembly.GetEntryAssembly();
             foreach (AssemblyName refAsmName in mainAsm.GetReferencedAssemblies())
             {
                 try
@@ -23,7 +26,7 @@ namespace AW.Base.Serializer.Common
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, refAsmName.FullName, "SerializerHelper.Load");
+                    Logger.Log(ex, $"Assembly: {refAsmName.FullName}");
                 }
             }
 
@@ -36,12 +39,12 @@ namespace AW.Base.Serializer.Common
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, $"[path: {path}]", "SerializerHelper.Load");
+                    Logger.Log(ex, $"File: {path}");
                 }
             }
         }
 
-        public static void SaveText(string data, string path = "__data")
+        public static void SaveText(string data, string path)
         {
             try
             {
@@ -60,7 +63,7 @@ namespace AW.Base.Serializer.Common
             }
         }
 
-        public static string LoadText(string path = "__data")
+        public static string LoadText(string path)
         {
             try
             {
@@ -77,7 +80,7 @@ namespace AW.Base.Serializer.Common
             return default;
         }
 
-        public static void SaveByte(string stringBit, string path = "__data")
+        public static void SaveByte(string stringBit, string path)
         {
             try
             {
@@ -103,7 +106,7 @@ namespace AW.Base.Serializer.Common
             }
         }
 
-        public static string LoadByte(string path = "__data")
+        public static string LoadByte(string path)
         {
             try
             {

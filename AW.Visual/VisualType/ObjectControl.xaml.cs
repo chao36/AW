@@ -38,6 +38,7 @@ namespace AW.Visual.VisualType
                 });
 
                 SubItemContainer.Margin = new Thickness(left, 0, 0, 0);
+                Separator.Margin = new Thickness(0, 4, 0, 2);
             }
         }
 
@@ -133,11 +134,11 @@ namespace AW.Visual.VisualType
                         if (p.PropertyType.IsEnum)
                             return new EnumComboBoxContext(tag, null, source, p.Name, Enum.GetNames(p.PropertyType), true);
 
-                        if (p.PropertyType.GetInterfaces().Any(t => t == EnumerableType))
-                            return new CollectionContext(tag, source, p.Name, Left + 25);
+                        if (p.PropertyType.GetInterfaces().Any(t => t == EnumerableType) && p.PropertyType.GenericTypeArguments[0].IsClass && p.PropertyType.GenericTypeArguments[0] != StringType)
+                            return new CollectionContext(tag, source, p.Name, Left + 15);
 
                         if (p.PropertyType.IsClass)
-                            return new ObjectContext(tag, source, p.Name, Left + 25);
+                            return new ObjectContext(tag, source, p.Name, Left + 15);
 
                         return null;
                     })

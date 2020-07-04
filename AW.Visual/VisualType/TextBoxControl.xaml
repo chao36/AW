@@ -13,8 +13,9 @@
             Content="{Binding Tag}"/>
         <TextBox
             x:Name="Element"
-            Margin="2 0 0 0"
+            Style="{StaticResource AWTextBox}"
             md:HintAssist.Hint="{Binding Placeholder}"
-            Text="{Binding Value}"/>
+            Text="{Binding Value}"
+            Margin="2 0 0 0"/>
     </StackPanel>
 </UserControl>

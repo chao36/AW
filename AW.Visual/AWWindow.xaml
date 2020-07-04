@@ -9,15 +9,15 @@
     mc:Ignorable="d"
     WindowStyle="None"
     AllowsTransparency="True"
-    Background="{DynamicResource MaterialDesignToolBarBackground}"
+    Background="{DynamicResource MaterialDesignBackground}"
     Foreground="{DynamicResource MaterialDesignBody}"
     FontFamily="{DynamicResource MaterialDesignFont}">
     <WindowChrome.WindowChrome>
         <WindowChrome CaptionHeight="32" ResizeBorderThickness="{x:Static SystemParameters.WindowResizeBorderThickness}" />
     </WindowChrome.WindowChrome>
     <Border
-        BorderThickness="1"
-        BorderBrush="{DynamicResource PrimaryHueMidBrush}">
+        BorderBrush="{DynamicResource PrimaryHueMidBrush}"
+        BorderThickness="1">
         <Grid
             x:Name="Container">
             <Grid.RowDefinitions>

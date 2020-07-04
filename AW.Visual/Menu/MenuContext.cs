@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using System.Linq;
 
 using AW.Base.Serializer.Common;
@@ -10,25 +9,19 @@ using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual.Menu
 {
-    public interface IMenuItem
+    public interface IMenuItem : IActionContext
     {
-        Func<IMenuItem, bool> CanSelect { get; set; }
         Func<IMenuItem, bool> CanRemove { get; set; }
         Func<IMenuItem, string, bool> CanRename { get; set; }
 
-        IMenuGroup Group { get; set; }
-
         int Left { get; set; }
-        bool IsSelect { get; set; }
+        IMenuGroup Group { get; set; }
 
         bool ViewRemove { get; }
         bool ViewRename { get; }
         bool CanChangeGroup { get; }
 
-        IEnumerable<IAction> Actions { get; set; }
-
-        string Name { get; set; }
-        PackIconKind Icon { get; }
+        List<IContextMenuAction> Actions { get; set; }
 
         object Content { get; set; }
         object Context { get; set; }
@@ -36,107 +29,95 @@ namespace AW.Visual.Menu
         IEnumerable<string> Names { get; }
     }
 
+    public class MenuItemContext : ActionContext, IMenuItem
+    {
+        private List<IContextMenuAction> actions;
+
+        public MenuItemContext(string header, PackIconKind? icon) : base(header, icon) { }
+        public MenuItemContext(string header, PackIconKind? icon, Action<IMenuItem> action) : this(header, icon)
+        {
+            Command = new SimpleCommand(() => action?.Invoke(this));
+        }
+
+        public Func<IMenuItem, bool> CanRemove { get; set; }
+        public Func<IMenuItem, string, bool> CanRename { get; set; }
+
+        public int Left { get; set; }
+        public IMenuGroup Group { get; set; }
+
+        public bool ViewRemove { get; set; } = true;
+        public bool ViewRename { get; set; } = true;
+        public bool CanChangeGroup { get; set; }
+
+        public List<IContextMenuAction> Actions 
+        {
+            get => actions;
+            set
+            {
+                actions = value;
+                Notify();
+            }
+        }
+
+        public object Content { get; set; }
+        public object Context { get; set; }
+
+        public virtual IEnumerable<string> Names => new List<string> { Header };
+    }
+
     public interface IMenuGroup : IMenuItem, IReference
     {
-        Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
-        Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
+        Func<IMenuGroup, string, IMenuItem> OnCreateItem { get; set; }
+        Func<IMenuGroup, string, IMenuGroup> OnCreateGroup { get; set; }
         Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
 
         bool IsOpen { get; set; }
+        bool NeedSortItems { get; set; }
 
-        bool NeedSortItems { get; }
         bool ViewCreateItem { get; }
         bool ViewCreateGroup { get; }
 
         string CreateItemHint { get; set; }
         string CreateGroupHint { get; set; }
 
-        ObservableCollection<IMenuItem> Source { get; }
         IEnumerable<IMenuItem> Items { get; }
-        IEnumerable<IMenuItem> AllItems { get; }
 
         void AddItem(IMenuItem item);
         void RemoveItem(IMenuItem item);
-        void Clear();
+
+        IEnumerable<IMenuItem> AllItems { get; }
     }
 
-    [AWSerializable]
-    public class MenuItemContext : BaseContext, IMenuItem
-    {
-        [AWReference]
-        public IMenuGroup Group { get; set; }
-
-        [AWIgnore]
-        public Func<IMenuItem, bool> CanSelect { get; set; }
-        [AWIgnore]
-        public Func<IMenuItem, bool> CanRemove { get; set; }
-        [AWIgnore]
-        public Func<IMenuItem, string, bool> CanRename { get; set; }
-
-        public int Left { get; set; }
-
-        private bool isSelect;
-        [AWIgnore]
-        public virtual bool IsSelect
-        {
-            get => isSelect;
-            set
-            {
-                isSelect = value;
-                Notify();
-            }
-        }
-
-        public bool ViewRemove { get; set; } = true;
-        public bool ViewRename { get; set; } = true;
-        public bool CanChangeGroup { get; set; }
-
-        [AWIgnore]
-        public IEnumerable<IAction> Actions { get; set; }
-
-        private string name;
-        public string Name
-        {
-            get => name;
-            set
-            {
-                name = value;
-                Notify();
-            }
-        }
-        public PackIconKind Icon { get; set; }
-
-        public object Content { get; set; }
-        public object Context { get; set; }
-
-        [AWIgnore]
-        public virtual IEnumerable<string> Names => new List<string> { Name.ToLower() };
-    }
-
-    [AWSerializable]
-    public class MenuGroupItemContext : MenuItemContext, IMenuGroup
+    public class MenuGroupContext : MenuItemContext, IMenuGroup
     {
         public int ReferenceId { get; set; }
 
-        public MenuGroupItemContext()
-            => Group = this;
+        public MenuGroupContext(string header, PackIconKind? icon) : base(header, icon)
+        {
+            Group = this;
+            Command = new SimpleCommand(() =>
+            {
+                IsOpen = !IsOpen;
+            });
+        }
 
-        [AWIgnore]
-        public Func<IMenuGroup, string, bool> OnCreateItem { get; set; }
-        [AWIgnore]
-        public Func<IMenuGroup, string, bool> OnCreateGroup { get; set; }
-        [AWIgnore]
+        public MenuGroupContext(string header, PackIconKind? icon, Action<IMenuGroup> action) : this(header, icon)
+        {
+            (Command as SimpleCommand).OnExecute = () => IsOpen = !IsOpen;
+        }
+
+        public Func<IMenuGroup, string, IMenuItem> OnCreateItem { get; set; }
+        public Func<IMenuGroup, string, IMenuGroup> OnCreateGroup { get; set; }
         public Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
 
-        public bool IsOpen { get; set; }
-        [AWIgnore]
-        public override bool IsSelect
+        private bool isOpen;
+        public bool IsOpen 
         {
-            get => false;
+            get => isOpen;
             set
             {
-                foreach (IMenuItem item in Items)
-                    item.IsSelect = value;
+                isOpen = value;
+                Notify();
             }
         }
 
@@ -148,11 +129,47 @@ namespace AW.Visual.Menu
         public string CreateItemHint { get; set; }
         public string CreateGroupHint { get; set; }
 
-        public ObservableCollection<IMenuItem> Source { get; set; } = new ObservableCollection<IMenuItem>();
+        public List<IMenuItem> Source { get; set; } = new List<IMenuItem>();
+        public IEnumerable<IMenuItem> Items => NeedSortItems ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Header) : (IEnumerable<IMenuItem>)Source;
+        
+        public void AddItem(IMenuItem item)
+        {
+            item.Left = Left + 40;
+            item.Group = this;
 
-        [AWIgnore]
-        public IEnumerable<IMenuItem> Items => NeedSortItems ? Source.OrderByDescending(i => i is IMenuGroup).ThenBy(i => i.Name) : (IEnumerable<IMenuItem>)Source;
-        [AWIgnore]
+            item.CanRemove ??= CanRemove;
+            item.CanRename ??= CanRename;
+
+            if (item is IMenuGroup group)
+            {
+                group.OnCreateItem ??= OnCreateItem;
+                group.OnCreateGroup ??= OnCreateGroup;
+                group.CanItemChangeGroup ??= CanItemChangeGroup;
+
+                group.CreateItemHint ??= CreateItemHint;
+                group.CreateGroupHint ??= CreateGroupHint;
+
+                if (group.Items != null)
+                    foreach (IMenuItem menuItem in group.Items.ToList())
+                    {
+                        group.RemoveItem(menuItem);
+                        group.AddItem(menuItem);
+                    }
+            }
+
+            Source.Add(item);
+            Notify(nameof(Items));
+        }
+
+        public void RemoveItem(IMenuItem item)
+        {
+            if (item.CanRemove?.Invoke(item) == true)
+            {
+                Source.Remove(item);
+                Notify(nameof(Items));
+            }
+        }
+
         public IEnumerable<IMenuItem> AllItems
         {
             get
@@ -169,52 +186,6 @@ namespace AW.Visual.Menu
             }
         }
 
-        public void AddItem(IMenuItem item)
-        {
-            item.Left = Left + 40;
-            item.Group = this;
-
-            item.CanRemove ??= CanRemove;
-            item.CanRename ??= CanRename;
-            item.CanSelect ??= CanSelect;
-
-            if (item is IMenuGroup group)
-            {
-                group.OnCreateItem ??= OnCreateItem;
-                group.OnCreateGroup ??= OnCreateGroup;
-                group.CanItemChangeGroup ??= CanItemChangeGroup;
-
-                group.CreateItemHint ??= CreateItemHint;
-                group.CreateGroupHint ??= CreateGroupHint;
-
-                if (group.Items != null)
-                    foreach (IMenuItem menuItem in group.Source.ToList())
-                    {
-                        group.RemoveItem(menuItem);
-                        group.AddItem(menuItem);
-                    }
-            }
-
-            Source.Add(item);
-            Notify(nameof(Items));
-        }
-
-        public void RemoveItem(IMenuItem item)
-        {
-            Source.Remove(item);
-            Notify(nameof(Items));
-        }
-
-        public void Clear()
-        {
-            foreach (IMenuItem item in Source.ToList())
-                item?.CanRemove?.Invoke(item);
-
-            Source.Clear();
-            Notify(nameof(Items));
-        }
-
-        [AWIgnore]
-        public override IEnumerable<string> Names => new List<string> { Name.ToLower() }.Concat(Source.SelectMany(i => i.Names));
+        public override IEnumerable<string> Names => new List<string> { Header }.Concat(Source.SelectMany(i => i.Names));
     }
 }

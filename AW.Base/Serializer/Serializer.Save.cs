@@ -13,10 +13,6 @@ namespace AW.Base.Serializer
         private int Id { get; set; }
         private StringBuilder Builder { get; set; }
 
-        private const char FirstST = '~';
-        private const string StringT = "~[";
-        private List<string> TypeTabel { get; set; }
-
         private void BeforeSerialize(object obj)
         {
             Id = 1;
@@ -162,25 +158,6 @@ namespace AW.Base.Serializer
                 Builder.Append($"({GetTypeToSave(reference)})<[{nameof(reference.ReferenceId)}]=({GetTypeToSave(reference.ReferenceId)}){reference.ReferenceId}>");
             else
                 SerializeObj(value);
-        }
-
-        private int GetTypeToSave(object obj)
-            => GetTypeToSave(obj.GetType());
-
-        private int GetTypeToSave(Type t)
-        {
-            if (!TypeTabel.Contains(t.FullName))
-                TypeTabel.Add(t.FullName);
-
-            return TypeTabel.IndexOf(t.FullName);
-        }
-
-        public void Dispose()
-        {
-            Builder?.Clear();
-            TypeTabel?.Clear();
-
-            Sources?.Clear();
         }
     }
 }

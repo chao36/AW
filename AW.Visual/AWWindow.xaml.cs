@@ -1,9 +1,10 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Windows;
 using System.Windows.Media;
 
 using AW.Visual.ColorTheme;
-
+using AW.Visual.Common;
 using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual
@@ -31,6 +32,14 @@ namespace AW.Visual
 
             WindowStateChanged(null, EventArgs.Empty);
         }
+
+
+        public AWWindow(FrameworkElement content = null, IEnumerable<IContextMenuAction> topMenu = null) : this(content, new TopMenuControl
+        {
+            DataContext = new TopMenuContext(topMenu)
+        }) 
+        { }
+
 
         public bool ShowMinimized
         {
@@ -76,11 +85,6 @@ namespace AW.Visual
         
         public void ShowAlert(FrameworkElement view)
             => DialogHelper.ShowView(Container, view);
-
-        public static void Init()
-        {
-            Application.Current.Resources.MergedDictionaries.Add(Application.LoadComponent(new Uri("/AW.Visual;Component/Resource.xaml", UriKind.Relative)) as ResourceDictionary);
-        }
 
         public static void ChangeTheme(bool isDark, Color color)
         {

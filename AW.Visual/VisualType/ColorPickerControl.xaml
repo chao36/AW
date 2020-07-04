@@ -5,7 +5,7 @@
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
-    xmlns:common="clr-namespace:AW.Visual.Common"
+    xmlns:base="clr-namespace:AW.Visual.Common"
     mc:Ignorable="d">
     <StackPanel>
         <md:PopupBox
@@ -16,31 +16,31 @@
                     Height="22"
                     Orientation="Horizontal">
                     <Rectangle
+                        Stroke="{DynamicResource MaterialDesignDivider}"
                         Width="18"
                         Height="18"
-                        HorizontalAlignment="Center"
-                        Stroke="{DynamicResource MaterialDesignDivider}">
+                        HorizontalAlignment="Center">
                         <Rectangle.Fill>
                             <SolidColorBrush Color="{Binding Value}"/>
                         </Rectangle.Fill>
                     </Rectangle>
                     <Label
                         x:Name="TagLabel"
+                        Content="{Binding Tag}"
                         Margin="5 0 0 0"
-                        HorizontalContentAlignment="Center"
-                        Content="{Binding Tag}"/>
+                        HorizontalContentAlignment="Center"/>
                 </StackPanel>
             </md:PopupBox.ToggleContent>
             <StackPanel>
-                <common:ColorPicker
+                <base:ColorPicker
                     x:Name="ColorPicker"
                     Margin="0 0 5 0"/>
                 <StackPanel
                     Margin="0 5 0 -2"
                     Orientation="Horizontal"
                     HorizontalAlignment="Right">
-                    <common:ActionControl DataContext="{Binding Ok}"/>
-                    <common:ActionControl DataContext="{Binding Cancel}"/>
+                    <base:ActionControl DataContext="{Binding Ok}"/>
+                    <base:ActionControl DataContext="{Binding Cancel}"/>
                 </StackPanel>
             </StackPanel>
         </md:PopupBox>

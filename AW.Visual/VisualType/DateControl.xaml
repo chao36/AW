@@ -9,12 +9,12 @@
     <StackPanel>
         <Label
             x:Name="TagLabel"
-            Margin="0 0 0 -4"
-            Content="{Binding Tag}"/>
+            Content="{Binding Tag}"
+            Margin="0 0 0 -4"/>
         <DatePicker
             x:Name="Element"
-            Margin="2 0 0 0"
             md:HintAssist.Hint="{Binding Placeholder}"
-            SelectedDate="{Binding Value}"/>
+            SelectedDate="{Binding Value}"
+            Margin="2 0 0 0"/>
     </StackPanel>
 </UserControl>

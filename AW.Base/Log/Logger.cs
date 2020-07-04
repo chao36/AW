@@ -4,56 +4,85 @@ using System.Runtime.CompilerServices;
 
 namespace AW.Base.Log
 {
-    public static class Logger
+    public interface ILogger
     {
-        public static event Action<string> OnLog;
+        void Log(string message, string tag = null, string method = null, bool ignoreEvent = false);
+        void Log(Exception ex, string message = null, string tag = null, string method = null, bool ignoreEvent = false);
+    }
 
-        public static string LogFileName = "__log";
-        public static long MaxLogFileSize = 104857600;
+    public class Logger : ILogger
+    {
+        private string LogFileName { get; }
+        private string Tag { get; }
 
-        static Logger()
+        public Logger(string tag = null, string file = "log.txt", long maxLogFileSize = 104857600)
         {
             try
             {
-                if (File.Exists(LogFileName))
+                if (File.Exists(file))
                 {
-                    long size = new FileInfo(LogFileName).Length;
-                    if (size > MaxLogFileSize)
+                    long size = new FileInfo(file).Length;
+                    if (size > maxLogFileSize)
                         File.Delete(LogFileName);
                 }
+                else
+                    File.Create(file);
+
+                LogFileName = file;
+                Tag = tag;
             }
             catch { }
         }
 
-        public static void Log(string message, [CallerMemberName] string method = null, bool ignoreEvent = false)
-            => Log(null, message, method, ignoreEvent);
+        public void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => Log(null, message, tag, method, ignoreEvent);
 
-        public static void Log(Exception ex, string message = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+        public void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
         {
-            if (message != null && ex != null)
-                message += $" {ex.Message}";
-            else if (ex != null)
-                message = ex.Message;
+            if (!string.IsNullOrEmpty(message) && ex != null)
+                message = $"{message} {ex.Message}{Environment.NewLine}{ex.StackTrace}";
+            else if (string.IsNullOrEmpty(message) && ex != null)
+                message = $"{ex.Message}{Environment.NewLine}{ex.StackTrace}";
 
-            Log($"{method}() - {message ?? "error"}{(ex != null ? ($"{Environment.NewLine}{ex.StackTrace}") : "")}", ignoreEvent);
+            tag = $"[{(tag ?? Tag ?? "error").ToUpper()}]: ";
+
+            method = !string.IsNullOrEmpty(method) ? $"{method}() - " : "";
+
+            Log($"{tag}{GetDate()}{method}{message}", ignoreEvent);
         }
 
-        private static void Log(string message, bool ignoreEvent)
+        private static string GetDate()
+            => $"[{DateTime.Now:dd.MM hh:mm:ss}] - ";
+
+        private void Log(string message, bool ignoreEvent)
+            => LoggerHelper.Log(message, ignoreEvent, LogFileName);
+    }
+
+    public static class LoggerHelper
+    {
+        public static event Action<string> OnLog;
+
+        public static ILogger DefaultLogger { get; set; }
+
+        public static void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => DefaultLogger.Log(message, tag, method, ignoreEvent);
+
+        public static void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => DefaultLogger.Log(ex, message, tag, method, ignoreEvent);
+
+        internal static void Log(string message, bool ignoreEvent, string file)
         {
             if (!ignoreEvent)
                 OnLog?.Invoke(message);
 
             try
             {
-                using (StreamWriter stream = new StreamWriter(LogFileName, true))
+                using (StreamWriter stream = new StreamWriter(file, true))
                 {
-                    stream.WriteLine($"{GetDate()}: {message}");
+                    stream.WriteLine(message);
                 }
             }
             catch { }
         }
-
-        private static string GetDate()
-            => $"[{DateTime.Now:dd.MM hh:mm:ss}]";
     }
 }

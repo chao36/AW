@@ -29,11 +29,18 @@ namespace AW.Visual.VisualType
             {
                 SetValue((Control as ColorPickerControl).ColorPicker.CurrentColor);
                 (Control as ColorPickerControl).Element.IsPopupOpen = false;
-            }, fontSize: 12, iconSize: 20);
+            })
+            {
+                FontSize = 12
+            };
             Cancel = new ActionContext(AWWindow.CancelTitle, PackIconKind.Close, () =>
             {
                 (Control as ColorPickerControl).Element.IsPopupOpen = false;
-            }, fontSize: 12, iconSize: 20, iconColor: ColorHelper.RedSet.Color500.ToBrush());
+            })
+            {
+                FontSize = 12,
+                IconColor = ColorHelper.RedSet.Color500.ToBrush()
+            };
         }
 
         public ActionContext Ok { get; }

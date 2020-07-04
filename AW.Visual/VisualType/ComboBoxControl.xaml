@@ -9,13 +9,13 @@
     <StackPanel>
         <Label
             x:Name="TagLabel"
-            Margin="0 0 0 -4"
-            Content="{Binding Tag}"/>
+            Content="{Binding Tag}"
+            Margin="0 0 0 -4"/>
         <ComboBox
             x:Name="Element"
-            Margin="2 0 0 0"
             md:HintAssist.Hint="{Binding Placeholder}"
             ItemsSource="{Binding Items}"
-            SelectedValue="{Binding Value}"/>
+            SelectedValue="{Binding Value}"
+            Margin="2 0 0 0"/>
     </StackPanel>
 </UserControl>

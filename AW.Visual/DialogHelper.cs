@@ -18,8 +18,8 @@ namespace AW.Visual
         public static void ShowWait(Grid container, string message)
             => Show(container, new SimpleDialog(message, true));
 
-        public static void ShowView(Grid container, FrameworkElement view)
-            => Show(container, new CustomDialog(view, 0.8, 0.9));
+        public static void ShowView(Grid container, FrameworkElement view, double width = 0.8, double height = 0.9)
+            => Show(container, new CustomDialog(view, width, height));
 
         public static void Hide()
             => Hide(null);

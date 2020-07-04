@@ -72,7 +72,7 @@ public class CollectionContext : VisualTypeContext
         List<IVisualTypeContext> properties = new List<IVisualTypeContext>();
 
         for (int i = 0; i < source.Count; ++i)
-            properties.Add(new ObjectContext($"[{i}]", source[i], Left + 25));
+            properties.Add(new ObjectContext($"[{i}]", source[i], Left ));
 
         Properties = new ObservableCollection<IVisualTypeContext>(properties);
 
@@ -83,8 +83,11 @@ public class CollectionContext : VisualTypeContext
             source.Add(SerializerHelper.GetObject(itemType));
 
             int index = source.Count - 1;
-            Properties.Add(new ObjectContext($"[{index}]", source[index], Left + 25));
-        }, fontSize: 12, iconSize: 20);
+            Properties.Add(new ObjectContext($"[{index}]", source[index], Left));
+        })
+        {
+            FontSize = 12
+        };
 
         Remove = new ActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
         {
@@ -92,7 +95,11 @@ public class CollectionContext : VisualTypeContext
 
             source.RemoveAt(index);
             Properties.RemoveAt(index);
-        }, fontSize: 12, iconSize: 20, iconColor: ColorHelper.RedSet.Color500.ToBrush());
+        })
+        {
+            FontSize = 12,
+            IconColor = ColorHelper.RedSet.Color500.ToBrush()
+        };
     }
 
     public ActionContext Add { get; set; }

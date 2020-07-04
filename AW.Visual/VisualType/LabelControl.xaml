@@ -8,7 +8,7 @@
     <StackPanel>
         <Label
             x:Name="Element"
-            Margin="-2 0 0 0"
-            Content="{Binding Value}"/>
+            Content="{Binding Value}"
+            Margin="-2 0 0 0"/>
     </StackPanel>
 </UserControl>

@@ -35,12 +35,6 @@ namespace AW.Visual
         public static Teal TealSet { get; } = new Teal();
         public static Yellow YellowSet { get; } = new Yellow();
 
-        public static DColor FromArgb(int color)
-        {
-            byte[] argbarray = BitConverter.GetBytes(color).Reverse().ToArray();
-            return DColor.FromArgb(argbarray[0], argbarray[1], argbarray[2], argbarray[3]);
-        }
-
         public static SolidColorBrush BrushAlpha(this SolidColorBrush brush, byte alpha)
             => new SolidColorBrush(MColor.FromArgb(alpha, brush.Color.R, brush.Color.G, brush.Color.B));
         public static SolidColorBrush ToBrush(this DColor color)
@@ -53,7 +47,13 @@ namespace AW.Visual
         public static DColor ToDrawColor(this MColor color, byte? alpha = null)
             => DColor.FromArgb(alpha ?? color.A, color.R, color.G, color.B);
 
-        public static MColor MediaColorFromHSB(double H, double S, double B, byte? alpha = null)
+        public static MColor FromArgb(int color)
+        {
+            byte[] argbarray = BitConverter.GetBytes(color).Reverse().ToArray();
+            return MColor.FromArgb(argbarray[0], argbarray[1], argbarray[2], argbarray[3]);
+        }
+
+        public static MColor FromHSB(double H, double S, double B, byte? alpha = null)
         {
             if (H < 0)
                 H += 360;

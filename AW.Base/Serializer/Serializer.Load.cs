@@ -5,7 +5,6 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-using AW.Base.Log;
 using AW.Base.Serializer.Common;
 
 namespace AW.Base.Serializer
@@ -40,7 +39,7 @@ namespace AW.Base.Serializer
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                SerializerHelper.Logger.Log(ex);
             }
 
             T result = (T)DeserializeObject(SerializerHelper.GetObject(typeof(T)), data);
@@ -250,7 +249,7 @@ namespace AW.Base.Serializer
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                SerializerHelper.Logger.Log(ex);
             }
 
             return null;
@@ -421,14 +420,6 @@ namespace AW.Base.Serializer
             }
 
             return result;
-        }
-
-        public Type GetSaveType(string name)
-        {
-            if (int.TryParse(name, out int index) && index < TypeTabel?.Count)
-                name = TypeTabel[index];
-
-            return SerializerHelper.GetType(name);
         }
     }
 }
