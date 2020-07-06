@@ -35,9 +35,7 @@ namespace AW.Visual.Menu
 
         public MenuItemContext(string header, PackIconKind? icon) : base(header, icon) { }
         public MenuItemContext(string header, PackIconKind? icon, Action<IMenuItem> action) : this(header, icon)
-        {
-            Command = new SimpleCommand(() => action?.Invoke(this));
-        }
+            => Command = new SimpleCommand(() => action?.Invoke(this));
 
         public Func<IMenuItem, bool> CanRemove { get; set; }
         public Func<IMenuItem, string, bool> CanRename { get; set; }
@@ -102,9 +100,7 @@ namespace AW.Visual.Menu
         }
 
         public MenuGroupContext(string header, PackIconKind? icon, Action<IMenuGroup> action) : this(header, icon)
-        {
-            (Command as SimpleCommand).OnExecute = () => IsOpen = !IsOpen;
-        }
+            => (Command as SimpleCommand).OnExecute = () => action?.Invoke(this);
 
         public Func<IMenuGroup, string, IMenuItem> OnCreateItem { get; set; }
         public Func<IMenuGroup, string, IMenuGroup> OnCreateGroup { get; set; }

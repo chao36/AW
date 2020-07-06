@@ -103,6 +103,5 @@ namespace AW.Visual
         public static string RemoveTitle { get; set; } = "Remove";
         public static string OkTitle { get; set; } = "Ok";
         public static string CancelTitle { get; set; } = "Cancel";
-
     }
 }

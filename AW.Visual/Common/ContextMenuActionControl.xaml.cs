@@ -94,12 +94,15 @@ namespace AW.Visual.Common
         }
     }
 
-
     public class ContextMenuActionContext : ActionContext, IContextMenuAction
     {
         private bool isOpen;
 
-        public ContextMenuActionContext(string header, PackIconKind? icon = null, ICommand command = null, IEnumerable<IContextMenuAction> actions = null) : base(header, icon, command)
+        public ContextMenuActionContext(string header) : base(header, null) { }
+        public ContextMenuActionContext(string header, PackIconKind? icon) : base(header, icon) { }
+        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command) : base(header, icon, command) { }
+        public ContextMenuActionContext(string header, PackIconKind? icon, Action action) : base(header, icon, action) { }
+        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, IEnumerable<IContextMenuAction> actions) : base(header, icon, command)
         {
             Actions = actions;
 
@@ -107,12 +110,8 @@ namespace AW.Visual.Common
                 foreach (IContextMenuAction item in Actions)
                     item.Parent = this;
         }
-
-        public ContextMenuActionContext(string header, PackIconKind? icon = null, Action action = null, IEnumerable<IContextMenuAction> actions = null) 
+        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions) 
             : this(header, icon, new SimpleCommand(action), actions) { }
-
-        public ContextMenuActionContext(string header, PackIconKind? icon = null, IEnumerable<IContextMenuAction> actions = null) 
-            : this(header, icon, action: null, actions) { }
 
         public UIElement Element { get; set; }
         public IContextMenuAction Parent { get; set; }

@@ -157,6 +157,13 @@ namespace AW.Visual.Common
 
     public class ActionContext : BaseContext, IActionContext
     {
+        private bool isSelect;
+        private string header;
+        private PackIconKind? icon;
+        private ICommand command;
+        private double fontSize = 14;
+        private double iconSize = 20;
+
         public ActionContext(string header, PackIconKind? icon)
         {
             Header = header;
@@ -168,13 +175,6 @@ namespace AW.Visual.Common
 
         public ActionContext(string header, PackIconKind? icon, Action action)
             : this(header, icon, new SimpleCommand(action)) { }
-
-        private bool isSelect;
-        private string header;
-        private PackIconKind? icon;
-        private ICommand command;
-        private double fontSize = 14;
-        private double iconSize = 20;
 
         public bool IsSelect
         {
