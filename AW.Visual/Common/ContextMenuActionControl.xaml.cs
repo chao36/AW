@@ -100,9 +100,16 @@ namespace AW.Visual.Common
 
         public ContextMenuActionContext(string header) : base(header, null) { }
         public ContextMenuActionContext(string header, PackIconKind? icon) : base(header, icon) { }
+        public ContextMenuActionContext(string header, PackIconKind? icon, IEnumerable<IContextMenuAction> actions) : base(header, icon)
+            => SetActions(actions);
         public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command) : base(header, icon, command) { }
         public ContextMenuActionContext(string header, PackIconKind? icon, Action action) : base(header, icon, action) { }
         public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, IEnumerable<IContextMenuAction> actions) : base(header, icon, command)
+            => SetActions(actions);
+        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions) : base(header, icon, action)
+            => SetActions(actions);
+
+        public void SetActions(IEnumerable<IContextMenuAction> actions)
         {
             Actions = actions;
 
@@ -110,8 +117,6 @@ namespace AW.Visual.Common
                 foreach (IContextMenuAction item in Actions)
                     item.Parent = this;
         }
-        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions) 
-            : this(header, icon, new SimpleCommand(action), actions) { }
 
         public UIElement Element { get; set; }
         public IContextMenuAction Parent { get; set; }
@@ -132,7 +137,7 @@ namespace AW.Visual.Common
         public SubContextMenuType SubContextMenuType { get; set; }
 
         public bool HasItems => Actions?.Any() == true;
-        public IEnumerable<IContextMenuAction> Actions { get; }
+        public IEnumerable<IContextMenuAction> Actions { get; private set; }
 
         public void UpdateState()
         {

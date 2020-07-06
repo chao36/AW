@@ -5,16 +5,17 @@ using System.Windows.Media;
 
 using AW.Visual.ColorTheme;
 using AW.Visual.Common;
+
 using MaterialDesignThemes.Wpf;
 
 namespace AW.Visual
 {
     public partial class AWWindow : Window
     {
-        public AWWindow(FrameworkElement content = null, FrameworkElement toolbar = null)
+        public AWWindow(FrameworkElement content)
         {
             InitializeComponent();
-            
+
             MaxHeight = SystemParameters.MaximizedPrimaryScreenHeight - SystemParameters.WindowResizeBorderThickness.Top - SystemParameters.WindowResizeBorderThickness.Bottom + 1;
             MaxWidth = SystemParameters.MaximizedPrimaryScreenWidth - SystemParameters.WindowResizeBorderThickness.Left - SystemParameters.WindowResizeBorderThickness.Right + 1;
 
@@ -23,21 +24,24 @@ namespace AW.Visual
 
             if (content != null)
                 ContentControl.Content = content;
-            
+
+            WindowStateChanged(null, EventArgs.Empty);
+        }
+
+        public AWWindow(FrameworkElement content, FrameworkElement toolbar) : this(content)
+        {
             if (toolbar != null)
             {
                 Toolbar.Children.RemoveAt(0);
                 Toolbar.Children.Add(toolbar);
             }
-
-            WindowStateChanged(null, EventArgs.Empty);
         }
 
 
-        public AWWindow(FrameworkElement content = null, IEnumerable<IContextMenuAction> topMenu = null) : this(content, new TopMenuControl
+        public AWWindow(FrameworkElement content, IEnumerable<IContextMenuAction> topMenu) : this(content, new TopMenuControl
         {
             DataContext = new TopMenuContext(topMenu)
-        }) 
+        })
         { }
 
 
