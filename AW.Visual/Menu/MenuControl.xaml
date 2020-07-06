@@ -22,10 +22,14 @@
             <base:ActionControl.ContentStyle>
                 <Style TargetType="Button" BasedOn="{StaticResource AWAction}">
                     <Style.Triggers>
-                        <DataTrigger Binding="{Binding IsSelect}" Value="True">
+                        <MultiDataTrigger>
+                            <MultiDataTrigger.Conditions>
+                                <Condition Binding="{Binding IsSelect}" Value="True"/>
+                                <Condition Binding="{Binding RelativeSource={RelativeSource Mode=Self}, Path=IsEnabled}" Value="True"/>
+                            </MultiDataTrigger.Conditions>
                             <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignSelection}" />
                             <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
-                        </DataTrigger>
+                        </MultiDataTrigger>
                     </Style.Triggers>
                 </Style>
             </base:ActionControl.ContentStyle>

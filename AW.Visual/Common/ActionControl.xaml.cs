@@ -162,7 +162,7 @@ namespace AW.Visual.Common
         private PackIconKind? icon;
         private ICommand command;
         private double fontSize = 14;
-        private double iconSize = 20;
+        private double iconSize = 18;
 
         public ActionContext(string header, PackIconKind? icon)
         {
