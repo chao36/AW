@@ -4,6 +4,8 @@ namespace AW.Visual.Output
 {
     public partial class OutputControl : UserControl
     {
+        private int LastCount = 0;
+
         public OutputControl()
         {
             InitializeComponent();
@@ -20,7 +22,5 @@ namespace AW.Visual.Output
 
             DataContext = new OutputContext();
         }
-
-        private int LastCount = 0;
     }
 }

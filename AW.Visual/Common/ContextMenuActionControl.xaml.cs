@@ -99,7 +99,7 @@ namespace AW.Visual.Common
     {
         private bool isOpen;
 
-        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, IEnumerable<IContextMenuAction> actions) : base(header, icon, command)
+        public ContextMenuActionContext(string header, PackIconKind? icon = null, ICommand command = null, IEnumerable<IContextMenuAction> actions = null) : base(header, icon, command)
         {
             Actions = actions;
 
@@ -108,10 +108,10 @@ namespace AW.Visual.Common
                     item.Parent = this;
         }
 
-        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions = null) 
+        public ContextMenuActionContext(string header, PackIconKind? icon = null, Action action = null, IEnumerable<IContextMenuAction> actions = null) 
             : this(header, icon, new SimpleCommand(action), actions) { }
 
-        public ContextMenuActionContext(string header, PackIconKind? icon, IEnumerable<IContextMenuAction> actions = null) 
+        public ContextMenuActionContext(string header, PackIconKind? icon = null, IEnumerable<IContextMenuAction> actions = null) 
             : this(header, icon, action: null, actions) { }
 
         public UIElement Element { get; set; }
