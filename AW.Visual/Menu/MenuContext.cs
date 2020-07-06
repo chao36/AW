@@ -11,8 +11,8 @@ namespace AW.Visual.Menu
 {
     public interface IMenuItem : IActionContext
     {
-        Func<IMenuItem, bool> CanRemove { get; set; }
-        Func<IMenuItem, string, bool> CanRename { get; set; }
+        Func<IMenuItem, bool> OnRemove { get; set; }
+        Func<IMenuItem, string, bool> OnRename { get; set; }
 
         int Left { get; set; }
         IMenuGroup Group { get; set; }
@@ -26,7 +26,7 @@ namespace AW.Visual.Menu
         object Content { get; set; }
         object Context { get; set; }
 
-        IEnumerable<string> Names { get; }
+        IEnumerable<string> Headers { get; }
     }
 
     public class MenuItemContext : ActionContext, IMenuItem
@@ -37,8 +37,8 @@ namespace AW.Visual.Menu
         public MenuItemContext(string header, PackIconKind? icon, Action<IMenuItem> action) : this(header, icon)
             => Command = new SimpleCommand(() => action?.Invoke(this));
 
-        public Func<IMenuItem, bool> CanRemove { get; set; }
-        public Func<IMenuItem, string, bool> CanRename { get; set; }
+        public Func<IMenuItem, bool> OnRemove { get; set; }
+        public Func<IMenuItem, string, bool> OnRename { get; set; }
 
         public int Left { get; set; }
         public IMenuGroup Group { get; set; }
@@ -60,14 +60,14 @@ namespace AW.Visual.Menu
         public object Content { get; set; }
         public object Context { get; set; }
 
-        public virtual IEnumerable<string> Names => new List<string> { Header };
+        public virtual IEnumerable<string> Headers => new List<string> { Header };
     }
 
     public interface IMenuGroup : IMenuItem, IReference
     {
         Func<IMenuGroup, string, IMenuItem> OnCreateItem { get; set; }
         Func<IMenuGroup, string, IMenuGroup> OnCreateGroup { get; set; }
-        Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
+        Func<IMenuItem, IMenuGroup, bool> OnItemChangeGroup { get; set; }
 
         bool IsOpen { get; set; }
         bool NeedSortItems { get; set; }
@@ -104,7 +104,7 @@ namespace AW.Visual.Menu
 
         public Func<IMenuGroup, string, IMenuItem> OnCreateItem { get; set; }
         public Func<IMenuGroup, string, IMenuGroup> OnCreateGroup { get; set; }
-        public Func<IMenuItem, IMenuGroup, bool> CanItemChangeGroup { get; set; }
+        public Func<IMenuItem, IMenuGroup, bool> OnItemChangeGroup { get; set; }
 
         private bool isOpen;
         public bool IsOpen 
@@ -133,14 +133,14 @@ namespace AW.Visual.Menu
             item.Left = Left + 40;
             item.Group = this;
 
-            item.CanRemove ??= CanRemove;
-            item.CanRename ??= CanRename;
+            item.OnRemove ??= OnRemove;
+            item.OnRename ??= OnRename;
 
             if (item is IMenuGroup group)
             {
                 group.OnCreateItem ??= OnCreateItem;
                 group.OnCreateGroup ??= OnCreateGroup;
-                group.CanItemChangeGroup ??= CanItemChangeGroup;
+                group.OnItemChangeGroup ??= OnItemChangeGroup;
 
                 group.CreateItemHint ??= CreateItemHint;
                 group.CreateGroupHint ??= CreateGroupHint;
@@ -159,7 +159,7 @@ namespace AW.Visual.Menu
 
         public void RemoveItem(IMenuItem item)
         {
-            if (item.CanRemove?.Invoke(item) == true)
+            if (item.OnRemove?.Invoke(item) == true)
             {
                 Source.Remove(item);
                 Notify(nameof(Items));
@@ -182,6 +182,6 @@ namespace AW.Visual.Menu
             }
         }
 
-        public override IEnumerable<string> Names => new List<string> { Header }.Concat(Source.SelectMany(i => i.Names));
+        public override IEnumerable<string> Headers => new List<string> { Header }.Concat(Source.SelectMany(i => i.Headers));
     }
 }

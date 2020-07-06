@@ -49,13 +49,12 @@
             </base:ActionControl.StartContent>
             <base:ActionControl.CenterContent>
                 <TextBox
-                    Margin="1 0 0 0"
+                    Style="{StaticResource AWTextBox}"
                     FontSize="{Binding FontSize}"
+                    Margin="3 1 0 0"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Stretch"
-                    Visibility="Collapsed"
-                    KeyDown="EditKeyDown"
-                    LostFocus="EditLostFocus"/>
+                    Visibility="Hidden"/>
             </base:ActionControl.CenterContent>
         </base:ActionControl>
         <ItemsControl

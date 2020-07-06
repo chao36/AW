@@ -83,64 +83,57 @@ namespace AW.Visual
 
             textBox.Tag = tag;
 
-            textBox.PreviewTextInput -= TextBoxPreviewTextInput;
-            textBox.PreviewTextInput += TextBoxPreviewTextInput;
-
-            DataObject.RemovePastingHandler(textBox, TextBoxPastingHandler);
-            DataObject.AddPastingHandler(textBox, TextBoxPastingHandler);
-        }
-
-        private static void TextBoxPreviewTextInput(object sender, TextCompositionEventArgs e)
-        {
-            if (sender is TextBox textBox && textBox.Tag is List<Func<string, bool>> canChanges)
-                e.Handled = !string.IsNullOrWhiteSpace(e.Text)
-                    && (e.Text != "-" || textBox.CaretIndex != 0)
-                    && canChanges.Any(c => c(textBox.Text.Insert(textBox.CaretIndex, e.Text)));
-        }
-
-        private static void TextBoxPastingHandler(object sender, DataObjectPastingEventArgs e)
-        {
-            if (sender is TextBox textBox && textBox.Tag is Func<string, bool> canChange)
+            textBox.PreviewTextInput += (s, e) =>
             {
-                if (e.DataObject.GetDataPresent(typeof(string)))
-                {
-                    string text = (string)e.DataObject.GetData(typeof(string));
+                if (s is TextBox textBox && textBox.Tag is List<Func<string, bool>> canChanges)
+                    e.Handled = !string.IsNullOrWhiteSpace(e.Text)
+                        && (e.Text != "-" || textBox.CaretIndex != 0)
+                        && canChanges.Any(c => c(textBox.Text.Insert(textBox.CaretIndex, e.Text)));
+            };
 
-                    if (canChange(textBox.Text.Insert(textBox.CaretIndex, text)))
+            DataObject.AddPastingHandler(textBox, (s, e) =>
+            {
+                if (s is TextBox textBox && textBox.Tag is Func<string, bool> canChange)
+                {
+                    if (e.DataObject.GetDataPresent(typeof(string)))
+                    {
+                        string text = (string)e.DataObject.GetData(typeof(string));
+
+                        if (canChange(textBox.Text.Insert(textBox.CaretIndex, text)))
+                            e.CancelCommand();
+                    }
+                    else
                         e.CancelCommand();
                 }
-                else
-                    e.CancelCommand();
-            }
+            });
         }
 
-        public static void ExitOnEnter(TextBox textBox)
+        public static void ExitOnEnter(TextBox textBox, Action complite = null)
         {
-            textBox.PreviewKeyUp -= TextBoxPreviewKeyUp;
-            textBox.PreviewKeyUp += TextBoxPreviewKeyUp;
-        }
-
-        private static void TextBoxPreviewKeyUp(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return && sender is TextBox textBox)
+            textBox.PreviewKeyUp += (s, e) =>
             {
-                DependencyObject ancestor = textBox.Parent;
-                while (ancestor != null)
+                if (e.Key == Key.Return && s is TextBox textBox)
                 {
-                    if (ancestor is UIElement element && element.Focusable)
+                    DependencyObject ancestor = textBox.Parent;
+                    while (ancestor != null)
                     {
-                        element.Focus();
-                        break;
+                        if (ancestor is UIElement element && element.Focusable)
+                        {
+                            element.Focus();
+                            break;
+                        }
+
+                        ancestor = VisualTreeHelper.GetParent(ancestor);
                     }
+                    Keyboard.ClearFocus();
 
-                    ancestor = VisualTreeHelper.GetParent(ancestor);
+                    BindingExpression be = textBox.GetBindingExpression(TextBox.TextProperty);
+                    if (be != null)
+                        be.UpdateSource();
+
+                    complite?.Invoke();
                 }
-                Keyboard.ClearFocus();
-
-                BindingExpression be = textBox.GetBindingExpression(TextBox.TextProperty);
-                if (be != null)
-                    be.UpdateSource();
-            }
+            };
         }
 
         public static void LeftDown(FrameworkElement element, Action<MouseButtonEventArgs> click)

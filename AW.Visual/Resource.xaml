@@ -14,7 +14,7 @@
     <conv:InverseBooleanConverter x:Key="InverseBoolean"/>
 
     <Style TargetType="md:SmartHint" BasedOn="{StaticResource {x:Type md:SmartHint}}">
-        <Setter Property="Margin" Value="1 0 0 0" />
+        <Setter Property="Margin" Value="2 0 0 0" />
     </Style>
 
     <Style x:Key="HoverBG" TargetType="{x:Type Grid}">

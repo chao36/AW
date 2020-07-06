@@ -123,7 +123,7 @@ namespace AW.Visual.Menu
                 if (item.ViewRemove)
                     item.Actions.Add(new ContextMenuActionContext(AWWindow.RemoveTitle, PackIconKind.Close, () =>
                     {
-                        if (item.CanRemove?.Invoke(item) == true)
+                        if (item.OnRemove?.Invoke(item) == true)
                             item.Group?.RemoveItem(item);
                     })
                     {
@@ -135,6 +135,11 @@ namespace AW.Visual.Menu
                     (menuAction.Command as SimpleCommand).OnExecute = () => Menu.IsOpen = false;
 
                 (item as BaseContext).Notify(nameof(item.Actions));
+
+                VisualHelper.ExitOnEnter(Edit, () =>
+                {
+                    OnEdit(item);
+                });
             }
         }
 
@@ -142,23 +147,11 @@ namespace AW.Visual.Menu
         {
             IMenuItem menuItem = (IMenuItem)de.Data.GetData(typeof(MenuItemContext)) ?? (IMenuItem)de.Data.GetData(typeof(MenuGroupContext));
 
-            if (menuItem != null && DataContext is IMenuGroup group && group.CanItemChangeGroup?.Invoke(menuItem, group) == true)
+            if (menuItem != null && DataContext is IMenuGroup group && group.OnItemChangeGroup?.Invoke(menuItem, group) == true)
             {
                 menuItem.Group.RemoveItem(menuItem);
                 group.AddItem(menuItem);
             }
-        }
-
-        private void EditKeyDown(object sender, KeyEventArgs e)
-        {
-            if (e.Key == Key.Return && DataContext is IMenuItem menuItem)
-                OnEdit(menuItem);
-        }
-
-        private void EditLostFocus(object sender, RoutedEventArgs e)
-        {
-            if (DataContext is IMenuItem menuItem)
-                OnEdit(menuItem);
         }
 
         private bool IsCreate;
@@ -169,14 +162,13 @@ namespace AW.Visual.Menu
             if (string.IsNullOrWhiteSpace(Edit.Text))
                 if (IsCreate || IsCreateGroup)
                 {
-                    Edit.Visibility = Visibility.Collapsed;
+                    Edit.Visibility = Visibility.Hidden;
                     Element.HideHeader = false;
                     return;
                 }
                 else
                     return;
 
-            Keyboard.ClearFocus();
             bool complite = false;
 
             if (menuItem is IMenuGroup group)
@@ -201,7 +193,7 @@ namespace AW.Visual.Menu
                 }
             }
             
-            if (!IsCreate && !IsCreateGroup && (Edit.Text == menuItem.Header || menuItem.CanRename?.Invoke(menuItem, Edit.Text) == true))
+            if (!IsCreate && !IsCreateGroup && (Edit.Text == menuItem.Header || menuItem.OnRename?.Invoke(menuItem, Edit.Text) == true))
             {
                 menuItem.Header = Edit.Text;
                 complite = true;
@@ -211,21 +203,11 @@ namespace AW.Visual.Menu
             {
                 Edit.Text = "";
 
-                Edit.Visibility = Visibility.Collapsed;
+                Edit.Visibility = Visibility.Hidden;
                 Element.HideHeader = false;
             }
             else
-            {
                 Edit.Text = IsCreate || IsCreateGroup ? "" : menuItem.Header;
-
-                Dispatcher.BeginInvoke(DispatcherPriority.Input,
-                    new Action(() =>
-                    {
-                        Edit.Focus();
-                        Keyboard.Focus(Edit);
-                        Edit.CaretIndex = Edit.Text.Length;
-                    }));
-            }
         }
     }
 }
