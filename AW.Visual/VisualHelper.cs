@@ -10,6 +10,8 @@ using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Media.Imaging;
 
+using Microsoft.WindowsAPICodePack.Dialogs;
+
 using Point = System.Windows.Point;
 
 namespace AW.Visual
@@ -22,6 +24,30 @@ namespace AW.Visual
 
     public static class VisualHelper
     {
+        public static string SelectFile(string message = null, string filter = null, string path = null, bool selectFolder = false)
+        {
+            CommonOpenFileDialog dialog = new CommonOpenFileDialog
+            {
+                IsFolderPicker = selectFolder,
+                Title = message,
+                InitialDirectory = path
+            };
+
+            if (!string.IsNullOrEmpty(filter))
+            {
+                string[] filters = filter.Split('|');
+
+                if (filters.Length > 0 && filters.Length % 2 == 0)
+                    for (int i = 0; i < filters.Length; i += 2)
+                        dialog.Filters.Add(new CommonFileDialogFilter(filters[i], filters[i + 1]));
+            }
+
+            if (dialog.ShowDialog() == CommonFileDialogResult.Ok)
+                return dialog.FileName;
+            
+            return path;
+        }
+
         public static Bitmap GetBitmap(UIElement element)
         {
             var rect = new Rect(element.RenderSize);

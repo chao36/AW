@@ -38,7 +38,6 @@ namespace AW.Visual.VisualType
                 });
 
                 SubItemContainer.Margin = new Thickness(left, 0, 0, 0);
-                Separator.Margin = new Thickness(0, 4, 0, 2);
             }
         }
 
@@ -89,6 +88,7 @@ namespace AW.Visual.VisualType
         private static readonly Type BoolType = typeof(bool);
         private static readonly Type DateTimeType = typeof(DateTime);
         private static readonly Type ColorType = typeof(Color);
+        private static readonly Type ActionType = typeof(Action);
         private static readonly Type EnumerableType = typeof(IList);
 
         private void SetProperties(object source)
@@ -109,7 +109,7 @@ namespace AW.Visual.VisualType
                         string tag = attribute.Tag ?? p.Name;
 
                         if (attribute is AWComboBoxAttribute comboBoxAttribute)
-                            return new ComboBoxContext(tag, null, source, p.Name, comboBoxAttribute.DisplayMemberPath, comboBoxAttribute.SourceName, comboBoxAttribute.UpdateSourceEventName, true);
+                            return new ComboBoxContext(tag, null, source, p.Name, comboBoxAttribute, true);
 
                         if (p.PropertyType == IntType)
                             return new TextBoxContext(tag, null, source, p.Name, TextBoxType.Int, attribute, true);
@@ -131,14 +131,17 @@ namespace AW.Visual.VisualType
                         if (p.PropertyType == ColorType)
                             return new ColorPickerContext(tag, source, p.Name, true);
 
+                        if (p.PropertyType == ActionType)
+                            return new ButtonContext(tag, source, p.Name, attribute as AWActionAttribute);
+
                         if (p.PropertyType.IsEnum)
                             return new EnumComboBoxContext(tag, null, source, p.Name, Enum.GetNames(p.PropertyType), true);
 
                         if (p.PropertyType.GetInterfaces().Any(t => t == EnumerableType) && p.PropertyType.GenericTypeArguments[0].IsClass && p.PropertyType.GenericTypeArguments[0] != StringType)
-                            return new CollectionContext(tag, source, p.Name, Left + 15);
+                            return new CollectionContext(tag, source, p.Name, Left + 20);
 
                         if (p.PropertyType.IsClass)
-                            return new ObjectContext(tag, source, p.Name, Left + 15);
+                            return new ObjectContext(tag, source, p.Name, Left + 20);
 
                         return null;
                     })

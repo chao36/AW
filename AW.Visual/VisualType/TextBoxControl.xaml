@@ -17,5 +17,16 @@
             md:HintAssist.Hint="{Binding Placeholder}"
             Text="{Binding Value}"
             Margin="2 0 0 0"/>
+        <Label
+            x:Name="PathElement"
+            Content="{Binding Value}"
+            ToolTip="{Binding Value}"
+            BorderBrush="{DynamicResource MaterialDesignDivider}"
+            BorderThickness="0 0 0 1"
+            Visibility="Collapsed"
+            Height="22"
+            VerticalContentAlignment="Center"
+            VerticalAlignment="Stretch"
+            HorizontalAlignment="Stretch"/>
     </StackPanel>
 </UserControl>

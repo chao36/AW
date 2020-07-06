@@ -3,11 +3,13 @@ using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Reflection;
 using System.Windows;
-using System.Windows.Controls;
+
+using AW.Base;
+using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    public partial class ComboBoxControl : UserControl
+    public partial class ComboBoxControl : BaseControl
     {
         public ComboBoxControl(bool hideTag, string displayMemberPath)
         {
@@ -18,27 +20,33 @@ namespace AW.Visual.VisualType
 
             Element.DisplayMemberPath = displayMemberPath;
         }
+
+        protected override void OnLoaded()
+        {
+            if (DataContext is VisualTypeContext context)
+                context.Notify(nameof(context.Value));
+        }
     }
 
     public class ComboBoxContext : VisualTypeContext
     {
-        private Func<ObservableCollection<object>> GetSource;
+        private readonly Func<ObservableCollection<object>> GetSource;
 
-        public ComboBoxContext(string tag, string placeholder, object source, string property, string displayMemberPath, string itemSourceName, string itemSourceEventUpdateName, bool? hideTag = null)
-            : base(tag, source, property, new ComboBoxControl(hideTag ?? string.IsNullOrEmpty(tag), displayMemberPath))
+        public ComboBoxContext(string tag, string placeholder, object source, string property, AWComboBoxAttribute attribute, bool? hideTag = null)
+            : base(tag, source, property, new ComboBoxControl(hideTag ?? string.IsNullOrEmpty(tag), attribute.DisplayMemberPath))
         {
-            if (!string.IsNullOrEmpty(itemSourceName))
+            if (!string.IsNullOrEmpty(attribute.SourceName))
             {
                 Type type = source.GetType();
 
-                PropertyInfo propertyInfo = type.GetProperty(itemSourceName);
+                PropertyInfo propertyInfo = type.GetProperty(attribute.SourceName);
 
                 if (propertyInfo != null)
                     GetSource = () => new ObservableCollection<object>(propertyInfo.GetValue(source) as IEnumerable<object>);
 
-                if (!string.IsNullOrEmpty(itemSourceEventUpdateName))
+                if (!string.IsNullOrEmpty(attribute.UpdateSourceEventName))
                 {
-                    EventInfo eventInfo = type.GetEvent(itemSourceEventUpdateName);
+                    EventInfo eventInfo = type.GetEvent(attribute.UpdateSourceEventName);
                     Action update = () => Notify(nameof(Items));
 
                     eventInfo.AddMethod?.Invoke(source, new object[] { update });
@@ -58,12 +66,12 @@ namespace AW.Visual.VisualType
             : base(tag, source, property, new ComboBoxControl(hideTag ?? string.IsNullOrEmpty(tag), null))
         {
             Placeholder = placeholder;
-            Items = new ObservableCollection<object>(items);
+            Items = new ObservableCollection<string>(items);
         }
 
         public string Placeholder { get; }
-        public ObservableCollection<object> Items { get; }
+        public ObservableCollection<string> Items { get; }
 
-        protected override object GetValue() =>  base.GetValue();
+        public override object Value { get => base.Value.ToString(); set => base.Value = value; }
     }
 }

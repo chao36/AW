@@ -14,13 +14,27 @@ namespace AW.Visual.VisualType
             if (hideTag)
                 TagLabel.Visibility = Visibility.Collapsed;
 
-            if (attribute is AWLimitAttribute limitAttribute && limitAttribute.MaxLength > 0)
-                Element.MaxLength = limitAttribute.MaxLength;
+            if (attribute is AWFilePathAttribute filePathAttribute)
+            {
+                Element.Visibility = Visibility.Collapsed;
+                PathElement.Visibility = Visibility.Visible;
 
-            if (textBoxType != TextBoxType.String)
-                VisualHelper.LimitInput(Element, textBoxType == TextBoxType.Double ? LimitType.Double : LimitType.Int, (attribute as AWLimitAttribute)?.AllowedStrings);
+                VisualHelper.LeftClick(PathElement, _ =>
+                {
+                    if (DataContext is VisualTypeContext context)
+                        context.Value = VisualHelper.SelectFile(filePathAttribute.Message, filePathAttribute.Filter, context.Value?.ToString(), filePathAttribute.OnlyFolder);
+                });
+            }
+            else
+            {
+                if (attribute is AWLimitAttribute limitAttribute && limitAttribute.MaxLength > 0)
+                    Element.MaxLength = limitAttribute.MaxLength;
 
-            VisualHelper.ExitOnEnter(Element);
+                if (textBoxType != TextBoxType.String)
+                    VisualHelper.LimitInput(Element, textBoxType == TextBoxType.Double ? LimitType.Double : LimitType.Int, (attribute as AWLimitAttribute)?.AllowedStrings);
+
+                VisualHelper.ExitOnEnter(Element);
+            }
         }
     }
 

@@ -44,9 +44,5 @@
                 </ItemsPanelTemplate>
             </ItemsControl.ItemsPanel>
         </ItemsControl>
-        <Separator
-            x:Name="Separator"
-            Background="{DynamicResource MaterialDesignDivider}"
-            Height="1"/>
     </StackPanel>
 </UserControl>

@@ -17,6 +17,38 @@ namespace AW.Base
     }
 
     [AttributeUsage(AttributeTargets.Property)]
+    public class AWActionAttribute : AWPropertyAttribute
+    {
+        public string Content { get; }
+        public string CanExecuteName { get; }
+
+        public AWActionAttribute(int index = 0, string tag = null, string content = null, string canExecuteName = null)
+            : base(index, tag)
+        {
+            Content = content;
+            CanExecuteName = canExecuteName;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
+    public class AWFilePathAttribute : AWPropertyAttribute
+    {
+        public bool OnlyFolder { get; }
+
+        public string Filter { get; }
+        public string Message { get; }
+
+        public AWFilePathAttribute(int index = 0, string tag = null, string filter = null, string message = null, bool onlyFolder = false)
+            : base(index, tag)
+        {
+            OnlyFolder = onlyFolder;
+
+            Filter = filter;
+            Message = message;
+        }
+    }
+
+    [AttributeUsage(AttributeTargets.Property)]
     public class AWLimitAttribute : AWPropertyAttribute
     {
         public int MaxLength { get; }
