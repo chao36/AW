@@ -44,6 +44,19 @@ namespace AW.Visual.Common
 
     public partial class ContextMenuActionControl : BaseControl
     {
+        public static readonly DependencyProperty InnerPaddingProperty = DependencyProperty.Register(nameof(InnerPadding), typeof(Thickness),
+              typeof(ActionControl), new PropertyMetadata(new Thickness(4, 0, 4, 0), InnerPaddingPropertyChanged));
+
+        public Thickness InnerPadding
+        {
+            get => Element.ContentPadding;
+            set => SetValue(InnerPaddingProperty, value);
+        }
+
+        private void InnerPaddingPropertyChanged(Thickness value) => Element.ContentPadding = value;
+        private static void InnerPaddingPropertyChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+            => ((ContextMenuActionControl)d).InnerPaddingPropertyChanged((Thickness)e.NewValue);
+
         public ContextMenuActionControl() => InitializeComponent();
 
         protected override void OnDataContextChange()

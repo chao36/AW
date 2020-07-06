@@ -19,7 +19,9 @@
             </ItemsControl.ItemsPanel>
             <ItemsControl.ItemTemplate>
                 <DataTemplate>
-                    <base:ContextMenuActionControl/>
+                    <base:ContextMenuActionControl
+                        Height="32"
+                        InnerPadding="0"/>
                 </DataTemplate>
             </ItemsControl.ItemTemplate>
         </ItemsControl>
