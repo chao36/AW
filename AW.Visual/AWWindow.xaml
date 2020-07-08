@@ -34,8 +34,9 @@
                     <ColumnDefinition/>
                     <ColumnDefinition Width="96"/>
                 </Grid.ColumnDefinitions>
-                <md:PackIcon
+                <Image
                     x:Name="Icon"
+                    Margin="5 0"
                     Width="20"
                     Height="20"
                     Visibility="Hidden"

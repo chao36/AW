@@ -135,14 +135,20 @@ namespace AW.Visual
             set => CloseBtn.Visibility = true ? Visibility.Visible : Visibility.Collapsed;
         }
 
-        public PackIconKind? AppIcon
+        public ImageSource AppIcon
         {
-            get => Icon.Kind;
+            get => Icon.Source;
             set
             {
                 Icon.Visibility = value == null ? Visibility.Hidden : Visibility.Visible;
-                Icon.Kind = value.Value;
+                Icon.Source = value;
             }
+        }
+
+        public Thickness AppIconMargin
+        {
+            get => Icon.Margin;
+            set => Icon.Margin = value;
         }
 
         public double AppIconSize

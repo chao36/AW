@@ -21,7 +21,7 @@
         <base:ActionControl
             x:Name="Element"
             RippleFeedback="Transparent"
-            ContentPadding="2 1">
+            ContentPadding="4 1">
             <base:ActionControl.ContentStyle>
                 <Style TargetType="Button" BasedOn="{StaticResource AWAction}">
                     <Style.Triggers>
