@@ -15,11 +15,15 @@ namespace AW.Visual
 {
     public class QuickKey
     {
-        public Key Key { get; }
-        public Key[] ModifierKeys { get; }
+        public Guid Id { get; }
+
+        public Key Key { get; set; }
+        public Key[] ModifierKeys { get; set; }
 
         public QuickKey(Key key, params Key[] modifierKeys)
         {
+            Id = Guid.NewGuid();
+
             Key = key;
             ModifierKeys = modifierKeys;
         }
@@ -29,9 +33,30 @@ namespace AW.Visual
             string result = null;
 
             if (ModifierKeys?.Length > 0)
-                result = string.Concat(ModifierKeys.Select(k => $"{k} + "));
+                result = string.Concat(ModifierKeys.Select(k => $"{GetName(k)}+"));
             
-            return $"{result}{Key}";
+            return $"{result}{GetName(Key)}";
+        }
+
+        public static string GetName(Key key)
+        {
+            switch (key)
+            {
+                case Key.LeftCtrl:
+                case Key.RightCtrl:
+                    return "Ctrl";
+                case Key.LeftShift:
+                case Key.RightShift:
+                    return "Shift";
+                case Key.LeftAlt:
+                case Key.RightAlt:
+                    return "Alt";
+                case Key.LWin:
+                case Key.RWin:
+                    return "Win";
+            }
+
+            return key.ToString();
         }
     }
 

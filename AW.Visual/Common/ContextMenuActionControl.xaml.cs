@@ -151,7 +151,11 @@ namespace AW.Visual.Common
             }
 
             QuickKey = quickKey.ToString();
-            AWWindow.QuickKeys.Add(new ActionQuickKey(() => Command?.Execute(null), quickKey.Key, quickKey.ModifierKeys));
+            AWWindow.QuickKeys.Add(new ActionQuickKey(() =>
+            {
+                if (Command?.CanExecute(null) == true)
+                    Command?.Execute(null);
+            }, quickKey.Key, quickKey.ModifierKeys));
         }
 
         public UIElement Element { get; set; }
