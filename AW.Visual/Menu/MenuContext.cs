@@ -133,7 +133,7 @@ namespace AW.Visual.Menu
         
         public void AddItem(IMenuItem item)
         {
-            item.Left = Left + 40;
+            item.Left = Left + 15;
             item.Group = this;
 
             item.OnRemove ??= OnRemove;
