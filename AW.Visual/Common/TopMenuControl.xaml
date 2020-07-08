@@ -7,7 +7,8 @@
     xmlns:base="clr-namespace:AW.Visual.Common"
     mc:Ignorable="d"
     WindowChrome.IsHitTestVisibleInChrome="True">
-    <StackPanel>
+    <StackPanel
+        Margin="0 -1 0 0">
         <ItemsControl
             ItemsSource="{Binding Items}"
             HorizontalAlignment="Left">

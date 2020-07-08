@@ -39,6 +39,9 @@ namespace AW.Visual.Common
         bool HasItems { get; }
         IEnumerable<IContextMenuAction> Actions { get; }
 
+        string QuickKey { get; }
+        void SetQuickKey(QuickKey quickKey);
+
         void UpdateState();
     }
 
@@ -80,11 +83,8 @@ namespace AW.Visual.Common
                     Popup.HorizontalOffset = 0;
                     Popup.VerticalOffset = 0;
 
-                    if (Element.EndContent is PackIcon icon)
-                    {
-                        BindingOperations.ClearBinding(icon, VisibilityProperty);
-                        icon.Visibility = Visibility.Collapsed;
-                    }
+                    if (Element.EndContent is UIElement element)
+                        element.Visibility = Visibility.Collapsed;
                 }
 
                 if (context.IconCollapse)
@@ -115,12 +115,20 @@ namespace AW.Visual.Common
         public ContextMenuActionContext(string header, PackIconKind? icon) : base(header, icon) { }
         public ContextMenuActionContext(string header, PackIconKind? icon, IEnumerable<IContextMenuAction> actions) : base(header, icon)
             => SetActions(actions);
-        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command) : base(header, icon, command) { }
-        public ContextMenuActionContext(string header, PackIconKind? icon, Action action) : base(header, icon, action) { }
-        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, IEnumerable<IContextMenuAction> actions) : base(header, icon, command)
-            => SetActions(actions);
-        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions) : base(header, icon, action)
-            => SetActions(actions);
+        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, QuickKey quickKey = null) : base(header, icon, command)
+            => SetQuickKey(quickKey);
+        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, QuickKey quickKey = null) : base(header, icon, action)
+            => SetQuickKey(quickKey);
+        public ContextMenuActionContext(string header, PackIconKind? icon, ICommand command, IEnumerable<IContextMenuAction> actions, QuickKey quickKey = null) : base(header, icon, command)
+            => Init(actions, quickKey);
+        public ContextMenuActionContext(string header, PackIconKind? icon, Action action, IEnumerable<IContextMenuAction> actions, QuickKey quickKey = null) : base(header, icon, action)
+            => Init(actions, quickKey);
+
+        private void Init(IEnumerable<IContextMenuAction> actions, QuickKey quickKey)
+        {
+            SetActions(actions);
+            SetQuickKey(quickKey);
+        }
 
         public void SetActions(IEnumerable<IContextMenuAction> actions)
         {
@@ -129,6 +137,21 @@ namespace AW.Visual.Common
             if (Actions != null)
                 foreach (IContextMenuAction item in Actions)
                     item.Parent = this;
+        }
+
+        public string QuickKey { get; private set; }
+        public void SetQuickKey(QuickKey quickKey)
+        {
+            if (quickKey == null)
+            {
+                QuickKey = null;
+                Notify(nameof(QuickKey));
+
+                return;
+            }
+
+            QuickKey = quickKey.ToString();
+            AWWindow.QuickKeys.Add(new ActionQuickKey(() => Command?.Execute(null), quickKey.Key, quickKey.ModifierKeys));
         }
 
         public UIElement Element { get; set; }

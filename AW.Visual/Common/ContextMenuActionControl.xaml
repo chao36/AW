@@ -37,13 +37,22 @@
                 </Style>
             </base:ActionControl.ContentStyle>
             <base:ActionControl.EndContent>
-                <md:PackIcon
-                    Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibility}}"
-                    Foreground="{DynamicResource MaterialDesignBody}"
-                    Kind="MenuRight"
-                    VerticalAlignment="Center"
-                    Height="20"
-                    Width="20"/>
+                <StackPanel
+                    Orientation="Horizontal"
+                    VerticalAlignment="Center">
+                    <Label
+                        FontSize="11"
+                        Content="{Binding QuickKey}"
+                        VerticalAlignment="Center"
+                        Opacity="0.8"/>
+                    <md:PackIcon
+                        Visibility="{Binding HasItems, Converter={StaticResource BooleanToVisibility}}"
+                        Foreground="{DynamicResource MaterialDesignBody}"
+                        Kind="MenuRight"
+                        VerticalAlignment="Center"
+                        Height="20"
+                        Width="20"/>
+                </StackPanel>
             </base:ActionControl.EndContent>
         </base:ActionControl>
         <Separator

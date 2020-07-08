@@ -35,7 +35,10 @@ namespace AW.Visual.Menu
 
         public MenuItemContext(string header, PackIconKind? icon) : base(header, icon) { }
         public MenuItemContext(string header, PackIconKind? icon, Action<IMenuItem> action) : this(header, icon)
-            => Command = new SimpleCommand(() => action?.Invoke(this));
+        {
+            Action commandAction = () => action?.Invoke(this);
+            Command = new SimpleCommand(commandAction);
+        }
 
         public Func<IMenuItem, bool> OnRemove { get; set; }
         public Func<IMenuItem, string, bool> OnRename { get; set; }
