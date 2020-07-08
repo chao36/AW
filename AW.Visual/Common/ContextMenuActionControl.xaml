@@ -21,7 +21,7 @@
         <base:ActionControl
             x:Name="Element"
             RippleFeedback="Transparent"
-            ContentPadding="4 2">
+            ContentPadding="2 1">
             <base:ActionControl.ContentStyle>
                 <Style TargetType="Button" BasedOn="{StaticResource AWAction}">
                     <Style.Triggers>
@@ -41,7 +41,7 @@
                     Orientation="Horizontal"
                     VerticalAlignment="Center">
                     <Label
-                        FontSize="11"
+                        FontSize="10"
                         Content="{Binding QuickKey}"
                         VerticalAlignment="Center"
                         Opacity="0.8"/>

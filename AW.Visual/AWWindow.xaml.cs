@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows;
+using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 
@@ -29,7 +30,7 @@ namespace AW.Visual
 
             if (ModifierKeys?.Length > 0)
                 result = string.Concat(ModifierKeys.Select(k => $"{k} + "));
-
+            
             return $"{result}{Key}";
         }
     }
@@ -104,8 +105,9 @@ namespace AW.Visual
         {
             if (toolbar != null)
             {
-                Toolbar.Children.RemoveAt(0);
+                Toolbar.Children.Remove(Header);
                 Toolbar.Children.Add(toolbar);
+                Grid.SetColumn(toolbar, 1);
             }
         }
 
@@ -131,6 +133,26 @@ namespace AW.Visual
         {
             get => CloseBtn.Visibility == Visibility.Visible;
             set => CloseBtn.Visibility = true ? Visibility.Visible : Visibility.Collapsed;
+        }
+
+        public PackIconKind? AppIcon
+        {
+            get => Icon.Kind;
+            set
+            {
+                Icon.Visibility = value == null ? Visibility.Hidden : Visibility.Visible;
+                Icon.Kind = value.Value;
+            }
+        }
+
+        public double AppIconSize
+        {
+            get => Icon.Width;
+            set
+            {
+                Icon.Width = value;
+                Icon.Height = value;
+            }
         }
 
         private void WindowStateChanged(object sender, EventArgs e)

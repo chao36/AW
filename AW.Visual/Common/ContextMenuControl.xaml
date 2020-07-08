@@ -8,7 +8,7 @@
     mc:Ignorable="d" 
     Background="{DynamicResource MaterialDesignCardBackground}"
     BorderBrush="{DynamicResource MaterialDesignDivider}"
-    BorderThickness="1"
+    BorderThickness="0.75"
     MinWidth="200"
     Padding="2">
     <ItemsControl

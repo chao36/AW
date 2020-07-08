@@ -30,16 +30,25 @@
                 HorizontalAlignment="Stretch"
                 Height="32">
                 <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
                     <ColumnDefinition/>
                     <ColumnDefinition Width="96"/>
                 </Grid.ColumnDefinitions>
+                <md:PackIcon
+                    x:Name="Icon"
+                    Width="20"
+                    Height="20"
+                    Visibility="Hidden"
+                    VerticalAlignment="Center"/>
                 <Label
-                    Margin="5 0 0 0"
+                    x:Name="Header"
+                    Grid.Column="1"
+                    Margin="5 0"
                     FontSize="16"
                     VerticalAlignment="Center"
                     Content="{Binding Title, ElementName=W}"/>
                 <StackPanel
-                    Grid.Column="1"
+                    Grid.Column="2"
                     VerticalAlignment="Center"
                     HorizontalAlignment="Right"
                     Orientation="Horizontal">
