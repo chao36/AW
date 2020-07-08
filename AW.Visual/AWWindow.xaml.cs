@@ -210,7 +210,7 @@ namespace AW.Visual
         public void ShowWait(string message)
             => DialogHelper.ShowWait(Container, message);
         
-        public void ShowAlert(FrameworkElement view)
+        public void ShowView(FrameworkElement view)
             => DialogHelper.ShowView(Container, view);
     }
 }
