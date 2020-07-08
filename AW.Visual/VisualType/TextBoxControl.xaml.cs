@@ -1,11 +1,11 @@
 ﻿using System.Windows;
-using System.Windows.Controls;
 
 using AW.Base;
+using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    public partial class TextBoxControl : UserControl
+    public partial class TextBoxControl : BaseControl
     {
         public TextBoxControl(bool hideTag, TextBoxType textBoxType, AWPropertyAttribute attribute)
         {
@@ -36,6 +36,12 @@ namespace AW.Visual.VisualType
                 VisualHelper.ExitOnEnter(Element);
             }
         }
+
+        protected override void OnDataContextChange()
+        {
+            if (DataContext is TextBoxContext context && !string.IsNullOrEmpty(context.Style))
+                Element.SetResourceReference(StyleProperty, context.Style);
+        }
     }
 
     public enum TextBoxType
@@ -50,6 +56,8 @@ namespace AW.Visual.VisualType
         public TextBoxContext(string tag, string placeholder, object source, string property, TextBoxType textBoxType, AWPropertyAttribute attribute = null, bool? hideTag = null)
             : base(tag, source, property, new TextBoxControl(hideTag ?? string.IsNullOrEmpty(tag), textBoxType, attribute))
             => Placeholder = placeholder;
+
+        public string Style { get; set; }
 
         public string Placeholder { get; }
     }

@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Reflection;
-using System.Windows.Controls;
 using System.Windows.Input;
 
 using AW.Base;
@@ -8,9 +7,15 @@ using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    public partial class ButtonControl : UserControl
+    public partial class ButtonControl : BaseControl
     {
         public ButtonControl() => InitializeComponent();
+
+        protected override void OnDataContextChange()
+        {
+            if (DataContext is ButtonContext context && !string.IsNullOrEmpty(context.Style))
+                Element.SetResourceReference(StyleProperty, context.Style);
+        }
     }
 
     public class ButtonContext : VisualTypeContext
@@ -35,6 +40,8 @@ namespace AW.Visual.VisualType
 
             Command = new SimpleCommand(action, canAction);
         }
+
+        public string Style { get; set; }
 
         public string Content { get; }
         public ICommand Command { get; }
