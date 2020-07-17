@@ -31,7 +31,7 @@ namespace AW.Visual.VisualType
                 style = enumComboBoxContext.Style;
             
             if (!string.IsNullOrEmpty(style))
-                Element.SetResourceReference(StyleProperty, style);
+                Element.SetResourceReference(StyleProperty, FindResource(style));
         }
 
         protected override void OnLoaded()

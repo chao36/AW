@@ -14,7 +14,7 @@ namespace AW.Visual.VisualType
         protected override void OnDataContextChange()
         {
             if (DataContext is ButtonContext context && !string.IsNullOrEmpty(context.Style))
-                Element.SetResourceReference(StyleProperty, context.Style);
+                Element.SetResourceReference(StyleProperty, FindResource(context.Style));
         }
     }
 
