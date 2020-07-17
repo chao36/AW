@@ -40,7 +40,7 @@ namespace AW.Visual.VisualType
         protected override void OnDataContextChange()
         {
             if (DataContext is TextBoxContext context && !string.IsNullOrEmpty(context.Style))
-                Element.SetResourceReference(StyleProperty, FindResource(context.Style));
+                Element.Style = (Style)FindResource(context.Style);
         }
     }
 

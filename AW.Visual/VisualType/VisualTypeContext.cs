@@ -31,8 +31,7 @@ namespace AW.Visual.VisualType
 
             Tag = tag;
 
-            Control = control;
-            Control.DataContext = this;
+            ControlSource = control;
 
             if (Source is INotifyPropertyChanged notify)
                 notify.PropertyChanged += (_, e) =>
@@ -52,7 +51,17 @@ namespace AW.Visual.VisualType
             set => SetValue(value);
         }
 
-        public FrameworkElement Control { get; }
+        private readonly FrameworkElement ControlSource;
+        public FrameworkElement Control
+        {
+            get
+            {
+                if (ControlSource.DataContext != this)
+                    ControlSource.DataContext = this;
+
+                return ControlSource;
+            }
+        }
 
         protected virtual object GetValue()
         {
