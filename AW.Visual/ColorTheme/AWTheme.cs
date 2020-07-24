@@ -43,6 +43,10 @@ namespace AW.Visual.ColorTheme
             MaterialDesignTextFieldBoxDisabledBackground = GetColor(isDark ? "#0DFFFFFF" : "#0D000000");
             MaterialDesignTextAreaBorder = GetColor(isDark ? "#BCFFFFFF" : "#BC000000");
             MaterialDesignTextAreaInactiveBorder = GetColor(isDark ? "#1AFFFFFF" : "#1A000000");
+
+            MaterialDesignToolForeground = MaterialDesignDivider;
+            MaterialDesignToolBackground = MaterialDesignBackground;
+            MaterialDesignDataGridRowHoverBackground = MaterialDesignSelection;
         }
 
         public Color ValidationErrorColor { get; }
@@ -70,6 +74,10 @@ namespace AW.Visual.ColorTheme
         public Color MaterialDesignTextFieldBoxDisabledBackground { get; }
         public Color MaterialDesignTextAreaBorder { get; }
         public Color MaterialDesignTextAreaInactiveBorder { get; }
+
+        public Color MaterialDesignToolForeground { get; }
+        public Color MaterialDesignToolBackground { get; }
+        public Color MaterialDesignDataGridRowHoverBackground { get; }
 
         private Color GetColor(string hex)
             => (Color)ColorConverter.ConvertFromString(hex);
