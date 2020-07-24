@@ -5,6 +5,5 @@
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008" 
     xmlns:base="clr-namespace:AW.Visual.Common"
-    mc:Ignorable="d"
-    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=FrameworkElement, AncestorLevel=1}, Path=Background}">
+    mc:Ignorable="d">
 </base:BaseControl>

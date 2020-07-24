@@ -5,11 +5,9 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:base="clr-namespace:AW.Visual.Common"
-    mc:Ignorable="d" 
-    Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=FrameworkElement, AncestorLevel=1}, Path=Background}">
+    mc:Ignorable="d" >
     <Grid
-        x:Name="Container"
-        Background="{Binding RelativeSource={RelativeSource Mode=FindAncestor, AncestorType=FrameworkElement, AncestorLevel=1}, Path=Background}">
+        x:Name="Container">
         <Grid.ColumnDefinitions>
             <ColumnDefinition/>
             <ColumnDefinition Width="2*"/>
