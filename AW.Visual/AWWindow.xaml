@@ -35,7 +35,7 @@
                     <ColumnDefinition Width="96"/>
                 </Grid.ColumnDefinitions>
                 <Image
-                    x:Name="Icon"
+                    x:Name="IconElement"
                     Margin="5 0"
                     Width="20"
                     Height="20"

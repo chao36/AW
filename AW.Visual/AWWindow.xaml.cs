@@ -162,18 +162,18 @@ namespace AW.Visual
 
         public ImageSource AppIcon
         {
-            get => Icon.Source;
+            get => IconElement.Source;
             set
             {
-                Icon.Visibility = value == null ? Visibility.Hidden : Visibility.Visible;
-                Icon.Source = value;
+                IconElement.Visibility = value == null ? Visibility.Hidden : Visibility.Visible;
+                IconElement.Source = value;
             }
         }
 
         public Thickness AppIconMargin
         {
-            get => Icon.Margin;
-            set => Icon.Margin = value;
+            get => IconElement.Margin;
+            set => IconElement.Margin = value;
         }
 
         public double AppIconSize
@@ -181,8 +181,8 @@ namespace AW.Visual
             get => Icon.Width;
             set
             {
-                Icon.Width = value;
-                Icon.Height = value;
+                IconElement.Width = value;
+                IconElement.Height = value;
             }
         }
 

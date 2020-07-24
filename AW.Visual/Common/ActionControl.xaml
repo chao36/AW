@@ -16,7 +16,7 @@
         HorizontalContentAlignment="Stretch"
         Padding="4 0">
         <i:Interaction.Triggers>
-            <i:EventTrigger EventName="PreviewMouseDown">
+            <i:EventTrigger EventName="PreviewMouseLeftButtonDown">
                 <i:InvokeCommandAction Command="{Binding Command}" />
             </i:EventTrigger>
         </i:Interaction.Triggers>
