@@ -4,17 +4,22 @@
     xmlns:md="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:i="http://schemas.microsoft.com/xaml/behaviors"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
     xmlns:base="clr-namespace:AW.Visual.Common"
     mc:Ignorable="d">
     <Button
         x:Name="Element"
         Style="{StaticResource AWFlatButton}"
-        Command="{Binding Command}"
         VerticalAlignment="Center"
         HorizontalAlignment="Stretch"
         HorizontalContentAlignment="Stretch"
         Padding="4 0">
+        <i:Interaction.Triggers>
+            <i:EventTrigger EventName="PreviewMouseDown">
+                <i:InvokeCommandAction Command="{Binding Command}" />
+            </i:EventTrigger>
+        </i:Interaction.Triggers>
         <Grid
             x:Name="Container"
             Background="Transparent"

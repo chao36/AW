@@ -1,4 +1,6 @@
 ﻿using System.Windows;
+using System.Windows.Controls;
+using System.Windows.Data;
 
 using AW.Base;
 using AW.Visual.Common;
@@ -39,8 +41,18 @@ namespace AW.Visual.VisualType
 
         protected override void OnDataContextChange()
         {
-            if (DataContext is TextBoxContext context && !string.IsNullOrEmpty(context.Style))
-                Element.Style = (Style)FindResource(context.Style);
+            if (DataContext is TextBoxContext context)
+            {
+                Binding binding = new Binding(nameof(context.Value))
+                {
+                    UpdateSourceTrigger = context.Trigger
+                };
+
+                Element.SetBinding(TextBox.TextProperty, binding);
+
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
         }
     }
 
@@ -56,6 +68,8 @@ namespace AW.Visual.VisualType
         public TextBoxContext(string tag, string placeholder, object source, string property, TextBoxType textBoxType, AWPropertyAttribute attribute = null, bool? hideTag = null)
             : base(tag, source, property, new TextBoxControl(hideTag ?? string.IsNullOrEmpty(tag), textBoxType, attribute))
             => Placeholder = placeholder;
+
+        public UpdateSourceTrigger Trigger { get; set; } = UpdateSourceTrigger.Default;
 
         public string Style { get; set; }
 
