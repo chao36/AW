@@ -20,18 +20,14 @@ namespace AW.Visual.VisualType
 
             Element.DisplayMemberPath = displayMemberPath;
         }
-
+        
         protected override void OnDataContextChange()
         {
-            string style = null;
-
-            if (DataContext is ComboBoxContext comboBoxContext)
-                style = comboBoxContext.Style;
-            if (DataContext is EnumComboBoxContext enumComboBoxContext)
-                style = enumComboBoxContext.Style;
-            
-            if (!string.IsNullOrEmpty(style))
-                Element.SetResourceReference(StyleProperty, FindResource(style));
+            if (DataContext is IVisualTypeContext context)
+            {
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
         }
 
         protected override void OnLoaded()
@@ -69,8 +65,6 @@ namespace AW.Visual.VisualType
             Placeholder = placeholder;
         }
 
-        public string Style { get; set; }
-
         public string Placeholder { get; }
         public ObservableCollection<object> Items => GetSource?.Invoke();
     }
@@ -83,8 +77,6 @@ namespace AW.Visual.VisualType
             Placeholder = placeholder;
             Items = new ObservableCollection<string>(items);
         }
-
-        public string Style { get; set; }
 
         public string Placeholder { get; }
         public ObservableCollection<string> Items { get; }

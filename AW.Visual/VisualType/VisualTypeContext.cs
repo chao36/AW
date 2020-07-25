@@ -10,6 +10,8 @@ namespace AW.Visual.VisualType
     public interface IVisualTypeContext : INotifyPropertyChanged
     {
         int Left { get; set; }
+        
+        string Style { get; }
 
         object Source { get; }
         string PropertyName { get; }
@@ -40,6 +42,8 @@ namespace AW.Visual.VisualType
                         Notify(nameof(Value));
                 };
         }
+
+        public string Style { get; set; }
 
         public object Source { get; }
         public string PropertyName { get; }

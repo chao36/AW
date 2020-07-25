@@ -71,8 +71,6 @@ namespace AW.Visual.VisualType
 
         public UpdateSourceTrigger Trigger { get; set; } = UpdateSourceTrigger.Default;
 
-        public string Style { get; set; }
-
         public string Placeholder { get; }
     }
 }

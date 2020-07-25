@@ -1,10 +1,21 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+
+using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    public partial class LabelControl : UserControl
+    public partial class LabelControl : BaseControl
     {
         public LabelControl() => InitializeComponent();
+
+        protected override void OnDataContextChange()
+        {
+            if (DataContext is IVisualTypeContext context)
+            {
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
+        }
     }
 
     public class LabelContext : VisualTypeContext

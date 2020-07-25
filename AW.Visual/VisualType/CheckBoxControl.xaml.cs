@@ -1,8 +1,10 @@
-﻿using System.Windows.Controls;
+﻿using System.Windows;
+
+using AW.Visual.Common;
 
 namespace AW.Visual.VisualType
 {
-    public partial class CheckBoxControl : UserControl
+    public partial class CheckBoxControl : BaseControl
     {
         public CheckBoxControl(bool hideTag)
         {
@@ -10,6 +12,15 @@ namespace AW.Visual.VisualType
 
             if (hideTag)
                 Element.Content = null;
+        }
+
+        protected override void OnDataContextChange()
+        {
+            if (DataContext is IVisualTypeContext context)
+            {
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
         }
     }
 

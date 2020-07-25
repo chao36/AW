@@ -4,9 +4,11 @@ using System.Windows.Data;
 using System.Windows.Input;
 using System.Windows.Media;
 
+using AW.Visual.Common;
+
 namespace AW.Visual.VisualType
 {
-    public partial class DateControl : UserControl
+    public partial class DateControl : BaseControl
     {
         public DateControl(bool hideTag)
         {
@@ -37,6 +39,15 @@ namespace AW.Visual.VisualType
                         be.UpdateSource();
                 }
             };
+        }
+
+        protected override void OnDataContextChange()
+        {
+            if (DataContext is IVisualTypeContext context)
+            {
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
         }
     }
 

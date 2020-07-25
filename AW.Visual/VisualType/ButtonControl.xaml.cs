@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Reflection;
+using System.Windows;
 using System.Windows.Input;
 
 using AW.Base;
@@ -13,8 +14,11 @@ namespace AW.Visual.VisualType
 
         protected override void OnDataContextChange()
         {
-            if (DataContext is ButtonContext context && !string.IsNullOrEmpty(context.Style))
-                Element.SetResourceReference(StyleProperty, FindResource(context.Style));
+            if (DataContext is IVisualTypeContext context)
+            {
+                if (!string.IsNullOrEmpty(context.Style))
+                    Element.Style = (Style)FindResource(context.Style);
+            }
         }
     }
 
@@ -40,8 +44,6 @@ namespace AW.Visual.VisualType
 
             Command = new SimpleCommand(action, canAction);
         }
-
-        public string Style { get; set; }
 
         public string Content { get; }
         public ICommand Command { get; }
