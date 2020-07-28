@@ -6,7 +6,7 @@ using AW.Base.Serializer.Common;
 namespace AW.LangSupport
 {
     [AWSerializable]
-    public class LangConfig
+    public partial class LangConfig
     {
         [AWIgnore]
         public static LangConfig Instane { get; set; } = new LangConfig();
