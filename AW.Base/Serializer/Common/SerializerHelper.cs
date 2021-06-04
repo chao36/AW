@@ -17,7 +17,7 @@ namespace AW.Base.Serializer.Common
         {
             Logger = new Logger("Serializer", "serializer.log");
 
-            Assembly mainAsm = Assembly.GetEntryAssembly();
+            Assembly mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
             foreach (AssemblyName refAsmName in mainAsm.GetReferencedAssemblies())
             {
                 try

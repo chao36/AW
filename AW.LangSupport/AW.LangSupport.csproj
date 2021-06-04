@@ -10,7 +10,7 @@
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
     <PackageTags>AW;Lang;AW.LangSupport;AW.Lang;LangSupport;Translate;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>1.2.0</Version>
+    <Version>1.2.1</Version>
   </PropertyGroup>
 
   <ItemGroup>

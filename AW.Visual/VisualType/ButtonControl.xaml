@@ -9,13 +9,10 @@
     <StackPanel>
         <Button
             x:Name="Element"
+            Style="{StaticResource AWButton}"
             Content="{Binding Content}"
             Command="{Binding Command}"
             VerticalAlignment="Center"
-            HorizontalAlignment="Left"
-            FontSize="12"
-            FontWeight="Normal"
-            Padding="8 0"
-            Height="22"/>
+            HorizontalAlignment="Left"/>
     </StackPanel>
 </base:BaseControl>

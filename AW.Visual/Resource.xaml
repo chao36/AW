@@ -43,13 +43,16 @@
 
     <Style x:Key="AWAction" TargetType="{x:Type ButtonBase}">
         <Setter Property="FocusVisualStyle" Value="{StaticResource FocusVisual}"/>
-        <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="Foreground" Value="{DynamicResource MaterialDesignBody}"/>
         <Setter Property="md:RippleAssist.Feedback" Value="{DynamicResource MaterialDesignFlatButtonRipple}" />
+        <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="Padding" Value="8 2"/>
+        <Setter Property="BorderThickness" Value="0"/>
+        <Setter Property="md:ButtonAssist.CornerRadius" Value="0.5"/>
+        <Setter Property="Background" Value="Transparent"/>
+        <Setter Property="BorderBrush" Value="Transparent"/>
         <Setter Property="TextBlock.FontWeight" Value="Normal"/>
         <Setter Property="TextBlock.FontSize" Value="14"/>
-        <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="HorizontalContentAlignment" Value="Center"/>
         <Setter Property="VerticalContentAlignment" Value="Center"/>
         <Setter Property="Template">
@@ -58,6 +61,7 @@
                     <Grid>
                         <Border
                             x:Name="Border"
+                            CornerRadius="{Binding Path=(md:ButtonAssist.CornerRadius), RelativeSource={RelativeSource TemplatedParent}}"
                             Background="{TemplateBinding Background}"
                             BorderBrush="{TemplateBinding BorderBrush}" 
                             BorderThickness="{TemplateBinding BorderThickness}">
@@ -96,18 +100,48 @@
         </Style.Triggers>
     </Style>
 
+    <Style x:Key="AWButton" TargetType="{x:Type ButtonBase}"  BasedOn="{StaticResource AWAction}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueDarkBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueDarkForegroundBrush}"/>
+    </Style>
+    
+    <Style x:Key="AWAcceptButton" TargetType="{x:Type ButtonBase}"  BasedOn="{StaticResource AWAction}">
+        <Setter Property="Background" Value="{DynamicResource PrimaryHueLightBrush}"/>
+        <Setter Property="BorderBrush" Value="{DynamicResource PrimaryHueLightBrush}"/>
+        <Setter Property="Foreground" Value="{DynamicResource PrimaryHueLightForegroundBrush}"/>
+    </Style>
+
+    <Style x:Key="AWCancelButton" TargetType="{x:Type ButtonBase}"  BasedOn="{StaticResource AWAction}">
+        <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignBody}"/>
+        <Setter Property="Padding" Value="2"/>
+        <Setter Property="BorderThickness" Value="0 0 0 1"/>
+        <Style.Triggers>
+            <MultiTrigger>
+                <MultiTrigger.Conditions>
+                    <Condition Property="IsEnabled" Value="True" />
+                    <Condition Property="IsMouseOver" Value="True" />
+                </MultiTrigger.Conditions>
+                <MultiTrigger.Setters>
+                    <Setter Property="Background" Value="{DynamicResource MaterialDesignSelection}" />
+                </MultiTrigger.Setters>
+            </MultiTrigger>
+        </Style.Triggers>
+    </Style>
+
     <Style x:Key="AWTextBoxBase" TargetType="{x:Type TextBoxBase}">
         <Setter Property="Foreground" Value="{Binding RelativeSource={RelativeSource AncestorType={x:Type FrameworkElement}}, Path=(TextElement.Foreground)}"/>
         <Setter Property="BorderBrush" Value="{DynamicResource MaterialDesignTextBoxBorder}" />
+        <Setter Property="CaretBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
+        <Setter Property="FontSize" Value="14"/>
         <Setter Property="BorderThickness" Value="0 0 0 1"/>
         <Setter Property="md:TextFieldAssist.TextBoxViewMargin" Value="1 0 1 0" />
         <Setter Property="Background" Value="Transparent"/>
-        <Setter Property="CaretBrush" Value="{DynamicResource PrimaryHueMidBrush}" />
         <Setter Property="KeyboardNavigation.TabNavigation" Value="Local"/>
         <Setter Property="HorizontalContentAlignment" Value="Stretch"/>
         <Setter Property="VerticalContentAlignment" Value="Top"/>
         <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
-        <Setter Property="AllowDrop" Value="true"/>
+        <Setter Property="AllowDrop" Value="True"/>
         <Setter Property="ScrollViewer.PanningMode" Value="VerticalFirst"/>
         <Setter Property="Stylus.IsFlicksEnabled" Value="False"/>
         <Setter Property="Validation.ErrorTemplate" Value="{StaticResource MaterialDesignValidationErrorTemplate}"/>
@@ -463,6 +497,7 @@
 
     <Style x:Key="AWFloatingHintTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AWTextBox}">
         <Setter Property="md:HintAssist.IsFloating" Value="True"/>
+        <Setter Property="md:HintAssist.FloatingScale" Value="0.95"/>
     </Style>
 
     <Style x:Key="AWFilledTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AWFloatingHintTextBox}">
@@ -472,15 +507,10 @@
         <Setter Property="md:TextFieldAssist.UnderlineCornerRadius" Value="0" />
     </Style>
 
-    <Style x:Key="AWOutlinedTextBox" TargetType="{x:Type TextBox}" BasedOn="{StaticResource AWFloatingHintTextBox}">
+    <Style x:Key="AWOutlinedTextBox" TargetType="TextBox" BasedOn="{StaticResource AWFloatingHintTextBox}">
         <Setter Property="md:TextFieldAssist.HasOutlinedTextField" Value="True" />
-        <Setter Property="md:TextFieldAssist.TextFieldCornerRadius" Value="4" />
-    </Style>
-
-    <Style x:Key="AWSearchTextBox" TargetType="TextBox" BasedOn="{StaticResource AWOutlinedTextBox}">
-        <Setter Property="md:TextFieldAssist.TextFieldCornerRadius" Value="0"/>
+        <Setter Property="md:TextFieldAssist.TextFieldCornerRadius" Value="0.5"/>
         <Setter Property="md:TextFieldAssist.HasClearButton" Value="True"/>
-        <Setter Property="md:HintAssist.FloatingScale" Value="0.95"/>
         <Setter Property="Background" Value="{DynamicResource MaterialDesignBackground}"/>
         <Setter Property="md:HintAssist.Background" Value="{Binding RelativeSource={RelativeSource Mode=Self}, Path=Background}"/>
     </Style>

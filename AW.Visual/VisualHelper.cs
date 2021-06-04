@@ -24,6 +24,25 @@ namespace AW.Visual
 
     public static class VisualHelper
     {
+        public static class Style
+        {
+            public static class Button
+            {
+                public const string Default = "AWButton";
+                public const string Flat = "AWFlatButton";
+                public const string Accept = "AWAcceptButton";
+                public const string Cancel = "AWCancelButton";
+            }
+
+            public static class TextBox
+            {
+                public const string Default = "AWTextBox";
+                public const string FloatingHint = "AWFloatingHintTextBox";
+                public const string Filled = "AWFilledTextBox";
+                public const string Outlined = "AWOutlinedTextBox";
+            }
+        }
+
         public static string SelectFile(string message = null, string filter = null, string path = null, bool selectFolder = false)
         {
             CommonOpenFileDialog dialog = new CommonOpenFileDialog

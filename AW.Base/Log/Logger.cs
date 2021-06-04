@@ -62,6 +62,7 @@ namespace AW.Base.Log
     {
         public static event Action<string> OnLog;
 
+        public static Func<string, string> GetLoggerPath { get; set; }
         public static ILogger DefaultLogger { get; set; }
 
         public static void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
@@ -77,7 +78,7 @@ namespace AW.Base.Log
 
             try
             {
-                using (StreamWriter stream = new StreamWriter(file, true))
+                using (StreamWriter stream = new StreamWriter(GetLoggerPath == null ? file : GetLoggerPath(file), true))
                 {
                     stream.WriteLine(message);
                 }
