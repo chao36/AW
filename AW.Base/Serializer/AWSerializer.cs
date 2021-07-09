@@ -9,7 +9,9 @@ namespace AW.Base.Serializer
     {
         private const char FirstST = '~';
         private const string StringT = "~[";
+
         private List<string> TypeTabel { get; set; }
+
 
         public Type GetSaveType(string name)
         {
@@ -19,8 +21,10 @@ namespace AW.Base.Serializer
             return SerializerHelper.GetType(name);
         }
 
+
         private int GetTypeToSave(object obj)
             => GetTypeToSave(obj.GetType());
+
 
         private int GetTypeToSave(Type t)
         {
@@ -29,6 +33,7 @@ namespace AW.Base.Serializer
 
             return TypeTabel.IndexOf(t.FullName);
         }
+
 
         public void Dispose()
         {

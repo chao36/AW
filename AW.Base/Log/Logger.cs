@@ -8,34 +8,42 @@ namespace AW.Base.Log
     {
         void Log(string message, string tag = null, string method = null, bool ignoreEvent = false);
         void Log(Exception ex, string message = null, string tag = null, string method = null, bool ignoreEvent = false);
+        string View();
     }
+
 
     public class Logger : ILogger
     {
-        private string LogFileName { get; }
+        private readonly string logFileName;
+        private string LogFileName => LoggerHelper.GetLogPath(logFileName);
+       
         private string Tag { get; }
+
 
         public Logger(string tag = null, string file = "log.txt", long maxLogFileSize = 104857600)
         {
             try
             {
-                if (File.Exists(file))
+                logFileName = file;
+                Tag = tag;
+
+                if (File.Exists(LogFileName))
                 {
-                    long size = new FileInfo(file).Length;
+                    long size = new FileInfo(LogFileName).Length;
                     if (size > maxLogFileSize)
                         File.Delete(LogFileName);
                 }
                 else
-                    File.Create(file);
+                    File.Create(LogFileName);
 
-                LogFileName = file;
-                Tag = tag;
             }
             catch { }
         }
 
+
         public void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
             => Log(null, message, tag, method, ignoreEvent);
+
 
         public void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
         {
@@ -51,25 +59,40 @@ namespace AW.Base.Log
             Log($"{tag}{GetDate()}{method}{message}", ignoreEvent);
         }
 
+
         private static string GetDate()
             => $"[{DateTime.Now:dd.MM hh:mm:ss}] - ";
 
+
         private void Log(string message, bool ignoreEvent)
             => LoggerHelper.Log(message, ignoreEvent, LogFileName);
+
+
+        public string View()
+            => File.ReadAllText(LogFileName);
     }
+
 
     public static class LoggerHelper
     {
         public static event Action<string> OnLog;
 
+
         public static Func<string, string> GetLoggerPath { get; set; }
+        internal static string GetLogPath(string path)
+            => GetLoggerPath == null ? path : GetLoggerPath(path);
+
+
         public static ILogger DefaultLogger { get; set; }
+
 
         public static void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
             => DefaultLogger.Log(message, tag, method, ignoreEvent);
 
+
         public static void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
             => DefaultLogger.Log(ex, message, tag, method, ignoreEvent);
+
 
         internal static void Log(string message, bool ignoreEvent, string file)
         {
@@ -78,7 +101,7 @@ namespace AW.Base.Log
 
             try
             {
-                using (StreamWriter stream = new StreamWriter(GetLoggerPath == null ? file : GetLoggerPath(file), true))
+                using (StreamWriter stream = new StreamWriter(file, true))
                 {
                     stream.WriteLine(message);
                 }

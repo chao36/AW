@@ -20,6 +20,7 @@ namespace AW.LangSupport
             Logger = new Logger("Xml", "lang_xml.log");
         }
 
+
         public void SaveAsXmlResource(string langFolder)
         {
             try
@@ -51,6 +52,7 @@ namespace AW.LangSupport
                 Logger.Log(ex);
             }
         }
+
 
         public bool LoadFromXmlResource(string langFolder)
         {

@@ -13,6 +13,7 @@ namespace AW.Base.Serializer
     {
         private List<IReference> Sources { get; set; }
 
+
         public T Deserialize<T>(string data)
         {
             if (string.IsNullOrEmpty(data))
@@ -48,6 +49,7 @@ namespace AW.Base.Serializer
             return result;
         }
 
+
         private void AfterDeserialize(object obj)
         {
             Sources = new List<IReference>();
@@ -55,6 +57,7 @@ namespace AW.Base.Serializer
             GetSource(obj);
             SetReference(obj);
         }
+
 
         private void GetSource(object obj)
         {
@@ -103,6 +106,7 @@ namespace AW.Base.Serializer
                 }
             }
         }
+
 
         private void SetReference(object obj)
         {
@@ -226,6 +230,7 @@ namespace AW.Base.Serializer
             }
         }
 
+
         private object DeserializeObject(object obj, string data)
         {
             Type type = obj?.GetType();
@@ -254,6 +259,7 @@ namespace AW.Base.Serializer
 
             return null;
         }
+
 
         private object DeserializeValue(string data)
         {
@@ -359,6 +365,7 @@ namespace AW.Base.Serializer
 
             return DeserializeObject(value, data);
         }
+
 
         private Dictionary<string, string> Parse(string data)
         {

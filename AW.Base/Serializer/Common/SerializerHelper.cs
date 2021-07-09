@@ -9,9 +9,16 @@ using AW.Base.Log;
 
 namespace AW.Base.Serializer.Common
 {
+    public interface IReference
+    {
+        int ReferenceId { get; set; }
+    }
+
+
     public static class SerializerHelper
     {
         internal static ILogger Logger { get; }
+
 
         static SerializerHelper()
         {
@@ -44,6 +51,7 @@ namespace AW.Base.Serializer.Common
             }
         }
 
+
         public static void SaveText(string data, string path)
         {
             try
@@ -63,6 +71,7 @@ namespace AW.Base.Serializer.Common
             }
         }
 
+
         public static string LoadText(string path)
         {
             try
@@ -79,6 +88,7 @@ namespace AW.Base.Serializer.Common
 
             return default;
         }
+
 
         public static void SaveByte(string stringBit, string path)
         {
@@ -106,6 +116,7 @@ namespace AW.Base.Serializer.Common
             }
         }
 
+
         public static string LoadByte(string path)
         {
             try
@@ -132,6 +143,7 @@ namespace AW.Base.Serializer.Common
 
             return default;
         }
+
 
         public static object GetObject(Type type, object[] @params = null)
         {
@@ -170,6 +182,7 @@ namespace AW.Base.Serializer.Common
             return null;
         }
 
+
         private static bool IsParameters(ParameterInfo[] parameters, object[] @params)
         {
             if (parameters.Length == @params.Length)
@@ -198,6 +211,7 @@ namespace AW.Base.Serializer.Common
 
             return false;
         }
+
 
         public static Type GetType(string typeName)
         {

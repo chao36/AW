@@ -17,6 +17,7 @@ namespace AW.LangSupport
         public List<Lang> Langs { get; set; } = new List<Lang>();
         public List<Word> Words { get; set; } = new List<Word>();
 
+
         public Lang AddLang(string name)
         {
             if (Langs.Any(l => l.Name.ToLower() == name.ToLower()))
@@ -25,6 +26,7 @@ namespace AW.LangSupport
             Langs.Add(new Lang { Id = Langs.Count != 0 ? Langs.Last().Id + 1 : 1, Name = name });
             return Langs.Last();
         }
+
 
         public void RemoveLang(Lang lang)
         {
@@ -37,6 +39,7 @@ namespace AW.LangSupport
                 word.Values?.Remove(lang.Id);
         }
 
+
         public Word AddWord(string key)
         {
             if (Words.Any(w => w.Key.ToLower() == key.ToLower()))
@@ -46,14 +49,17 @@ namespace AW.LangSupport
             return Words.Last();
         }
 
+
         public void RemoveWord(Word word)
             => Words.Remove(word);
+
 
         public void SetValue(string wordKey, string langName, string value)
             => SetValue(
                 Words.FirstOrDefault(w => w.Key.ToLower() == wordKey.ToLower()),
                 Langs.FirstOrDefault(l => l.Name.ToLower() == langName.ToLower()),
                 value);
+
 
         public void SetValue(Word word, Lang lang, string value)
         {
@@ -74,8 +80,10 @@ namespace AW.LangSupport
                 word.Values.Add(lang.Id, value);
         }
 
+
         public string GetValue(string key)
             => GetValue(Words.FirstOrDefault(w => w.Key.ToLower() == key.ToLower()));
+
 
         public string GetValue(Word word)
         {
