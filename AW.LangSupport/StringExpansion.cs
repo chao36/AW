@@ -1,9 +1,11 @@
-﻿namespace AW.LangSupport
+﻿using AW.LangSupport;
+
+namespace AW.Base
 {
     public static class StringExpansion
     {
         public static string Translate(this string str)
-            => !string.IsNullOrEmpty(str)
+            => !str.IsNull()
                 ? LangConfig.Instane.GetValue(str) ?? str
                 : str;
     }

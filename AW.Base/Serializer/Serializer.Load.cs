@@ -5,9 +5,7 @@ using System.Collections.ObjectModel;
 using System.Linq;
 using System.Reflection;
 
-using AW.Base.Serializer.Common;
-
-namespace AW.Base.Serializer
+namespace AW.Serializer
 {
     public partial class AWSerializer
     {
@@ -16,24 +14,24 @@ namespace AW.Base.Serializer
 
         public T Deserialize<T>(string data)
         {
-            if (string.IsNullOrEmpty(data))
-                return (T)SerializerHelper.GetObject(typeof(T));
+            if (data.IsNull())
+                return typeof(T).Object<T>();
 
             try
             {
-                int index = data.IndexOf("&");
-                if (index < data.Length && int.TryParse(data.Substring(0, index), out int len))
+                var index = data.IndexOf("&");
+                if (index < data.Length && data.Substring(0, index).TryInt(out int len))
                 {
-                    int start = len.ToString().Length + 1;
-                    string types = data.Substring(start, len - 1);
+                    var start = len.ToString().Length + 1;
+                    var types = data.Substring(start, len - 1);
 
                     data = data.Substring(types.Length + start);
 
-                    if (!string.IsNullOrEmpty(types))
+                    if (!types.IsNull())
                     {
                         TypeTabel = new List<string>();
 
-                        foreach (string t in types.Split('&'))
+                        foreach (var t in types.Split('&'))
                             TypeTabel.Add(t);
                     }
                 }
@@ -43,7 +41,7 @@ namespace AW.Base.Serializer
                 SerializerHelper.Logger.Log(ex);
             }
 
-            T result = (T)DeserializeObject(SerializerHelper.GetObject(typeof(T)), data);
+            T result = (T)DeserializeObject(typeof(T).Object(), data);
             AfterDeserialize(result);
 
             return result;
@@ -61,28 +59,28 @@ namespace AW.Base.Serializer
 
         private void GetSource(object obj)
         {
-            Type type = obj?.GetType();
+            var type = obj?.GetType();
 
             if (type?.GetCustomAttribute<AWSerializableAttribute>() != null)
             {
                 if (obj is IReference reference)
                     Sources.Add(reference);
 
-                foreach (PropertyInfo property in type.GetProperties())
+                foreach (var property in type.GetProperties())
                 {
                     if (property.SetMethod == null || property.GetCustomAttribute<AWIgnoreAttribute>() != null)
                         continue;
 
-                    object value = property.GetValue(obj);
+                    var value = property.GetValue(obj);
                     if (property.GetCustomAttribute<AWReferenceAttribute>() != null)
                         continue;
 
                     if (value is IDictionary dictionary)
                     {
-                        IEnumerator keys = dictionary.Keys.GetEnumerator();
-                        IEnumerator values = dictionary.Values.GetEnumerator();
+                        var keys = dictionary.Keys.GetEnumerator();
+                        var values = dictionary.Values.GetEnumerator();
 
-                        for (int i = 0; i < dictionary.Count; ++i)
+                        for (var i = 0; i < dictionary.Count; ++i)
                         {
                             keys.MoveNext();
                             values.MoveNext();
@@ -96,7 +94,7 @@ namespace AW.Base.Serializer
                     }
                     else if (!(value is string) && value is IEnumerable enumerable)
                     {
-                        foreach (object item in enumerable)
+                        foreach (var item in enumerable)
                             GetSource(item);
 
                         continue;
@@ -110,42 +108,42 @@ namespace AW.Base.Serializer
 
         private void SetReference(object obj)
         {
-            Type type = obj?.GetType();
+            var type = obj?.GetType();
 
             if (type?.GetCustomAttribute<AWSerializableAttribute>() != null)
             {
-                foreach (PropertyInfo property in type.GetProperties())
+                foreach (var property in type.GetProperties())
                 {
                     if (property.SetMethod == null || property.GetCustomAttribute<AWIgnoreAttribute>() != null)
                         continue;
 
-                    object value = property.GetValue(obj);
-                    bool isReference = property.GetCustomAttribute<AWReferenceAttribute>() != null;
+                    var value = property.GetValue(obj);
+                    var isReference = property.GetCustomAttribute<AWReferenceAttribute>() != null;
 
                     if (value is string)
                         continue;
 
-                    Type valueType = value?.GetType();
+                    var valueType = value?.GetType();
 
                     if (value is IDictionary dictionary)
                     {
-                        IDictionary rDictionary = (IDictionary)SerializerHelper.GetObject(valueType);
+                        var rDictionary = valueType.Object<IDictionary>();
 
-                        IEnumerator keys = dictionary.Keys.GetEnumerator();
-                        IEnumerator values = dictionary.Values.GetEnumerator();
+                        var keys = dictionary.Keys.GetEnumerator();
+                        var values = dictionary.Values.GetEnumerator();
 
-                        for (int i = 0; i < dictionary.Count; ++i)
+                        for (var i = 0; i < dictionary.Count; ++i)
                         {
                             keys.MoveNext();
                             values.MoveNext();
 
-                            object key = keys.Current;
-                            object item = values.Current;
+                            var key = keys.Current;
+                            var item = values.Current;
 
                             if (isReference)
                             {
-                                object sourceKey = key;
-                                object sourceItem = item;
+                                var sourceKey = key;
+                                var sourceItem = item;
 
                                 if (sourceKey is IReference referenceKey)
                                     sourceKey = Sources.First(s => s.ReferenceId == referenceKey.ReferenceId);
@@ -167,14 +165,14 @@ namespace AW.Base.Serializer
                     }
                     else if (value is IEnumerable enumerable)
                     {
-                        Type itemType = valueType.IsArray ? enumerable.GetType().GetElementType() : enumerable.GetType().GenericTypeArguments[0];
-                        List<object> items = new List<object>();
+                        var itemType = valueType.IsArray ? enumerable.GetType().GetElementType() : enumerable.GetType().GenericTypeArguments[0];
+                        var items = new List<object>();
 
-                        foreach (object item in enumerable)
+                        foreach (var item in enumerable)
                         {
                             if (isReference)
                             {
-                                object sourceItem = item;
+                                var sourceItem = item;
 
                                 if (sourceItem is IReference referenceItem)
                                     sourceItem = Sources.First(s => s.ReferenceId == referenceItem.ReferenceId);
@@ -189,25 +187,25 @@ namespace AW.Base.Serializer
                             items.Add(item);
                         }
 
-                        Type enumerableType = typeof(Enumerable);
-                        MethodInfo castMethod = enumerableType.GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(itemType);
+                        var enumerableType = typeof(Enumerable);
+                        var castMethod = enumerableType.GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(itemType);
 
-                        object castedItems = castMethod.Invoke(null, new[] { items });
+                        var castedItems = castMethod.Invoke(null, new[] { items });
 
                         if (valueType.IsArray)
                         {
-                            MethodInfo toArrayMethod = enumerableType.GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
+                            var toArrayMethod = enumerableType.GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
                             castedItems = toArrayMethod.Invoke(null, new[] { castedItems });
                         }
                         else
                         {
-                            MethodInfo toListMethod = enumerableType.GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(itemType);
+                            var toListMethod = enumerableType.GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(itemType);
                             castedItems = toListMethod.Invoke(null, new[] { castedItems });
 
-                            Type observType = typeof(ObservableCollection<>).MakeGenericType(itemType);
+                            var observType = typeof(ObservableCollection<>).MakeGenericType(itemType);
 
                             if (valueType == observType)
-                                castedItems = SerializerHelper.GetObject(observType, new object[] { castedItems });
+                                castedItems = observType.Object(new object[] { castedItems });
                         }
 
                         property.SetValue(obj, castedItems);
@@ -217,7 +215,7 @@ namespace AW.Base.Serializer
 
                     if (isReference && value is IReference referenceValue)
                     {
-                        object sourceValue = Sources.FirstOrDefault(s => s.ReferenceId == referenceValue.ReferenceId && s.GetType() == referenceValue.GetType());
+                        var sourceValue = Sources.FirstOrDefault(s => s.ReferenceId == referenceValue.ReferenceId && s.GetType() == referenceValue.GetType());
 
                         if (sourceValue != null)
                             property.SetValue(obj, sourceValue);
@@ -233,13 +231,13 @@ namespace AW.Base.Serializer
 
         private object DeserializeObject(object obj, string data)
         {
-            Type type = obj?.GetType();
+            var type = obj?.GetType();
 
             if (type?.GetCustomAttribute<AWSerializableAttribute>() != null)
             {
-                foreach (KeyValuePair<string, string> param in Parse(data))
+                foreach (var param in Parse(data))
                 {
-                    PropertyInfo property = type.GetProperty(param.Key);
+                    var property = type.GetProperty(param.Key);
 
                     if (property != null)
                         property.SetValue(obj, DeserializeValue(param.Value));
@@ -272,8 +270,8 @@ namespace AW.Base.Serializer
             {
                 data = data.Remove(0, StringT.Length);
 
-                string lenString = data.Substring(0, data.IndexOf(']'));
-                int len = int.Parse(lenString);
+                var lenString = data.Substring(0, data.IndexOf(']'));
+                var len = int.Parse(lenString);
 
                 data = data.Substring(2 + lenString.Length, len);
                 type = typeof(string);
@@ -288,28 +286,28 @@ namespace AW.Base.Serializer
             if (type == null)
                 throw new ArgumentNullException();
 
-            if (string.IsNullOrEmpty(data))
-                return Convert.ChangeType(null, type) ?? SerializerHelper.GetObject(type);
+            if (data.IsNull())
+                return Convert.ChangeType(null, type) ?? type.Object();
 
             if (type == typeof(string))
                 return data;
 
-            object value = SerializerHelper.GetObject(type);
+            var value = type.Object();
 
             if (value is IDictionary dictionary)
             {
-                Type keyType = dictionary.GetType().GenericTypeArguments[0];
-                Type valueType = dictionary.GetType().GenericTypeArguments[1];
+                var keyType = dictionary.GetType().GenericTypeArguments[0];
+                var valueType = dictionary.GetType().GenericTypeArguments[1];
 
-                foreach (KeyValuePair<string, string> param in Parse(data))
+                foreach (var param in Parse(data))
                 {
-                    string item = param.Value;
+                    var item = param.Value;
                     string k, v;
 
                     if (item.StartsWith(StringT))
                     {
-                        string lenString = item.Substring(StringT.Length, item.IndexOf(']') - StringT.Length);
-                        int len = int.Parse(lenString);
+                        var lenString = item.Substring(StringT.Length, item.IndexOf(']') - StringT.Length);
+                        var len = lenString.Int();
 
                         k = item.Substring(0, len + $"{StringT}{len}])".Length);
                         v = item.Substring(k.Length + 1);
@@ -327,31 +325,31 @@ namespace AW.Base.Serializer
             }
             else if (value is IEnumerable enumerable)
             {
-                Type itemType = type.IsArray ? enumerable.GetType().GetElementType() : enumerable.GetType().GenericTypeArguments[0];
-                List<object> items = new List<object>();
+                var itemType = type.IsArray ? enumerable.GetType().GetElementType() : enumerable.GetType().GenericTypeArguments[0];
+                var items = new List<object>();
 
-                foreach (KeyValuePair<string, string> param in Parse(data))
+                foreach (var param in Parse(data))
                     items.Add(DeserializeValue(param.Value));
 
-                Type enumerableType = typeof(Enumerable);
+                var enumerableType = typeof(Enumerable);
 
-                MethodInfo castMethod = enumerableType.GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(itemType);
-                object castedItems = castMethod.Invoke(null, new[] { items });
+                var castMethod = enumerableType.GetMethod(nameof(Enumerable.Cast)).MakeGenericMethod(itemType);
+                var castedItems = castMethod.Invoke(null, new[] { items });
 
                 if (type.IsArray)
                 {
-                    MethodInfo toArrayMethod = enumerableType.GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
+                    var toArrayMethod = enumerableType.GetMethod(nameof(Enumerable.ToArray)).MakeGenericMethod(itemType);
                     return toArrayMethod.Invoke(null, new[] { castedItems });
                 }
                 else
                 {
-                    MethodInfo toListMethod = enumerableType.GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(itemType);
+                    var toListMethod = enumerableType.GetMethod(nameof(Enumerable.ToList)).MakeGenericMethod(itemType);
                     castedItems = toListMethod.Invoke(null, new[] { castedItems });
 
-                    Type observType = typeof(ObservableCollection<>).MakeGenericType(itemType);
+                    var observType = typeof(ObservableCollection<>).MakeGenericType(itemType);
 
                     if (type == observType)
-                        return SerializerHelper.GetObject(observType, new object[] { castedItems });
+                        return observType.Object(new object[] { castedItems });
 
                     return castedItems;
                 }
@@ -369,9 +367,9 @@ namespace AW.Base.Serializer
 
         private Dictionary<string, string> Parse(string data)
         {
-            Dictionary<string, string> result = new Dictionary<string, string>();
+            var result = new Dictionary<string, string>();
 
-            if (string.IsNullOrEmpty(data))
+            if (data.IsNull())
                 return result;
 
             if (data[0] == '(')
@@ -385,22 +383,22 @@ namespace AW.Base.Serializer
                 key = data.Substring(0, data.IndexOf(']'));
                 data = data.Remove(0, key.Length + 2);
 
-                int start = 1;
-                int end = 0;
-                int index = 0;
+                var start = 1;
+                var end = 0;
+                var index = 0;
 
-                for (int i = 0; i < data.Length; ++i)
+                for (var i = 0; i < data.Length; ++i)
                 {
-                    char c = data[i];
+                    var c = data[i];
 
                     if (c == FirstST && data.Substring(i).StartsWith(StringT))
                     {
                         i += StringT.Length;
 
-                        string str = data.Substring(i);
-                        string lenString = str.Substring(0, str.IndexOf(']'));
+                        var str = data.Substring(i);
+                        var lenString = str.Substring(0, str.IndexOf(']'));
 
-                        i += 2 + lenString.Length + int.Parse(lenString);
+                        i += 2 + lenString.Length + lenString.Int();
 
                         c = data[i];
                     }
@@ -422,7 +420,7 @@ namespace AW.Base.Serializer
 
                 result.Add(key, value);
 
-                if (!string.IsNullOrEmpty(data) && data[0] == '>')
+                if (!data.IsNull() && data[0] == '>')
                     data = data.Remove(0, 1);
             }
 

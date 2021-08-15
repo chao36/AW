@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-using AW.Base.Serializer.Common;
-
-namespace AW.Base.Serializer
+namespace AW.Serializer
 {
     public partial class AWSerializer : IDisposable
     {
@@ -15,10 +13,10 @@ namespace AW.Base.Serializer
 
         public Type GetSaveType(string name)
         {
-            if (int.TryParse(name, out int index) && index < TypeTabel?.Count)
+            if (name.TryInt(out int index) && index < TypeTabel?.Count)
                 name = TypeTabel[index];
 
-            return SerializerHelper.GetType(name);
+            return name.Type();
         }
 
 

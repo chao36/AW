@@ -14,7 +14,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="AW.Base" Version="2.3.0" />
+    <ProjectReference Include="..\AW.Base\AW.Base.csproj" />
   </ItemGroup>
 
 </Project>

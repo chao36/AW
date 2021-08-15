@@ -1,8 +1,6 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 
-using AW.Base.Serializer.Common;
-
 namespace AW.LangSupport
 {
     [AWSerializable]
@@ -35,7 +33,7 @@ namespace AW.LangSupport
             if (CurrentLang == lang)
                 CurrentLang = Langs.FirstOrDefault();
 
-            foreach (Word word in Words)
+            foreach (var word in Words)
                 word.Values?.Remove(lang.Id);
         }
 
@@ -71,12 +69,12 @@ namespace AW.LangSupport
 
             if (word.Values.ContainsKey(lang.Id))
             {
-                if (string.IsNullOrEmpty(value))
+                if (value.IsNull())
                     word.Values.Remove(lang.Id);
                 else
                     word.Values[lang.Id] = value;
             }
-            else if (!string.IsNullOrEmpty(value))
+            else if (!value.IsNull())
                 word.Values.Add(lang.Id, value);
         }
 

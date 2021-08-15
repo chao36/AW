@@ -2,7 +2,7 @@
 using System.IO;
 using System.Runtime.CompilerServices;
 
-namespace AW.Base.Log
+namespace AW.Log
 {
     public interface ILogger
     {
@@ -29,7 +29,7 @@ namespace AW.Base.Log
 
                 if (File.Exists(LogFileName))
                 {
-                    long size = new FileInfo(LogFileName).Length;
+                    var size = new FileInfo(LogFileName).Length;
                     if (size > maxLogFileSize)
                         File.Delete(LogFileName);
                 }
@@ -47,14 +47,14 @@ namespace AW.Base.Log
 
         public void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
         {
-            if (!string.IsNullOrEmpty(message) && ex != null)
+            if (!message.IsNull() && ex != null)
                 message = $"{message} {ex.Message}{Environment.NewLine}{ex.StackTrace}";
-            else if (string.IsNullOrEmpty(message) && ex != null)
+            else if (message.IsNull() && ex != null)
                 message = $"{ex.Message}{Environment.NewLine}{ex.StackTrace}";
 
             tag = $"[{(tag ?? Tag ?? "error").ToUpper()}]: ";
 
-            method = !string.IsNullOrEmpty(method) ? $"{method}() - " : "";
+            method = !method.IsNull() ? $"{method}() - " : "";
 
             Log($"{tag}{GetDate()}{method}{message}", ignoreEvent);
         }
@@ -101,7 +101,7 @@ namespace AW.Base.Log
 
             try
             {
-                using (StreamWriter stream = new StreamWriter(file, true))
+                using (var stream = new StreamWriter(file, true))
                 {
                     stream.WriteLine(message);
                 }

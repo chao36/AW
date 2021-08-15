@@ -1,7 +1,5 @@
 ﻿using System.Collections.Generic;
 
-using AW.Base.Serializer.Common;
-
 namespace AW.LangSupport
 {
     [AWSerializable]

@@ -1,10 +1,9 @@
-﻿using System;
+﻿using AW.Log;
+
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-
-using AW.Base.Log;
-using AW.Base.Serializer.Common;
 
 namespace AW.LangSupport
 {
@@ -35,13 +34,13 @@ namespace AW.LangSupport
 
                 SerializerHelper.SaveText(CurrentLang.Id.ToString(), Path.Combine(langFolder, CurrentLangFile));
 
-                foreach (Lang lang in Langs)
+                foreach (var lang in Langs)
                 {
-                    string path = Path.Combine(langFolder, $"{lang.Id}.{lang.Name}");
+                    var path = Path.Combine(langFolder, $"{lang.Id}.{lang.Name}");
                     Directory.CreateDirectory(path);
 
-                    string text = "";
-                    foreach (Word word in Words)
+                    var text = "";
+                    foreach (var word in Words)
                         text += $"<{word.Key}>{word.Values[lang.Id]}</{word.Key}>{Environment.NewLine}";
 
                     SerializerHelper.SaveText(text, Path.Combine(path, WordsFile));
@@ -61,16 +60,16 @@ namespace AW.LangSupport
                 if (!Directory.Exists(langFolder))
                     return false;
 
-                if (int.TryParse(SerializerHelper.LoadText(Path.Combine(langFolder, CurrentLangFile)), out int landId))
+                if (SerializerHelper.LoadText(Path.Combine(langFolder, CurrentLangFile)).TryInt(out int landId))
                 {
                     Langs.Clear();
                     Words.Clear();
 
-                    foreach (string lang in Directory.GetDirectories(langFolder))
+                    foreach (var lang in Directory.GetDirectories(langFolder))
                     {
-                        string name = new DirectoryInfo(lang).Name;
+                        var name = new DirectoryInfo(lang).Name;
 
-                        if (int.TryParse(name.Substring(0, name.IndexOf('.')), out int id))
+                        if (name.Substring(0, name.IndexOf('.')).TryInt(out int id))
                         {
                             name = name.Substring(name.IndexOf('.') + 1);
 
@@ -80,16 +79,16 @@ namespace AW.LangSupport
                                 Name = name
                             });
 
-                            string text = SerializerHelper.LoadText(Path.Combine(lang, WordsFile));
+                            var text = SerializerHelper.LoadText(Path.Combine(lang, WordsFile));
 
-                            while (!string.IsNullOrEmpty(text))
+                            while (!text.IsNull())
                             {
                                 if (text[0] == '<')
                                 {
-                                    string key = text.Substring(1, text.IndexOf('>') - 1);
-                                    string value = text.Substring(text.IndexOf('>') + 1, text.IndexOf($"</{key}>") - $"</{key}>".Length + 1);
+                                    var key = text.Substring(1, text.IndexOf('>') - 1);
+                                    var value = text.Substring(text.IndexOf('>') + 1, text.IndexOf($"</{key}>") - $"</{key}>".Length + 1);
 
-                                    Word word = Words.FirstOrDefault(w => w.Key == key);
+                                    var word = Words.FirstOrDefault(w => w.Key == key);
                                     
                                     if (word == null)
                                     {

@@ -1,13 +1,13 @@
-﻿using System;
+﻿using AW.Log;
+
+using System;
 using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-using AW.Base.Log;
-
-namespace AW.Base.Serializer.Common
+namespace AW
 {
     public interface IReference
     {
@@ -24,8 +24,8 @@ namespace AW.Base.Serializer.Common
         {
             Logger = new Logger("Serializer", "serializer.log");
 
-            Assembly mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
-            foreach (AssemblyName refAsmName in mainAsm.GetReferencedAssemblies())
+            var mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
+            foreach (var refAsmName in mainAsm.GetReferencedAssemblies())
             {
                 try
                 {
@@ -37,8 +37,8 @@ namespace AW.Base.Serializer.Common
                 }
             }
 
-            string folder = new FileInfo(mainAsm.Location).Directory.FullName;
-            foreach (string path in Directory.GetFiles(folder).Where(p => p.EndsWith(".dll")))
+            var folder = new FileInfo(mainAsm.Location).Directory.FullName;
+            foreach (var path in Directory.GetFiles(folder).Where(p => p.EndsWith(".dll")))
             {
                 try
                 {
@@ -59,9 +59,9 @@ namespace AW.Base.Serializer.Common
                 if (File.Exists(path))
                     File.Delete(path);
 
-                using (FileStream stream = new FileStream(path, FileMode.CreateNew))
+                using (var stream = new FileStream(path, FileMode.CreateNew))
                 {
-                    byte[] info = new UTF8Encoding(true).GetBytes(data);
+                    var info = new UTF8Encoding(true).GetBytes(data);
                     stream.Write(info, 0, info.Length);
                 }
             }
@@ -94,7 +94,7 @@ namespace AW.Base.Serializer.Common
         {
             try
             {
-                byte[] data = stringBit
+                var data = stringBit
                     .Split('-')
                     .Select(b => byte.Parse(b, NumberStyles.HexNumber))
                     .ToArray();
@@ -105,7 +105,7 @@ namespace AW.Base.Serializer.Common
                 if (File.Exists(path))
                     File.Delete(path);
 
-                using (FileStream stream = new FileStream(path, FileMode.CreateNew))
+                using (var stream = new FileStream(path, FileMode.CreateNew))
                 {
                     stream.Write(data, 0, data.Length);
                 }
@@ -125,7 +125,7 @@ namespace AW.Base.Serializer.Common
                     return default;
 
                 byte[] data;
-                using (FileStream fs = new FileStream(path, FileMode.Open))
+                using (var fs = new FileStream(path, FileMode.Open))
                 {
                     data = new byte[fs.Length];
                     fs.Read(data, 0, data.Length);
@@ -145,12 +145,12 @@ namespace AW.Base.Serializer.Common
         }
 
 
-        public static object GetObject(Type type, object[] @params = null)
+        internal static object GetObject(Type type, object[] @params = null)
         {
             if (type.IsArray)
                 return Activator.CreateInstance(type, 0);
 
-            ConstructorInfo[] constructors = type.GetConstructors();
+            var constructors = type.GetConstructors();
 
             if (constructors.Length == 0 || @params == null)
                 try
@@ -162,7 +162,7 @@ namespace AW.Base.Serializer.Common
                     Logger.Log(ex);
                 }
             else
-                foreach (ConstructorInfo constructor in constructors)
+                foreach (var constructor in constructors)
                 {
                     if (IsParameters(constructor.GetParameters(), @params))
                     {
@@ -187,13 +187,13 @@ namespace AW.Base.Serializer.Common
         {
             if (parameters.Length == @params.Length)
             {
-                for (int i = 0; i < parameters.Length; ++i)
+                for (var i = 0; i < parameters.Length; ++i)
                 {
-                    Type parameterType = parameters[i].ParameterType;
+                    var parameterType = parameters[i].ParameterType;
 
                     if (@params[i] != null)
                     {
-                        Type paramType = @params[i].GetType();
+                        var paramType = @params[i].GetType();
 
                         if (parameterType != paramType)
                             if (parameterType.IsInterface)
@@ -213,14 +213,14 @@ namespace AW.Base.Serializer.Common
         }
 
 
-        public static Type GetType(string typeName)
+        internal static Type GetType(string typeName)
         {
-            Type type = Type.GetType(typeName);
+            var type = Type.GetType(typeName);
 
             if (type != null)
                 return type;
 
-            foreach (Assembly a in AppDomain.CurrentDomain.GetAssemblies())
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
             {
                 type = a.GetType(typeName);
                 if (type != null)

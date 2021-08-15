@@ -4,9 +4,7 @@ using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
 
-using AW.Base.Serializer.Common;
-
-namespace AW.Base.Serializer
+namespace AW.Serializer
 {
     public partial class AWSerializer : IDisposable
     {
@@ -30,9 +28,9 @@ namespace AW.Base.Serializer
             BeforeSerialize(obj);
             SerializeObj(obj);
 
-            string types = "";
+            var types = "";
 
-            foreach (string t in TypeTabel)
+            foreach (var t in TypeTabel)
                 types += $"&{t}";
 
             Builder.Insert(0, types.Length.ToString() + types);
@@ -42,7 +40,7 @@ namespace AW.Base.Serializer
 
         private void SetId(object obj, bool isReference = false, bool zero = false)
         {
-            Type type = obj?.GetType();
+            var type = obj?.GetType();
 
             if (type?.GetCustomAttribute<AWSerializableAttribute>() != null)
             {
@@ -54,20 +52,20 @@ namespace AW.Base.Serializer
                         return;
                 }
 
-                foreach (PropertyInfo property in type.GetProperties())
+                foreach (var property in type.GetProperties())
                 {
                     if (property.SetMethod == null || property.GetCustomAttribute<AWIgnoreAttribute>() != null)
                         continue;
 
-                    object value = property.GetValue(obj);
+                    var value = property.GetValue(obj);
                     isReference = property.GetCustomAttribute<AWReferenceAttribute>() != null;
 
                     if (value is IDictionary dictionary)
                     {
-                        IEnumerator keys = dictionary.Keys.GetEnumerator();
-                        IEnumerator values = dictionary.Values.GetEnumerator();
+                        var keys = dictionary.Keys.GetEnumerator();
+                        var values = dictionary.Values.GetEnumerator();
 
-                        for (int i = 0; i < dictionary.Count; ++i)
+                        for (var i = 0; i < dictionary.Count; ++i)
                         {
                             keys.MoveNext();
                             values.MoveNext();
@@ -80,7 +78,7 @@ namespace AW.Base.Serializer
                     }
                     else if (!(value is string) && value is IEnumerable enumerable)
                     {
-                        foreach (object item in enumerable)
+                        foreach (var item in enumerable)
                             SetId(item, isReference, zero);
 
                         continue;
@@ -94,18 +92,18 @@ namespace AW.Base.Serializer
 
         private void SerializeObj(object obj)
         {
-            Type type = obj?.GetType();
+            var type = obj?.GetType();
 
             if (type?.GetCustomAttribute<AWSerializableAttribute>() != null)
             {
                 Builder.Append($"({GetTypeToSave(type)})");
 
-                foreach (PropertyInfo property in type.GetProperties())
+                foreach (var property in type.GetProperties())
                 {
                     if (property.SetMethod == null || property.GetCustomAttribute<AWIgnoreAttribute>() != null)
                         continue;
 
-                    object value = property.GetValue(obj);
+                    var value = property.GetValue(obj);
 
                     Builder.Append($"<[{property.Name}]=");
                     SerializeValue(value, property);
@@ -132,10 +130,10 @@ namespace AW.Base.Serializer
             {
                 Builder.Append($"({GetTypeToSave(value)})");
 
-                IEnumerator keys = dictionary.Keys.GetEnumerator();
-                IEnumerator values = dictionary.Values.GetEnumerator();
+                var keys = dictionary.Keys.GetEnumerator();
+                var values = dictionary.Values.GetEnumerator();
 
-                for (int index = 0; index < dictionary.Count; ++index)
+                for (var index = 0; index < dictionary.Count; ++index)
                 {
                     keys.MoveNext();
                     values.MoveNext();
@@ -150,9 +148,9 @@ namespace AW.Base.Serializer
             else if (value is IEnumerable enumerable)
             {
                 Builder.Append($"({GetTypeToSave(value)})");
-                int index = 0;
+                var index = 0;
 
-                foreach (object item in enumerable)
+                foreach (var item in enumerable)
                 {
                     Builder.Append($"<[{index++}]=");
                     SerializeValue(item, valueProperty);
