@@ -22,7 +22,7 @@ namespace AW
 
         static SerializerHelper()
         {
-            Logger = new Logger("Serializer", "serializer.log");
+            Logger = new Logger("SER", "serializer.log");
 
             var mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
             foreach (var refAsmName in mainAsm.GetReferencedAssemblies())

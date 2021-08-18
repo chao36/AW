@@ -1,4 +1,6 @@
-﻿using System;
+﻿using AW.Serializer;
+
+using System;
 using System.Collections.Generic;
 using System.Globalization;
 using System.Linq;
@@ -135,6 +137,24 @@ namespace AW
 
                 skip += c;
             }
+        }
+
+        #endregion
+
+
+        #region Serializer
+
+        public static string Serialize(this object obj)
+        {
+            var serializer = new AWSerializer();
+            return serializer.Serialize(obj);
+        }
+
+
+        public static T Deserialize<T>(this string data) where T : class
+        {
+            var serializer = new AWSerializer();
+            return serializer.Deserialize<T>(data);
         }
 
         #endregion
