@@ -14,6 +14,7 @@ namespace AW.LangSupport
 
         internal static ILogger Logger { get; }
 
+
         static LangConfig()
         {
             Logger = new Logger("Xml", "lang_xml.log");

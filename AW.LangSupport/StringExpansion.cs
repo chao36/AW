@@ -1,6 +1,6 @@
 ﻿using AW.LangSupport;
 
-namespace AW.Base
+namespace AW
 {
     public static class StringExpansion
     {

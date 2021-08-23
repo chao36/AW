@@ -107,13 +107,13 @@ namespace AW
 
         #region Enum
 
-        public static IEnumerable<T> GetValues<T>(this T @enum) where T : Enum
+        public static IEnumerable<T> Values<T>(this T @enum) where T : Enum
         {
             return Enum.GetValues(@enum.GetType()).Cast<T>();
         }
 
 
-        public static string GetName<T>(this T @enum) where T : Enum
+        public static string Name<T>(this T @enum) where T : Enum
         {
             return Enum.GetName(@enum.GetType(), @enum);
         }
