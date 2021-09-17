@@ -1,112 +1,85 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
+using System.Linq;
 using System.Runtime.CompilerServices;
 
 namespace AW.Log
 {
-    public interface ILogger
-    {
-        void Log(string message, string tag = null, string method = null, bool ignoreEvent = false);
-        void Log(Exception ex, string message = null, string tag = null, string method = null, bool ignoreEvent = false);
-        string View();
-    }
-
-
     public class Logger : ILogger
     {
-        private readonly string logFileName;
-        private string LogFileName => LoggerHelper.GetLogPath(logFileName);
-       
-        private string Tag { get; }
+        #region Static
 
-
-        public Logger(string tag = null, string file = "log.txt", long maxLogFileSize = 104857600)
+        public static event Action<string> OnLog;
+        
+        public static ILogger New(IEnumerable<ILoggerProvider> providers, string tag = null)
         {
-            try
+            return new Logger(providers, tag);
+        }
+
+        private static ILogger DefaultLogger;
+
+        public static ILogger Default()
+        {
+            if (DefaultLogger != null)
+                return DefaultLogger;
+
+            DefaultLogger = New(new List<ILoggerProvider>
             {
-                logFileName = file;
-                Tag = tag;
+                new ConsoleLoggerProvider(),
+                new FileLoggerProvider("logs", "common-{date}.log")
+            });
 
-                if (File.Exists(LogFileName))
-                {
-                    var size = new FileInfo(LogFileName).Length;
-                    if (size > maxLogFileSize)
-                        File.Delete(LogFileName);
-                }
-                else
-                    File.Create(LogFileName);
-
-            }
-            catch { }
+            return DefaultLogger;
         }
 
+        #endregion
 
-        public void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
-            => Log(null, message, tag, method, ignoreEvent);
+        public string Tag { get; set; }
 
+        private readonly IEnumerable<ILoggerProvider> Providers;
 
-        public void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+        internal Logger(IEnumerable<ILoggerProvider> providers, string tag)
         {
-            if (!message.IsNull() && ex != null)
-                message = $"{message} {ex.Message}{Environment.NewLine}{ex.StackTrace}";
-            else if (message.IsNull() && ex != null)
-                message = $"{ex.Message}{Environment.NewLine}{ex.StackTrace}";
-
-            tag = $"[{(tag ?? Tag ?? "error").ToUpper()}]: ";
-
-            method = !method.IsNull() ? $"{method}() - " : "";
-
-            Log($"{tag}{GetDate()}{method}{message}", ignoreEvent);
+            Tag = tag;
+            Providers = providers;
         }
 
+        public void Log(string message, [CallerMemberName] string method = null, bool ignoreEvent = false)
+            => Log(null, message, method, ignoreEvent);
 
-        private static string GetDate()
-            => $"[{DateTime.Now:dd.MM hh:mm:ss}] - ";
+        public void Log(Exception ex, string message = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
+        {
+            if (ex != null)
+            {
+                message = $"{(message.IsNull() ? "" : $"{message}: ")}";
 
+                while (ex != null)
+                {
+                    message += $"{ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}";
+                    ex = ex.InnerException;
+                }
+            }
+
+            Log($"[{DateTime.Now:hh:mm:ss}]{(!Tag.IsNull() ? $"{Tag.ToUpper()}" : "")}[{(ex != null ? "ERROR" : "LOG")}] {(!method.IsNull() ? $"{method}() - " : "")}{message}", ignoreEvent);
+        }
 
         private void Log(string message, bool ignoreEvent)
-            => LoggerHelper.Log(message, ignoreEvent, LogFileName);
+        {
+            lock (this)
+            {
+                if (ignoreEvent)
+                    OnLog?.Invoke(message);
 
+                foreach (var provider in Providers)
+                    provider.Log(message);
+            }
+        }
 
         public string View()
-            => File.ReadAllText(LogFileName);
-    }
-
-
-    public static class LoggerHelper
-    {
-        public static event Action<string> OnLog;
-
-
-        public static Func<string, string> GetLoggerPath { get; set; }
-        internal static string GetLogPath(string path)
-            => GetLoggerPath == null ? path : GetLoggerPath(path);
-
-
-        public static ILogger DefaultLogger { get; set; }
-
-
-        public static void Log(string message, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
-            => DefaultLogger.Log(message, tag, method, ignoreEvent);
-
-
-        public static void Log(Exception ex, string message = null, string tag = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
-            => DefaultLogger.Log(ex, message, tag, method, ignoreEvent);
-
-
-        internal static void Log(string message, bool ignoreEvent, string file)
         {
-            if (!ignoreEvent)
-                OnLog?.Invoke(message);
-
-            try
-            {
-                using (var stream = new StreamWriter(file, true))
-                {
-                    stream.WriteLine(message);
-                }
-            }
-            catch { }
+            return Providers
+                .Select(p => p.View())
+                .FirstOrDefault();
         }
     }
 }

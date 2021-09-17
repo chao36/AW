@@ -11,7 +11,6 @@ namespace AW.Serializer
         private int Id { get; set; }
         private StringBuilder Builder { get; set; }
 
-
         private void BeforeSerialize(object obj)
         {
             Id = 1;
@@ -21,7 +20,6 @@ namespace AW.Serializer
             SetId(obj, zero: true);
             SetId(obj);
         }
-
 
         public string Serialize(object obj)
         {
@@ -36,7 +34,6 @@ namespace AW.Serializer
             Builder.Insert(0, types.Length.ToString() + types);
             return Builder.ToString();
         }
-
 
         private void SetId(object obj, bool isReference = false, bool zero = false)
         {
@@ -89,7 +86,6 @@ namespace AW.Serializer
             }
         }
 
-
         private void SerializeObj(object obj)
         {
             var type = obj?.GetType();
@@ -113,7 +109,6 @@ namespace AW.Serializer
             else if (type.IsPrimitive || type.IsEnum || (type.IsValueType && type.IsSerializable))
                 Builder.Append($"({GetTypeToSave(type)}){obj}");
         }
-
 
         private void SerializeValue(object value, PropertyInfo valueProperty)
         {

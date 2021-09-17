@@ -1,4 +1,5 @@
 ﻿using AW.Log;
+using AW.Serializer;
 
 using System;
 using System.Collections.Generic;
@@ -14,12 +15,11 @@ namespace AW.LangSupport
 
         internal static ILogger Logger { get; }
 
-
         static LangConfig()
         {
-            Logger = new Logger("Xml", "lang_xml.log");
+            Logger = new FileLoggerProvider("logs/lang", "common-{date}.log")
+                .GetLogger();
         }
-
 
         public void SaveAsXmlResource(string langFolder)
         {
@@ -52,7 +52,6 @@ namespace AW.LangSupport
                 Logger.Log(ex);
             }
         }
-
 
         public bool LoadFromXmlResource(string langFolder)
         {

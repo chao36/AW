@@ -16,7 +16,6 @@ namespace AW
             return SerializerHelper.GetObject(type, @params);
         }
 
-
         public static T Object<T>(this Type type, object[] @params = null)
         {
             return (T)SerializerHelper.GetObject(type, @params);
@@ -24,44 +23,36 @@ namespace AW
 
         #endregion
 
-
         #region String
-
         public static int Int(this string value)
         {
             return int.Parse(value);
         }
-
 
         public static bool TryInt(this string value, out int result)
         {
             return int.TryParse(value, out result);
         }
 
-
         public static long Long(this string value)
         {
             return long.Parse(value);
         }
-
 
         public static bool TryLong(this string value, out long result)
         {
             return long.TryParse(value, out result);
         }
 
-
         public static double Double(this string value)
         {
             return double.Parse(value.Replace(',', '.'));
         }
 
-
         public static bool TryDouble(this string value, out double result)
         {
             return double.TryParse(value.Replace(',', '.'), out result);
         }
-
 
         public static DateTime Date(this string value, string format = null, IFormatProvider provider = null)
         {
@@ -71,18 +62,15 @@ namespace AW
             return DateTime.ParseExact(value, format, provider ?? CultureInfo.InvariantCulture);
         }
 
-
         public static Type Type(this string value)
         {
             return SerializerHelper.GetType(value);
         }
 
-
         public static bool IsNull(this string value)
         {
             return string.IsNullOrEmpty(value);
         }
-
 
         public static string UniqueFrom(this string value, IEnumerable<string> values)
         {
@@ -98,12 +86,10 @@ namespace AW
             return newValue;
         }
 
-
         public static bool AnyFrom(this string value, IEnumerable<string> values)
             => values.Any(v => v.Equals(value, StringComparison.InvariantCultureIgnoreCase));
 
         #endregion
-
 
         #region Enum
 
@@ -112,7 +98,6 @@ namespace AW
             return Enum.GetValues(@enum.GetType()).Cast<T>();
         }
 
-
         public static string Name<T>(this T @enum) where T : Enum
         {
             return Enum.GetName(@enum.GetType(), @enum);
@@ -120,9 +105,8 @@ namespace AW
 
         #endregion
 
-
         #region IEnumerable
-
+        
         public static IEnumerable<IEnumerable<T>> Groups<T>(this IEnumerable<T> source, int groupCount)
         {
             var count = source.Count();
@@ -141,7 +125,6 @@ namespace AW
 
         #endregion
 
-
         #region Serializer
 
         public static string Serialize(this object obj)
@@ -149,7 +132,6 @@ namespace AW
             var serializer = new AWSerializer();
             return serializer.Serialize(obj);
         }
-
 
         public static T Deserialize<T>(this string data) where T : class
         {

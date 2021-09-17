@@ -7,22 +7,16 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace AW
+namespace AW.Serializer
 {
-    public interface IReference
-    {
-        int ReferenceId { get; set; }
-    }
-
-
     public static class SerializerHelper
     {
         internal static ILogger Logger { get; }
 
-
         static SerializerHelper()
         {
-            Logger = new Logger("SER", "serializer.log");
+            Logger = new FileLoggerProvider("logs/serializer", "common-{date}.log")
+                .GetLogger();
 
             var mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
             foreach (var refAsmName in mainAsm.GetReferencedAssemblies())
@@ -33,7 +27,7 @@ namespace AW
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, $"Assembly: {refAsmName.FullName}");
+                    Logger.Log(ex, $"Assembly {refAsmName.FullName}");
                 }
             }
 
@@ -46,11 +40,10 @@ namespace AW
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, $"File: {path}");
+                    Logger.Log(ex, $"File {path}");
                 }
             }
         }
-
 
         public static void SaveText(string data, string path)
         {
@@ -59,18 +52,16 @@ namespace AW
                 if (File.Exists(path))
                     File.Delete(path);
 
-                using (var stream = new FileStream(path, FileMode.CreateNew))
-                {
-                    var info = new UTF8Encoding(true).GetBytes(data);
-                    stream.Write(info, 0, info.Length);
-                }
+                using var stream = new FileStream(path, FileMode.CreateNew);
+                var info = new UTF8Encoding(true).GetBytes(data);
+
+                stream.Write(info, 0, info.Length);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
         }
-
 
         public static string LoadText(string path)
         {
@@ -89,7 +80,6 @@ namespace AW
             return default;
         }
 
-
         public static void SaveByte(string stringBit, string path)
         {
             try
@@ -105,17 +95,14 @@ namespace AW
                 if (File.Exists(path))
                     File.Delete(path);
 
-                using (var stream = new FileStream(path, FileMode.CreateNew))
-                {
-                    stream.Write(data, 0, data.Length);
-                }
+                using var stream = new FileStream(path, FileMode.CreateNew);
+                stream.Write(data, 0, data.Length);
             }
             catch (Exception ex)
             {
                 Logger.Log(ex);
             }
         }
-
 
         public static string LoadByte(string path)
         {
@@ -143,7 +130,6 @@ namespace AW
 
             return default;
         }
-
 
         internal static object GetObject(Type type, object[] @params = null)
         {
@@ -177,11 +163,10 @@ namespace AW
                     }
                 }
 
-            Logger.Log($"Null control [type: {type.Name}]");
+            Logger.Log($"Null control [type {type.Name}]");
 
             return null;
         }
-
 
         private static bool IsParameters(ParameterInfo[] parameters, object[] @params)
         {
@@ -212,7 +197,6 @@ namespace AW
             return false;
         }
 
-
         internal static Type GetType(string typeName)
         {
             var type = Type.GetType(typeName);
@@ -223,6 +207,7 @@ namespace AW
             foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
             {
                 type = a.GetType(typeName);
+
                 if (type != null)
                     return type;
             }

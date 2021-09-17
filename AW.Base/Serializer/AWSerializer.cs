@@ -10,7 +10,6 @@ namespace AW.Serializer
 
         private List<string> TypeTabel { get; set; }
 
-
         public Type GetSaveType(string name)
         {
             if (name.TryInt(out int index) && index < TypeTabel?.Count)
@@ -19,10 +18,8 @@ namespace AW.Serializer
             return name.Type();
         }
 
-
         private int GetTypeToSave(object obj)
             => GetTypeToSave(obj.GetType());
-
 
         private int GetTypeToSave(Type t)
         {
@@ -31,7 +28,6 @@ namespace AW.Serializer
 
             return TypeTabel.IndexOf(t.FullName);
         }
-
 
         public void Dispose()
         {
