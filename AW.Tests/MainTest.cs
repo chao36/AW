@@ -1,6 +1,5 @@
-using AW;
-using AW.Serializer;
 using AW.LangSupport;
+using AW.Serializer;
 
 using NUnit.Framework;
 
@@ -10,13 +9,11 @@ namespace AW.Tests
     {
         AWSerializer Serializer;
 
-
         [SetUp]
         public void Setup()
         {
             Serializer = new AWSerializer();
         }
-
 
         [AWSerializable]
         public class TestClass
@@ -27,9 +24,8 @@ namespace AW.Tests
             public string[] Tests { get; set; }
         }
 
-
         [Test]
-        public void Test1()
+        public void SerializerTest()
         {
             var test = new TestClass
             {
@@ -39,24 +35,25 @@ namespace AW.Tests
             };
 
             var data = Serializer.Serialize(test);
+            //var data = test.Serialize();
 
-            var test2 = Serializer.Deserialize<TestClass>(data);
+            var parse = Serializer.Deserialize<TestClass>(data);
+            //var parse = data.Deserialize<TestClass>();
 
-            Assert.IsTrue(test.Test0 == test2.Test0 && test.Test1 == test2.Test1 && test.Tests[0] == test2.Tests[0]);
+            Assert.IsTrue(test.Test0 == parse.Test0 && test.Test1 == parse.Test1 && test.Tests[0] == parse.Tests[0]);
         }
 
-
         [Test]
-        public void Test2()
+        public void LangTest()
         {
             var config = new LangConfig();
 
-            var l = config.AddLang("l1");
-            var w = config.AddWord("w1");
+            var lang = config.AddLang("lang");
+            var word = config.AddWord("test");
 
-            config.SetValue(w, l, "v1");
+            config.SetValue(word, lang, "Value 1");
 
-            config.SaveAsXmlResource("langs");
+            Assert.IsTrue("test".Translate() == "Value 1");
         }
     }
 }

@@ -21,6 +21,11 @@ namespace AW.Serializer
             SetId(obj);
         }
 
+        /// <summary>
+        /// Serialize object
+        /// </summary>
+        /// <param name="obj"></param>
+        /// <returns></returns>
         public string Serialize(object obj)
         {
             BeforeSerialize(obj);

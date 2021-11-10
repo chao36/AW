@@ -3,6 +3,9 @@ using System.Collections.Generic;
 
 namespace AW.Serializer
 {
+    /// <summary>
+    /// Serializer
+    /// </summary>
     public partial class AWSerializer : IDisposable
     {
         private const char FirstST = '~';
@@ -10,7 +13,7 @@ namespace AW.Serializer
 
         private List<string> TypeTabel { get; set; }
 
-        public Type GetSaveType(string name)
+        private Type GetSaveType(string name)
         {
             if (name.TryInt(out int index) && index < TypeTabel?.Count)
                 name = TypeTabel[index];
@@ -29,6 +32,7 @@ namespace AW.Serializer
             return TypeTabel.IndexOf(t.FullName);
         }
 
+        /// <inheritdoc/>
         public void Dispose()
         {
             Builder?.Clear();

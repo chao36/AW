@@ -1,14 +1,16 @@
 ﻿using AW.Log;
 
 using System;
-using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Text;
 
-namespace AW.Serializer
+namespace AW
 {
+    /// <summary>
+    /// Help methods for serializer
+    /// </summary>
     public static class SerializerHelper
     {
         internal static ILogger Logger { get; }
@@ -45,6 +47,11 @@ namespace AW.Serializer
             }
         }
 
+        /// <summary>
+        /// Save text to file
+        /// </summary>
+        /// <param name="data"></param>
+        /// <param name="path"></param>
         public static void SaveText(string data, string path)
         {
             try
@@ -63,6 +70,11 @@ namespace AW.Serializer
             }
         }
 
+        /// <summary>
+        /// Load text from file
+        /// </summary>
+        /// <param name="path"></param>
+        /// <returns></returns>
         public static string LoadText(string path)
         {
             try
@@ -80,57 +92,12 @@ namespace AW.Serializer
             return default;
         }
 
-        public static void SaveByte(string stringBit, string path)
-        {
-            try
-            {
-                var data = stringBit
-                    .Split('-')
-                    .Select(b => byte.Parse(b, NumberStyles.HexNumber))
-                    .ToArray();
-
-                if (data?.Length == 0)
-                    return;
-
-                if (File.Exists(path))
-                    File.Delete(path);
-
-                using var stream = new FileStream(path, FileMode.CreateNew);
-                stream.Write(data, 0, data.Length);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-        }
-
-        public static string LoadByte(string path)
-        {
-            try
-            {
-                if (!File.Exists(path))
-                    return default;
-
-                byte[] data;
-                using (var fs = new FileStream(path, FileMode.Open))
-                {
-                    data = new byte[fs.Length];
-                    fs.Read(data, 0, data.Length);
-                }
-
-                if (data?.Length == 0)
-                    return default;
-
-                return BitConverter.ToString(data);
-            }
-            catch (Exception ex)
-            {
-                Logger.Log(ex);
-            }
-
-            return default;
-        }
-
+        /// <summary>
+        /// Get object from type
+        /// </summary>
+        /// <param name="type"></param>
+        /// <param name="params"></param>
+        /// <returns></returns>
         internal static object GetObject(Type type, object[] @params = null)
         {
             if (type.IsArray)
@@ -197,6 +164,12 @@ namespace AW.Serializer
             return false;
         }
 
+        /// <summary>
+        /// Get type by string name
+        /// </summary>
+        /// <param name="typeName"></param>
+        /// <returns></returns>
+        /// <exception cref="ArgumentNullException"></exception>
         internal static Type GetType(string typeName)
         {
             var type = Type.GetType(typeName);

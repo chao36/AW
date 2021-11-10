@@ -11,6 +11,12 @@ namespace AW.Serializer
     {
         private List<IReference> Sources { get; set; }
 
+        /// <summary>
+        /// Deserialize object from string
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="data"></param>
+        /// <returns></returns>
         public T Deserialize<T>(string data)
         {
             if (data.IsNull())

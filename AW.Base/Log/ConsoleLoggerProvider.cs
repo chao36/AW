@@ -3,8 +3,21 @@ using System.Collections.Generic;
 
 namespace AW.Log
 {
+    /// <summary>
+    /// Console log
+    /// </summary>
     public class ConsoleLoggerProvider : ILoggerProvider
     {
+        /// <inheritdoc/>
+        public ILogger GetLogger(string tag = null)
+        {
+            return Logger.New(new List<ILoggerProvider>
+            {
+                this
+            }, tag);
+        }
+
+        /// <inheritdoc/>
         public void Log(string message)
         {
             lock (typeof(Console))
@@ -20,17 +33,10 @@ namespace AW.Log
             }
         }
 
+        /// <inheritdoc/>
         public string View()
         {
             return null;
-        }
-
-        public ILogger GetLogger(string tag = null)
-        {
-            return Logger.New(new List<ILoggerProvider>
-            {
-                this
-            }, tag);
         }
     }
 }

@@ -5,12 +5,24 @@ using System.Runtime.CompilerServices;
 
 namespace AW.Log
 {
+    /// <summary>
+    /// Logger
+    /// </summary>
     public class Logger : ILogger
     {
         #region Static
 
+        /// <summary>
+        /// Event on log message
+        /// </summary>
         public static event Action<string> OnLog;
-        
+
+        /// <summary>
+        /// Create new logger
+        /// </summary>
+        /// <param name="providers"></param>
+        /// <param name="tag"></param>
+        /// <returns></returns>
         public static ILogger New(IEnumerable<ILoggerProvider> providers, string tag = null)
         {
             return new Logger(providers, tag);
@@ -18,6 +30,10 @@ namespace AW.Log
 
         private static ILogger DefaultLogger;
 
+        /// <summary>
+        /// Return single default logger
+        /// </summary>
+        /// <returns></returns>
         public static ILogger Default()
         {
             if (DefaultLogger != null)
@@ -34,19 +50,22 @@ namespace AW.Log
 
         #endregion
 
+        /// <inheritdoc/>
         public string Tag { get; set; }
 
         private readonly IEnumerable<ILoggerProvider> Providers;
 
-        internal Logger(IEnumerable<ILoggerProvider> providers, string tag)
+        protected Logger(IEnumerable<ILoggerProvider> providers, string tag)
         {
             Tag = tag;
             Providers = providers;
         }
 
+        /// <inheritdoc/>
         public void Log(string message, [CallerMemberName] string method = null, bool ignoreEvent = false)
             => Log(null, message, method, ignoreEvent);
 
+        /// <inheritdoc/>
         public void Log(Exception ex, string message = null, [CallerMemberName] string method = null, bool ignoreEvent = false)
         {
             if (ex != null)
@@ -75,11 +94,11 @@ namespace AW.Log
             }
         }
 
-        public string View()
+        /// <inheritdoc/>
+        public IEnumerable<string> View()
         {
             return Providers
-                .Select(p => p.View())
-                .FirstOrDefault();
+                .Select(p => p.View());
         }
     }
 }

@@ -4,6 +4,9 @@ using System.IO;
 
 namespace AW.Log
 {
+    /// <summary>
+    /// File log
+    /// </summary>
     public class FileLoggerProvider : ILoggerProvider
     {
         private string FilePath { get; set; }
@@ -22,6 +25,16 @@ namespace AW.Log
             }
         }
 
+        /// <inheritdoc/>
+        public ILogger GetLogger(string tag = null)
+        {
+            return Logger.New(new List<ILoggerProvider>
+            {
+                this
+            }, tag);
+        }
+
+        /// <inheritdoc/>
         public void Log(string message)
         {
             lock (this)
@@ -33,20 +46,13 @@ namespace AW.Log
             }
         }
 
+        /// <inheritdoc/>
         public string View()
         {
             lock (this)
             {
                 return File.ReadAllText(FilePath);
             }
-        }
-
-        public ILogger GetLogger(string tag = null)
-        {
-            return Logger.New(new List<ILoggerProvider>
-            {
-                this
-            }, tag);
         }
     }
 }
