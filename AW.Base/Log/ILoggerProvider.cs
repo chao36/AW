@@ -17,11 +17,5 @@
         /// </summary>
         /// <param name="message"></param>
         void Log(string message);
-        
-        /// <summary>
-        /// Return all logs (if can) or null
-        /// </summary>
-        /// <returns></returns>
-        string View();
     }
 }

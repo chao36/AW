@@ -10,7 +10,10 @@
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
     <PackageTags>AW;Lang;AW.LangSupport;AW.Lang;LangSupport;Translate;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
+    <EnforceCodeStyleInBuild>False</EnforceCodeStyleInBuild>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
+    <DebugType>embedded</DebugType>
   </PropertyGroup>
 
   <ItemGroup>

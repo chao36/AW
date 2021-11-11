@@ -13,14 +13,18 @@ namespace AW.LangSupport
         private const string CurrentLangFile = "current.lang";
         private const string WordsFile = "words.lang";
 
-        internal static ILogger Logger { get; }
+        internal static ILogger Log { get; }
 
         static LangConfig()
         {
-            Logger = new FileLoggerProvider("logs/lang", "common-{date}.log")
+            Log = new FileLoggerProvider(Path.Combine(Logger.DefaultFolder, "lang"), "common-{date}.log")
                 .GetLogger();
         }
 
+        /// <summary>
+        /// Save lang to xml format
+        /// </summary>
+        /// <param name="langFolder"></param>
         public void SaveAsXmlResource(string langFolder)
         {
             try
@@ -49,10 +53,15 @@ namespace AW.LangSupport
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Log.Log(ex);
             }
         }
 
+        /// <summary>
+        /// Load lang from xml format
+        /// </summary>
+        /// <param name="langFolder"></param>
+        /// <returns></returns>
         public bool LoadFromXmlResource(string langFolder)
         {
             try
@@ -119,7 +128,7 @@ namespace AW.LangSupport
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Log.Log(ex);
             }
 
             return false;

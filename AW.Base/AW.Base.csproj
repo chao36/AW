@@ -8,15 +8,17 @@
     <PackageId>AW</PackageId>
     <Authors>AkumaWalker</Authors>
     <RepositoryUrl>https://github.com/AkumaWalker/AW</RepositoryUrl>
-    <PackageTags>AW;Logger;Serializer;</PackageTags>
+    <PackageTags>AW;Base;AW.Base;Logger;Serializer;</PackageTags>
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <PackageProjectUrl>https://github.com/AkumaWalker/AW</PackageProjectUrl>
-    <Version>4.0.1</Version>
+    <Version>4.0.2</Version>
     <Copyright />
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <AssemblyVersion></AssemblyVersion>
     <AssemblyName>AW</AssemblyName>
     <RootNamespace>AW</RootNamespace>
+    <DebugType>embedded</DebugType>
+    <GenerateDocumentationFile>True</GenerateDocumentationFile>
   </PropertyGroup>
 
 </Project>

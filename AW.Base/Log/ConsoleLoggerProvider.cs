@@ -4,7 +4,7 @@ using System.Collections.Generic;
 namespace AW.Log
 {
     /// <summary>
-    /// Console log
+    /// Implement <see cref="ILoggerProvider"/> for console log
     /// </summary>
     public class ConsoleLoggerProvider : ILoggerProvider
     {
@@ -31,12 +31,6 @@ namespace AW.Log
 
                 Console.ForegroundColor = save;
             }
-        }
-
-        /// <inheritdoc/>
-        public string View()
-        {
-            return null;
         }
     }
 }

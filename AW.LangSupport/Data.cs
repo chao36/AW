@@ -2,6 +2,9 @@
 
 namespace AW.LangSupport
 {
+    /// <summary>
+    /// Lang 
+    /// </summary>
     [AWSerializable]
     public class Lang : IReference
     {
@@ -19,6 +22,9 @@ namespace AW.LangSupport
         public string Name { get; set; }
     }
 
+    /// <summary>
+    /// Word
+    /// </summary>
     [AWSerializable]
     public class Word
     {

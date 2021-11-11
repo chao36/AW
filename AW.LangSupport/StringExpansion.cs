@@ -2,10 +2,13 @@
 
 namespace AW
 {
+    /// <summary>
+    /// Translate expansion
+    /// </summary>
     public static class StringExpansion
     {
         /// <summary>
-        /// Переводит слово для текущего языка
+        /// Translate word for current lang in config
         /// </summary>
         /// <param name="str"></param>
         /// <returns></returns>

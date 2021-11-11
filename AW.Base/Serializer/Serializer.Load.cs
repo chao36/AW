@@ -43,7 +43,7 @@ namespace AW.Serializer
             }
             catch (Exception ex)
             {
-                SerializerHelper.Logger.Log(ex);
+                SerializerHelper.Log.Log(ex);
             }
 
             T result = (T)DeserializeObject(typeof(T).Object(), data);
@@ -253,7 +253,7 @@ namespace AW.Serializer
             }
             catch (Exception ex)
             {
-                SerializerHelper.Logger.Log(ex);
+                SerializerHelper.Log.Log(ex);
             }
 
             return null;

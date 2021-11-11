@@ -6,11 +6,16 @@ using System.Runtime.CompilerServices;
 namespace AW.Log
 {
     /// <summary>
-    /// Logger
+    /// Implement <see cref="ILogger"/>
     /// </summary>
     public class Logger : ILogger
     {
         #region Static
+
+        /// <summary>
+        /// Default folder for logs
+        /// </summary>
+        public static string DefaultFolder { get; set; } = "logs";
 
         /// <summary>
         /// Event on log message
@@ -42,7 +47,7 @@ namespace AW.Log
             DefaultLogger = New(new List<ILoggerProvider>
             {
                 new ConsoleLoggerProvider(),
-                new FileLoggerProvider("logs", "common-{date}.log")
+                new FileLoggerProvider(DefaultFolder, "common-{date}.log")
             });
 
             return DefaultLogger;
@@ -55,6 +60,11 @@ namespace AW.Log
 
         private readonly IEnumerable<ILoggerProvider> Providers;
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="providers"></param>
+        /// <param name="tag"></param>
         protected Logger(IEnumerable<ILoggerProvider> providers, string tag)
         {
             Tag = tag;
@@ -92,13 +102,6 @@ namespace AW.Log
                 foreach (var provider in Providers)
                     provider.Log(message);
             }
-        }
-
-        /// <inheritdoc/>
-        public IEnumerable<string> View()
-        {
-            return Providers
-                .Select(p => p.View());
         }
     }
 }

@@ -7,6 +7,9 @@ using System.Linq;
 
 namespace AW
 {
+    /// <summary>
+    /// Expansions
+    /// </summary>
     public static class Expansions
     {
         #region Type
@@ -176,6 +179,7 @@ namespace AW
         /// Unique string for collections [{string}#{index}]
         /// </summary>
         /// <param name="value"></param>
+        /// <param name="values"></param>
         /// <returns></returns>
         public static string UniqueFrom(this string value, IEnumerable<string> values)
         {

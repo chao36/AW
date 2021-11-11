@@ -13,11 +13,11 @@ namespace AW
     /// </summary>
     public static class SerializerHelper
     {
-        internal static ILogger Logger { get; }
+        internal static ILogger Log { get; }
 
         static SerializerHelper()
         {
-            Logger = new FileLoggerProvider("logs/serializer", "common-{date}.log")
+            Log = new FileLoggerProvider(Path.Combine(Logger.DefaultFolder, "serializer"), "common-{date}.log")
                 .GetLogger();
 
             var mainAsm = Assembly.GetEntryAssembly() ?? Assembly.GetExecutingAssembly() ?? Assembly.GetCallingAssembly();
@@ -29,7 +29,7 @@ namespace AW
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, $"Assembly {refAsmName.FullName}");
+                    Log.Log(ex, $"Assembly {refAsmName.FullName}");
                 }
             }
 
@@ -42,7 +42,7 @@ namespace AW
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex, $"File {path}");
+                    Log.Log(ex, $"File {path}");
                 }
             }
         }
@@ -66,7 +66,7 @@ namespace AW
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Log.Log(ex);
             }
         }
 
@@ -86,7 +86,7 @@ namespace AW
             }
             catch (Exception ex)
             {
-                Logger.Log(ex);
+                Log.Log(ex);
             }
 
             return default;
@@ -112,7 +112,7 @@ namespace AW
                 }
                 catch (Exception ex)
                 {
-                    Logger.Log(ex);
+                    Log.Log(ex);
                 }
             else
                 foreach (var constructor in constructors)
@@ -125,12 +125,12 @@ namespace AW
                         }
                         catch (Exception ex)
                         {
-                            Logger.Log(ex);
+                            Log.Log(ex);
                         }
                     }
                 }
 
-            Logger.Log($"Null control [type {type.Name}]");
+            Log.Log($"Null control [type {type.Name}]");
 
             return null;
         }

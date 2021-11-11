@@ -5,12 +5,17 @@ using System.IO;
 namespace AW.Log
 {
     /// <summary>
-    /// File log
+    /// Implement <see cref="ILoggerProvider"/> for file log
     /// </summary>
     public class FileLoggerProvider : ILoggerProvider
     {
         private string FilePath { get; set; }
 
+        /// <summary>
+        /// ctor
+        /// </summary>
+        /// <param name="folder"></param>
+        /// <param name="name"></param>
         public FileLoggerProvider(string folder, string name)
         {
             name = name.Replace("{date}", DateTime.Now.ToString("dd.MM.yyyy"));
@@ -39,19 +44,8 @@ namespace AW.Log
         {
             lock (this)
             {
-                using (var stream = new StreamWriter(FilePath, true))
-                {
-                    stream.WriteLine(message);
-                }
-            }
-        }
-
-        /// <inheritdoc/>
-        public string View()
-        {
-            lock (this)
-            {
-                return File.ReadAllText(FilePath);
+                using var stream = new StreamWriter(FilePath, true);
+                stream.WriteLine(message);
             }
         }
     }
